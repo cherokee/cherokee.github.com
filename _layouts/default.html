@@ -1,0 +1,345 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+	<head>
+		<title>{% if page.title %} {{ page.title }} | {% endif %} Cherokee Project</title>
+				<link rel="stylesheet" href="{{site.baseurl}}/static/style.css" />
+				<link rel="alternate" type="application/rss+xml" title="RSS Feed" href="{{site.baseurl}}/feed.xml" />
+	</head>
+
+	<body>
+		<div id="header">
+			<h1>Welcome to my page</h1>
+			<h4>Here is some tagline</h4>
+			<hr />
+		</div>
+
+		<div id="sidebar">
+
+			<h3>First Heading</h3>
+
+			<ul>
+								<li><a href="{{site.baseurl}}/">Home</a></li>
+								<li><a href="{{site.baseurl}}/archive">Archive</a></li>
+								<li><a href="{{site.baseurl}}/feed.xml">RSS Feed</a></li>
+			</ul>
+
+			<h3>Second Heading</h3>
+
+			<ul>
+				<li><a href="#">Link 1</a></li>
+				<li><a href="#">Link 2</a></li>
+				<li><a href="#">Link 3</a></li>
+			</ul>
+		</div>
+
+		<div id="content">
+
+			{{ content }}
+
+		</div>
+
+		<div id="footer">
+			<hr />
+			<p>&copy; 2012 Luke Maciak</p>
+		</div>
+
+	</body>
+
+</html>
+
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta http-equiv="Content-type" content="text/html; charset=utf-8">
+		<meta http-equiv="Content-Language" content="en-us">
+		<meta name="ROBOTS" content="ALL">
+		<meta http-equiv="imagetoolbar" content="no">
+		<meta name="MSSmartTagsPreventParsing" content="true">
+		<meta name="Keywords" content="cherokee web server httpd http">
+		<meta name="Description" content="Cherokee is a flexible, very fast, lightweight Web server. It is implemented entirely in C, and has no dependencies beyond a standard C library. It is embeddable and extensible with plug-ins. It supports on-the-fly configuration, TLS/SSL, virtual hosts, authentication, cache friendly features, PHP, custom error management, several load balancing policies, database balancing, and much more.">
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
+		<title>Cherokee Web Server</title>
+
+		<link rel="stylesheet" type="text/css" href="/CTK/css/CTK.css">
+		<link rel="author" href="humans.txt" />
+		<link rel="stylesheet" type="text/css" href="/static/css/cherokee.css">
+		<script type="text/javascript" src="/CTK/js/jquery-1.3.2.min.js"></script>
+	</head>
+
+	<body id="body-cherokee">
+		<div id="bar">
+			<div id="bar-inner">
+				<div id="logo">
+					<a id="widget_57691059" href="/">
+						<img src="/static/images/logo.png" id="widget_57691058" />
+					</a>
+				</div>
+				<div id="nav">
+					<ul id="widget_57691062">
+						<li id="widget_57691065">
+							<a id="widget_57691064" href="/downloads.html">Download</a>
+						</li>
+						<li id="widget_57691068">
+							<a id="widget_57691067" href="/doc/">Documentation</a>
+						</li>
+						<li id="widget_57691071">
+							<a id="widget_57691070" href="/community.html">Community</a>
+						</li>
+						<li id="widget_57691074">
+							<a id="widget_57691073" href="/contribute.html">Contribute</a>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+		<div id="banner">
+			<div id="sprint">
+				<div id="mainmsg">
+					<h1>Evolved Web Infrastructure Software</h1>
+					<p>Cherokee is an innovative, feature rich, and yet easy to configure open
+						source Web Server.</p>
+					<a id="overview">Learn More</a>
+				</div>
+				<div id="dialog57691078" title="" style="display:none;">
+					<div id="widget_57691080" class="dialog-proxy-lazy-loader">
+						<img src="/CTK/images/loader.gif" alt="Loading" class="no-see" id="widget_57691079"
+						/>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div id="container">
+			<div id="index-main">
+				<h2>Features Highlights</h2>
+				<div id="features">
+					<ul id="widget_57691089" class="list">
+						<li id="widget_57691092"><strong>User friendly</strong>
+							<br/><span>All the configuration is done through Cherokee-Admin, a beautiful and powerful Web interface.</span>
+						</li>
+						<li id="widget_57691095"><strong>Web Apps repository</strong>
+							<br/><span>Cherokee allows to deploy Web Apps optimally, in seconds, with just a few mouse clicks.</span>
+						</li>
+						<li id="widget_57691098"><strong>Modern Technologies</strong>
+							<br/><span>Cherokee supports the most widespread Web technologies: FastCGI, SCGI, PHP, uWSGI, SSI, CGI, LDAP, TLS/SSL, HTTP proxying, Video streaming, Content caching, Traffic Shaping, etc.</span>
+						</li>
+						<li id="widget_57691101"><strong>Cross Platform</strong>
+							<br/><span>Cherokee runs on Linux, MacOS X, Solaris, and BSD. A native Windows port is on the works.</span>
+						</li>
+					</ul>
+				</div>
+			</div>
+			<div id="index-sidebox">
+				<div id="main-links">
+					<ul id="widget_57691105">
+						<li id="widget_57691108">
+							<img src="/static/images/download.png" title="Download Cherokee 1.2.101">
+							<a href="/downloads.html">Download Cherokee 1.2.101</a>
+							<br/><span>Fetch the latest version of Cherokee</span>
+						</li>
+						<li id="widget_57691111">
+							<img src="/static/images/documentation.png" title="Read the Documentation">
+							<a href="/doc/index.html">Read the Documentation</a>
+							<br/><span>Tutorials, recipes, etc</span>
+						</li>
+						<li id="widget_57691114">
+							<img src="/static/images/contribute.png" title="Contribute to the project">
+							<a href="/contribute.html">Contribute to the project</a>
+							<br/><span>Help us to develop a better server!</span>
+						</li>
+					</ul>
+				</div>
+			</div>
+			<div id="widget_57691116" class="clr"></div>
+			<div id="widget_57691117" class="bar3">
+				<div id="latest-tweets">
+					<div id="widget_57689538" class="bar3-title">
+						<a href="http://twitter.com/webserver" target="_blank">Recent Tweets</a>
+					</div>
+					<div id="widget_57689540" class="bar3-bottom-link">
+						<a href="http://twitter.com/webserver" target="_blank">Follow Us on Twitter &raquo;</a>
+					</div>
+				</div>
+			</div>
+			<div id="widget_57691118" class="bar3">
+				<div id="latest-commits">
+					<div id="widget_57689969" class="bar3-title">
+						<a href="https://github.com/cherokee/webserver/commits/dev" target="_blank">Latest Commits</a>
+					</div>
+					<div id="widget_57689970" class="commit">
+						<div id="widget_57689971" class="date">
+							<a id="widget_57689973" href="https://github.com/cherokee/webserver/commit/e43de1b004f4954380f4b4ea272ea26ef2e81468"
+							target="_blank" title="e43de1b004f4954380f4b4ea272ea26ef2e81468">4 weeks ago</a>
+						</div>
+						<div id="widget_57689975" class="commit-txt">Stefan de Konink: Merge pull request #44 from cherokee/fix-for-missing-libt...</div>
+					</div>
+					<div id="widget_57689976" class="commit">
+						<div id="widget_57689977" class="date">
+							<a id="widget_57689979" href="https://github.com/cherokee/webserver/commit/7fa9e4457437a2affbcb3dfa8f5dc1084fecf924"
+							target="_blank" title="7fa9e4457437a2affbcb3dfa8f5dc1084fecf924">4 weeks ago</a>
+						</div>
+						<div id="widget_57689981" class="commit-txt">M. David Peterson: checks for the existence of glibtool using hash rather
+							th...</div>
+					</div>
+					<div id="widget_57689982" class="commit">
+						<div id="widget_57689983" class="date">
+							<a id="widget_57689985" href="https://github.com/cherokee/webserver/commit/97e24f061fc527f9aaf86aa5c97072b990d5912a"
+							target="_blank" title="97e24f061fc527f9aaf86aa5c97072b990d5912a">4 weeks ago</a>
+						</div>
+						<div id="widget_57689987" class="commit-txt">Stefan de Konink: Disabling SSL Compression might prevent an SSL CRIME
+							attack.</div>
+					</div>
+					<div id="widget_57689988" class="commit">
+						<div id="widget_57689989" class="date">
+							<a id="widget_57689991" href="https://github.com/cherokee/webserver/commit/2e4800587586e392f81c45893ec0e63cd303d748"
+							target="_blank" title="2e4800587586e392f81c45893ec0e63cd303d748">4 weeks ago</a>
+						</div>
+						<div id="widget_57689993" class="commit-txt">Stefan de Konink: Add support to explictly disable SSL compression.</div>
+					</div>
+					<div id="widget_57689994" class="commit">
+						<div id="widget_57689995" class="date">
+							<a id="widget_57689997" href="https://github.com/cherokee/webserver/commit/19b8fe12874ae4791ae695e74257a990c9f21281"
+							target="_blank" title="19b8fe12874ae4791ae695e74257a990c9f21281">4 weeks ago</a>
+						</div>
+						<div id="widget_57689999" class="commit-txt">Stefan de Konink: Implements the request for Cipher Server Preference</div>
+					</div>
+					<div id="widget_57690000" class="commit">
+						<div id="widget_57690001" class="date">
+							<a id="widget_57690003" href="https://github.com/cherokee/webserver/commit/d363f35eaca3f87d9af0133f7630099f61890ef8"
+							target="_blank" title="d363f35eaca3f87d9af0133f7630099f61890ef8">5 weeks ago</a>
+						</div>
+						<div id="widget_57690005" class="commit-txt">Stefan de Konink: Merge pull request #40 from cherokee/mod-streaming_ffmpeg...</div>
+					</div>
+					<div id="widget_57690006" class="commit">
+						<div id="widget_57690007" class="date">
+							<a id="widget_57690009" href="https://github.com/cherokee/webserver/commit/d6e24b9fc890876c832bc8c7bebdc58017bcba34"
+							target="_blank" title="d6e24b9fc890876c832bc8c7bebdc58017bcba34">5 weeks ago</a>
+						</div>
+						<div id="widget_57690011" class="commit-txt">M. David Peterson: fix for 'handler_streaming.c:383:23: error: 'AVFormatCont...</div>
+					</div>
+					<div id="widget_57690013" class="bar3-bottom-link">
+						<a href="https://github.com/cherokee/webserver/commits/dev" target="_blank">View Commits Log &raquo;</a>
+					</div>
+				</div>
+			</div>
+			<div id="widget_57691119" class="bar3">
+				<div id="mailing-list">
+					<div id="widget_57680197" class="bar3-title">
+						<a href="http://lists.octality.com/listinfo/cherokee" target="_blank">Mailing List</a>
+					</div>
+					<div id="widget_57680198" class="mail">
+						<div id="widget_57680199" class="date">Dec 27</div>
+						<div id="widget_57680201" class="mail-txt">
+							<a id="widget_57680203" href="http://lists.octality.com/pipermail/cherokee/2012-December/thread.html"
+							target="_blank">Moving the Google tracker to Github</a>
+							<br/>by (-, Stefan), 3 messages</div>
+					</div>
+					<div id="widget_57680205" class="mail">
+						<div id="widget_57680206" class="date">Dec 17</div>
+						<div id="widget_57680208" class="mail-txt">
+							<a id="widget_57680210" href="http://lists.octality.com/pipermail/cherokee/2012-December/thread.html"
+							target="_blank">Issue List</a>
+							<br/>by (-, Stefan, Daniel), 4 messages</div>
+					</div>
+					<div id="widget_57680212" class="mail">
+						<div id="widget_57680213" class="date">Dec 16</div>
+						<div id="widget_57680215" class="mail-txt">
+							<a id="widget_57680217" href="http://lists.octality.com/pipermail/cherokee/2012-December/thread.html"
+							target="_blank">A joined community</a>
+							<br/>by (Jędrzej, Stefan, -, Daniel, pig...@gmail.com), 10 messages</div>
+					</div>
+					<div id="widget_57680219" class="mail">
+						<div id="widget_57680220" class="date">Dec 13</div>
+						<div id="widget_57680222" class="mail-txt">
+							<a id="widget_57680224" href="http://lists.octality.com/pipermail/cherokee/2012-December/thread.html"
+							target="_blank">PHP:</a>
+							<br/>by (Francesco), 1 messages</div>
+					</div>
+					<div id="widget_57680226" class="mail">
+						<div id="widget_57680227" class="date">Dec 08</div>
+						<div id="widget_57680229" class="mail-txt">
+							<a id="widget_57680231" href="http://lists.octality.com/pipermail/cherokee/2012-December/thread.html"
+							target="_blank">Cherokee equivalent for e-mail?</a>
+							<br/>by (Hugo, -, Jeremy, Stefan), 5 messages</div>
+					</div>
+					<div id="widget_57680233" class="mail">
+						<div id="widget_57680234" class="date">Dec 08</div>
+						<div id="widget_57680236" class="mail-txt">
+							<a id="widget_57680238" href="http://lists.octality.com/pipermail/cherokee/2012-December/thread.html"
+							target="_blank">Google Plus!</a>
+							<br/>by (Stefan, Daniel), 3 messages</div>
+					</div>
+					<div id="widget_57680241" class="bar3-bottom-link">
+						<a href="http://lists.octality.com/listinfo/cherokee" target="_blank">Subscribe to Cherokee Mailing List &raquo;</a>
+					</div>
+				</div>
+			</div>
+			<div id="widget_57691120" class="clr"></div>
+		</div>
+		<div id="widget_57691121" class="clr"></div>
+		<div id="footer">
+			<div id="footer-inner">Obviously powered by Cherokee!
+				<br/>&copy; 2001-2011
+				<a id="widget_57691127" href="http://www.linkedin.com/profile/view?id=19919180"
+				target="_blank">Alvaro Lopez Ortega</a>
+			</div>
+		</div>
+		<div class="help"></div>
+		<script type="text/javascript" src="/CTK/js/common.js"></script>
+		<script type="text/javascript" src="/CTK/js/Help.js"></script>
+		<script type="text/javascript" src="/CTK/js/jquery-ui-1.7.2.custom.min.js"></script>
+		<script type="text/javascript">
+			$(document).ready(function () {
+				$('#overview').bind('click', function (event) {
+					$('#dialog57691078').show().dialog('open');
+				});
+				$('#dialog57691078').bind('dialogopen', function (event) {
+					$('#widget_57691079').show();
+					$.ajax({
+						type: 'GET',
+						url: '/learn_more.html',
+						async: true,
+						success: function (data) {
+							$("#widget_57691080").html(data);;
+
+							/* Modified: Save button */
+							var modified = data['modified'];
+							var not_modified = data['not-modified'];
+
+							if (modified != undefined) {
+								$(modified).show();
+								$(modified).removeClass('saved');
+							} else if (not_modified) {
+								$(not_modified).addClass('saved');
+							}
+						}
+					});
+				});
+
+				var dialog_obj = $("#dialog57691078");
+
+				/* Initialize */
+				dialog_obj.dialog({
+					'resizable': false,
+					'draggable': false,
+					'autoOpen': false,
+					'modal': true,
+					'position': ["center", 85],
+					'class': 'dialog-hidden'
+				});
+
+				/* Apply the Cancel/Close style */
+				var dlg = dialog_obj.parents(".ui-dialog:first");
+				var buttons = dlg.find(".ui-dialog-buttonpane button");
+
+				buttons.addClass('druid-button');
+				buttons.filter(':contains("Cancel"), :contains("Close")').addClass('close-button');
+
+			});
+		</script>
+	</body>
+
+</html>
