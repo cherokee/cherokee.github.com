@@ -1,10 +1,10 @@
 ---
 layout: post
 title: This is a test blog post
-
+categories: blog
 excerpt: This is just a quick test post. This is the excerpt for it.
 ---
 
 This is the body for the quick test post.
 
-It uses markdown.
+It uses markdown, which is determined by the file extension

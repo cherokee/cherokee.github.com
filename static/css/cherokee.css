@@ -577,6 +577,10 @@ ol.arabic {
   padding-left: 20px;
   background: transparent url(../images/li-bullet.png) 10px 4px no-repeat;
 }
+.section-list li span {
+  display: block;
+  color: #999;
+}
 
 #main_area #footer { display: none; }
 

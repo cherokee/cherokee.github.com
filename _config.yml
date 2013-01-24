@@ -16,4 +16,4 @@ description: Cherokee is a flexible, very fast, lightweight Web server.
 auto: true
 
 # Makes pretty permalinks. See Jekyll docs for alternatives.
-permalink: pretty
+permalink: none
