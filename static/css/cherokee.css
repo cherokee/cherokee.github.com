@@ -536,10 +536,14 @@ ol.arabic {
 
 .content img {
   width: 100%;
-  margin: 20px 0;
+  margin: 20px auto;
   padding: 5px;
   border: 1px solid #eaeaea;
   background: #fafafa;
+}
+
+.content .normal_image_width {
+  width: auto;
 }
 
 .content pre {

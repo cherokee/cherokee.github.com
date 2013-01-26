@@ -1,0 +1,760 @@
+---
+layout: documentation
+title: Virtual Servers | Cherokee Documentation
+---
+
+<div id="main_area">
+	<h1>Configuration</h1>
+	<h2 id="_a_href_index_html_index_a_8594_a_href_config_html_configuration_a"><a href="index.html">Index</a> → <a href="config.html">Configuration</a></h2>
+	<div class="sectionbody"></div>
+	<h2 id="_virtual_server">Virtual Servers</h2>
+	<div class="sectionbody">
+		<div class="paragraph">
+			<p>A <em>Virtual Server</em> is an abstraction mechanism that allows you to define
+				a custom number of parameters and rules that have to be applied to one
+				or more domains.
+			</p>
+		</div>
+		<div class="paragraph">
+			<p>In a Cherokee server there must be at least one virtual server named
+				<tt>default</tt>, and there is no maximum number. You can define and delete
+				as many as you want, with the sole exception of <tt>default</tt> which must
+				be present always.
+			</p>
+		</div>
+		<div class="paragraph">
+			<p>When the server receives a request it will try to match the domain
+				name specified in the virtual server that should handle it. In case no
+				virtual server matches the request, <tt>default</tt> will be used.
+			</p>
+		</div>
+		<div class="imageblock">
+			<div class="content">
+				<img src="media/images/admin_vserver.png" alt="media/images/admin_vserver.png" />
+			</div>
+			<div class="image-title">Host Match</div>
+		</div>
+		<div class="paragraph">
+			<p>This section of the admin is divided in a left panel and main contents
+				section on the right.
+			</p>
+		</div>
+		<div class="paragraph">
+			<p>The panel displays the list of virtual servers, which can be filtered
+				according to the matching criteria specified in the <tt>Virtual Server
+				Filtering</tt> box, and has two buttons at the top that correspond, from
+				left to right, to <tt>Add New Virtual Server</tt> and <tt>Clone Selected
+				Virtual Server</tt>.
+			</p>
+		</div>
+		<div class="paragraph">
+			<p>Whenever you select a virtual server, the main content area displays
+				information relevant to the chosen host.
+			</p>
+		</div>
+		<div class="paragraph">
+			<p>You should be aware that the order in which the virtual servers are
+				listed is not arbitrary. The list is evaluated from top to bottom
+				whenever Cherokee receives a request, and the first virtual server
+				that matches the given request will be the one used to send a reply.
+			</p>
+		</div>
+		<div class="paragraph">
+			<p>You can drag and drop the elements of the list to change the order in
+				which the matches are evaluated.
+			</p>
+		</div>
+		<div class="paragraph">
+			<p>The <tt>default</tt> virtual server is always at the bottom and cannot be
+				dragged. As mentioned above, if a request doesn’t match any other
+				virtual server, it falls through all the way to the default one to
+				ensure no requests are left unattended. The most simple usage
+				scenarios usually involve only the default virtual host, and do not
+				require additional virtual servers.
+			</p>
+		</div>
+		<div class="paragraph">
+			<p>The entries on the <tt>Virtual Server</tt> list are composed of two elements:</p>
+		</div>
+		<div class="ulist">
+			<ul>
+				<li>
+					<p>
+						<strong>Name</strong>
+					</p>
+					<div class="paragraph">
+						<p>An alias that is used to identify the virtual server and is the value
+							used when filtering the virtual servers to be listed. The domain names
+							handled by the virtual server should be specified later in the virtual
+							server details page.
+						</p>
+					</div>
+				</li>
+				<li>
+					<p>
+						<strong>Document Root</strong>
+					</p>
+					<div class="paragraph">
+						<p>This is the directory from which Cherokee will serve files. For
+							example, if the Document Root is <tt>/var/www</tt>, then a client’s request
+							for <tt>http://www.example.com/index.html</tt> refers to
+							<tt>/var/www/index.html</tt> on the server.
+						</p>
+					</div>
+					<div class="paragraph">
+						<p>In the simplest case, the server might return the contents of the file
+							to the client. But Cherokee provides a richer mechanism of behaviors,
+							based on the the URL. Behaviors are described
+							<a href="#behavior">below</a>. For now, just know that the combination of a
+							URL and the Document Root specifies the match (for instance, a file on
+							the server), but does not specify how that file will be served. Note
+							that not all rules will necessarily match files to be sent to the
+							client, so the Document Root is not always used.
+						</p>
+					</div>
+					<div class="paragraph">
+						<p>This is controlled by behavior rules. The set of rules is checked from
+							the highest to the lowest possible priority. Once a rule is matched,
+							the server appends the path from the requested URL to the document
+							root to make the path to the document. If it is a directory, this
+							information is used. If other rules apply to a parent directory, those
+							are applied as well without overwriting the original behavior:
+						</p>
+					</div>
+					<div class="listingblock">
+						<div class="content">
+							<pre><tt>        http://www.example.com/index.html refers to /var/www/index.html</tt></pre>
+						</div>
+					</div>
+					<div class="paragraph">
+						<p>This might seem complicated but it’s actually simple to
+							understand. For example suppose you had a directory called /secret
+							that was protected with authentication, and there was also a rule with
+							higher priority for /secret/cgi that only specified to use the CGI
+							handler. Under these circumstances, if a request was received for
+							/secret/cgi/something then the CGI handler would be taken and it would
+							inherit the authentication specified for /secret.
+						</p>
+					</div>
+				</li>
+			</ul>
+		</div>
+		<div class="paragraph">
+			<p><strong>Add New Virtual Server</strong> allows the creation of additional virtual
+				hosts, either manually or by using any of the available configuration
+				<a href="config_wizards.html">wizards</a>. These are configuration assistants
+				that will allow you to set up a new virtual server tailored to some
+				application’s specific needs. The wizard will ask for some basic
+				values, such as the name of the new virtual server or anything that
+				might be needed to make its job, like deploying a Django application,
+				installing Wordpress or whatever task you might have chosen. The
+				wizards can also be run on a per-server basis, in which case instead
+				of creating a new dedicated virtual server, the required changes will
+				be added to the existing one. To use the wizards in this manner you
+				will have to trigger them from the <tt>Behavior</tt> panel instead of the
+				<tt>Virtual Server Panel</tt>. This <tt>Behavior</tt> panel is specific to a given
+				virtual host, and can be activated using the <tt>Rule Management</tt> button
+				of the <tt>Behavior</tt> tab. You can read more about automatic configuration
+				on the <a href="config_wizards.html">wizards</a> section. Regardless of them
+				being used from the <tt>Virtual Server</tt> panel or the <tt>Behavior</tt> panel,
+				one or more rules will be created to suit a particular scenario. The
+				main difference will lay on the wizard creating a new virtual server
+				or just customizing an existing one, depending on the instantiation
+				context.
+			</p>
+		</div>
+		<div class="paragraph">
+			<p><strong>Clone Selected Virtual Server</strong> is simply a matter of selecting a
+				target name and a source virtual server currently present. Every
+				setting will be duplicated. From then onwards changes applied to any
+				of them, be it the original or the copied Virtual Servers, will only
+				apply to the implicated one. This is a great way to set up complex
+				domains, since you can use the existing ones as templates to be
+				refined with further work.
+			</p>
+		</div>
+		<div class="paragraph">
+			<p>A detailed explanation of every tab follows.</p>
+		</div>
+		<h3 id="basics">Basics</h3>
+		<div style="clear:left"></div>
+		<div class="ulist">
+			<ul>
+				<li>
+					<p>
+						<strong>Virtual Server nickname</strong>
+					</p>
+				</li>
+			</ul>
+		</div>
+		<div class="paragraph">
+			<p>The name that will be used to identify the virtual server.</p>
+		</div>
+		<div class="ulist">
+			<ul>
+				<li>
+					<p>
+						<strong>Document Root</strong>
+					</p>
+				</li>
+			</ul>
+		</div>
+		<div class="paragraph">
+			<p>Path to use as root directory for the virtual server.</p>
+		</div>
+		<div class="ulist">
+			<ul>
+				<li>
+					<p>
+						<strong>Directory Indexes</strong>
+					</p>
+				</li>
+			</ul>
+		</div>
+		<div class="paragraph">
+			<p>The DirectoryIndex directive sets the list of resources to look for
+				when the client requests an index of the directory by specifying a /
+				at the end of the directory name. Several URLs may be given, in which
+				case the server will return the first one that it finds. If none of
+				the resources exist, the server will reply according to the handler
+				behavior.
+			</p>
+		</div>
+		<div class="paragraph">
+			<p>Note that the documents do not need to be relative to the directory:</p>
+		</div>
+		<div class="listingblock">
+			<div class="content">
+				<pre><tt>        index.html,index.txt,/cgi-bin/index.pl</tt></pre>
+			</div>
+		</div>
+		<div class="paragraph">
+			<p>would cause the CGI script /cgi-bin/index.pl to be executed if neither
+				index.html nor index.txt existed in a directory.
+			</p>
+		</div>
+		<div class="paragraph">
+			<p>There is a special case in which the directory index entry starts with
+				a slash. For example, /cgi-bin/index.pl. In that case, it will use it
+				as the object accessible under that public address of the same virtual
+				server, so it will take care about the possible configuration of the
+				/cgi-bin/ directory and/or the pl extension.
+			</p>
+		</div>
+		<div class="ulist">
+			<ul>
+				<li>
+					<p>
+						<strong>Keep-alive</strong>
+					</p>
+				</li>
+			</ul>
+		</div>
+		<div class="paragraph">
+			<p>This flag is enabled by default. It is used to enable or disable
+				Keep-alive connections on a per-virtual-server basis. Keeping
+				persisting connections has dramatic effects both in speed, but very
+				high traffic loads can suffer because less connections are available
+				for any given moment.
+			</p>
+		</div>
+		<div class="ulist">
+			<ul>
+				<li>
+					<p>
+						<strong>Advanced Virtual Hosting</strong>
+					</p>
+				</li>
+			</ul>
+		</div>
+		<div class="paragraph">
+			<p>Settings to <a href="config_virtual_servers_evhost.html">host many
+				domains</a>.
+			</p>
+		</div>
+		<h3 id="domain_names">Host Match</h3>
+		<div style="clear:left"></div>
+		<div class="paragraph">
+			<p>This section allows to define the list of domains that the virtual
+				server implements.
+			</p>
+		</div>
+		<div class="paragraph">
+			<p>It can accept either FQDN (Fully Qualified Domain Names), wild card
+				entries, regular expressions, IPs/Subnets, or a combination of methods that
+				will be evaluated as a logical OR. This can be useful for some rare
+				cases where you might need to match by IP OR wildcards simultaneously,
+				such as the <a href="cookbook_ssl.html#workaround">HTTPS-without-SNI workaround</a>
+				documented in the <a href="cookbook.html">cookbook</a>.
+			</p>
+		</div>
+		<div class="dlist">
+			<dl>
+				<dt class="hdlist1">
+					For instance
+				</dt>
+				<dd>
+					<div class="listingblock">
+						<div class="content">
+							<pre><tt>          example.com
+        *.example.org</tt></pre>
+						</div>
+					</div>
+				</dd>
+			</dl>
+		</div>
+		<div class="paragraph">
+			<p>Hint: Although it is rare, there are some web-broswsers out there that
+				do not seem to convert the FQDN to lowercase before sending the
+				requests. This mainly happens with built-in browsers or very-early
+				implementations. Even in those cases it is possible to have
+				case-insensitive host matching by using regular-expression
+				matching. For example, if your domain name was <tt>Example.com</tt> and
+				were dealing with one such browser, you would have to prepend <strong>(?i)</strong>
+				to your regular expression. That in turn would perform a
+				case-insensitive evaluation, effectively solving the problem.
+			</p>
+		</div>
+		<div class="dlist">
+			<dl>
+				<dt class="hdlist1">
+					The following Case-insensitive RegEx matches both example.com and Example.com
+				</dt>
+				<dd>
+					<div class="listingblock">
+						<div class="content">
+							<pre><tt>        (?i)example.com</tt></pre>
+						</div>
+					</div>
+				</dd>
+			</dl>
+		</div>
+		<div class="paragraph">
+			<p>Note that you should probably keep in mind the way this list is
+				interpreted in order to avoid future problems. Whenever Cherokee
+				receives a request for a specific domain, it evaluates the <tt>Domain
+				list</tt> of every defined virtual host in the order defined by the
+				priorities of such hosts. When it finds a match, it stops the
+				evaluation and starts matching the specific rules from that virtual
+				host to send the appropriate response.
+			</p>
+		</div>
+		<div class="paragraph">
+			<p>If no domain name matches the request, Cherokee re-evaluates the list
+				of virtual hosts trying to match the request against the <tt>Nicknames</tt>,
+				also using the priorities defined by the virtual host order.
+			</p>
+		</div>
+		<div class="paragraph">
+			<p>Only after failing both with the domain names and the nicknames will
+				Cherokee issue the failure, in which case the default virtual server
+				is used to handle the request.
+			</p>
+		</div>
+		<div class="admonitionblock">
+			<table>
+				<tbody>
+					<tr>
+						<td class="icon">
+							<div class="title">Important</div>
+						</td>
+						<td class="content">It is easy to overlook the way in which virtual servers are evaluated,
+							which leads to the common problem of not knowing exactly why some
+							virtual servers work and some don’t. The list of Frequently Asked
+							Questions includes <a href="other_faq.html#faq19">"Why are my nicknames not
+							matched, while *.example.com does work?"</a>. A careful reinterpretation
+							of what has just been explained in this section should clarify any
+							doubts.
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		<div class="admonitionblock">
+			<table>
+				<tbody>
+					<tr>
+						<td class="icon">
+							<div class="title">Warning</div>
+						</td>
+						<td class="content">Do not use the IP/Subnet host match as a security measure to prevent
+							access to specific IP addresses. The purpose of the IP/Subnet match
+							type was to implement the SSL certificate selection workaround that
+							other web servers have been using for years. If it were to be
+							attacked, it could be easily overcome by simply setting the Host
+							header to the name of the virtual server. To restrict the traffic of
+							one of your virtual servers based on the incoming IP, please read the
+							appropriate cookbook entry,
+							<a href="cookbook_traffic_restriction.html">restricting traffic by IP</a>.
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		<h3 id="behavior">Behavior</h3>
+		<div style="clear:left"></div>
+		<div class="paragraph">
+			<p>This sections allows to define a set of rules to define how the server
+				should handle the different requests. A summary of the existing rules
+				is presented, containing several fields of information:
+			</p>
+		</div>
+		<div class="olist arabic">
+			<ol class="arabic">
+				<li>
+					<p>
+						<strong>Match</strong>: what the rule matches, which shows information about the
+						web target of the rule (be it a path, a file type, etc.) plus the
+						rule type. You can check the complete list of rule types in the
+						<a href="config_virtual_servers_rule_types.html">Rule Types</a> section.
+					</p>
+				</li>
+				<li>
+					<p>
+						<strong>Handler</strong>: The handler that manages the requests that match this
+						rule. Read on for further details.
+					</p>
+				</li>
+				<li>
+					<p>
+						<strong>Authentication</strong>: Indicates if authentication is used for this
+						rule. This can be set up through the
+						<a href="config_virtual_servers_rule.html">Rule Entry</a> menu.
+					</p>
+				</li>
+				<li>
+					<p>
+						<strong>Root</strong>: Indicates if the rule defines an alternative document root
+						path.
+					</p>
+				</li>
+				<li>
+					<p>
+						<strong>Secure</strong>: Which indicates that the rule only applies for HTTPS
+						connections.
+					</p>
+				</li>
+				<li>
+					<p>
+						<strong>Encoders</strong>: Indicates if any encoding is applied to the rule.
+					</p>
+				</li>
+				<li>
+					<p>
+						<strong>Expiration</strong>: Indicates if expiration headers are configured for the rule.
+					</p>
+				</li>
+				<li>
+					<p>
+						<strong>Timeout</strong>: Indicates if there is a defined connection timeout for
+						the rule.
+					</p>
+				</li>
+				<li>
+					<p>
+						<strong>Shaping</strong>: Whether traffic shaping is enabled.
+					</p>
+				</li>
+				<li>
+					<p>
+						<strong>Logging</strong>: Whether the rule matches are logged or not.
+					</p>
+				</li>
+				<li>
+					<p>
+						<strong>Final</strong>: If this flag is present it means that no other rules will
+						be applied after this one, even if the request also matches other
+						rules with lower priority. The server will issue a response with
+						whatever behavior it has figured out by then.
+					</p>
+				</li>
+				<li>
+					<p>
+						<strong>Enabled</strong>: If the rule is currently enabled or not, which might
+						completely alter the behavior of the virtual server.
+					</p>
+				</li>
+			</ol>
+		</div>
+		<div class="paragraph">
+			<p>These rules can be defined based on the directory that the request
+				targets, the extension of the file that it is requesting, or a regular
+				expression that may match the request among other options.
+			</p>
+		</div>
+		<div class="admonitionblock">
+			<table>
+				<tbody>
+					<tr>
+						<td class="icon">
+							<div class="title">Important</div>
+						</td>
+						<td class="content">It is very important to know that these rules are prioritized. The
+							higher its priority is, the sooner they are checked. And this priority
+							is represented by the position of the rule in the rule-list. You could
+							think of a network routing table, it is quite similar. You can set the
+							relative priorities among the rules from within the <tt>Behavior</tt> panel,
+							which is accessed through the <tt>Rule Management</tt> button. This button
+							will switch the left panel from <tt>Virtual Server</tt> mode to <tt>Rule mode</tt>,
+							and the list of virtual servers on the left panel will be replaced by
+							a panel with the list of rules.
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		<div class="paragraph">
+			<p>In <tt>Rule mode</tt> you wiil be able to define a set of rules to define how
+				the server should handle the different requests, and simply dragging
+				and dropping the rules in the desired position will do. If you click
+				on the rule name, the rule’s configuration options will be displayed
+				in the main content area. If you click anywhere else, you will be able
+				to drag and drop it into the desired position).
+			</p>
+		</div>
+		<div class="imageblock">
+			<div class="content">
+				<img src="media/images/admin_behavior.png" class="normal_image_width" width="242" height="549" alt="Behavior menu" />
+			</div>
+			<div class="image-title">Rule list</div>
+		</div>
+		<div class="paragraph">
+			<p>Each of these behavior rules must specify the handler that the server
+				should use to reply to the requests that match the rule.
+			</p>
+		</div>
+		<div class="paragraph">
+			<p>The selection of any one of the rule targets will offer new
+				configuration options through the
+				<a href="config_virtual_servers_rule.html">Rule Entry</a> menu.
+			</p>
+		</div>
+		<div class="paragraph">
+			<p>Each of the mentioned handlers can be fine-tuned through that
+				menu. Refer to each handler’s documentation if you are interested in
+				the available settings.
+			</p>
+		</div>
+		<div class="paragraph">
+			<p>These rules can also be combined with boolean operators, so you can
+				apply AND to require two rules, NOT to negate and so forth. These can
+				be nested as much as necessary.
+			</p>
+		</div>
+		<div class="admonitionblock">
+			<table>
+				<tbody>
+					<tr>
+						<td class="icon">
+							<div class="title">Note</div>
+						</td>
+						<td class="content">It is quite easy to fully specify a virtual server’s behavior having
+							just some notions of Cherokee’s way of working. However, there might
+							be some corner cases where Cherokee will behave in a manner that could
+							not seem obvious at first. Every doubt can be easily cleared by simple
+							understanding in full detail the way a rule is applied. For instance
+							lets suppose there is an <tt>Extension</tt> type rule configured to handle
+							PHP files. If a request is made for
+							<tt>http://example.com/index.php/what/ever</tt>, this rule <strong>WOULD NOT</strong> be
+							applied at first because the request doesn’t end with the appropriate
+							extension: it has some additional path information. However, if there
+							is a <tt>Default</tt> rule configured that is managed by the <tt>List and Send</tt>
+							handler, things would work. This is because the <tt>Default</tt> rule would
+							catch any unmatched requests, and the <tt>List and Send</tt> handler would
+							notice the PATHINFO part of the request. It would then split the
+							request in two parts, separating the PHP file from the appended
+							information, and would then evaluate once more the list of rules. This
+							time the request would end in <tt>.php</tt> and thus it would match the
+							<tt>Extension</tt> rule meant to handle PHP files.
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		<h3 id="error_handler">Error Handler</h3>
+		<div style="clear:left"></div>
+		<div class="paragraph">
+			<p>Several mechanisms exist to handle errors.</p>
+		</div>
+		<div class="olist arabic">
+			<ol class="arabic">
+				<li>
+					<p>
+						Default errors
+					</p>
+				</li>
+				<li>
+					<p>
+						Custom redirections
+					</p>
+				</li>
+				<li>
+					<p>
+						Closest match
+					</p>
+				</li>
+			</ol>
+		</div>
+		<div class="paragraph">
+			<p>Using the <em>Custom redirections</em> error handler we can easily redirect
+				errors to a custom path or website.
+			</p>
+		</div>
+		<div class="imageblock">
+			<div class="content">
+				<img src="media/images/admin_vserver_errors.png" alt="media/images/admin_vserver_errors.png" />
+			</div>
+			<div class="image-title">Error Handler</div>
+		</div>
+		<div class="paragraph">
+			<p>In this case, the handled errors (400, 401, and 500) will be
+				redirected to the specified resources, while non-defined errors will
+				trigger an HTTP 500 error. In case this is not the desired behavior,
+				you can set a <tt>Default Error</tt> to catch and redirect the non-defined
+				ones.
+			</p>
+		</div>
+		<div class="paragraph">
+			<p>The <em>Closest match</em> error handler should never fail to deliver
+				something. If a requested resource is not available, the closest match
+				will be sent. The only exception to this is when nothing at all is at
+				Cherokee’s disposal, in which case a standard http error is sent.
+			</p>
+		</div>
+		<h3 id="logging">Logging</h3>
+		<div style="clear:left"></div>
+		<div class="paragraph">
+			<p>The <a href="modules_loggers.html">loggers</a> are a type of Cherokee modules
+				to write the server log information using different destinations
+				and/or formats:
+			</p>
+		</div>
+		<div class="ulist">
+			<ul>
+				<li>
+					<p>
+						Destination: File, syslog, program execution and standard error output.
+					</p>
+				</li>
+				<li>
+					<p>
+						Format: Combined (Apache compatible), NCSA or custom.
+					</p>
+				</li>
+			</ul>
+		</div>
+		<div class="paragraph">
+			<p>If a virtual server doesn’t have a logger set up it will not log anything.</p>
+		</div>
+		<div class="imageblock">
+			<div class="content">
+				<img src="media/images/admin_vserver_loggers.png" alt="media/images/admin_vserver_loggers.png" />
+			</div>
+			<div class="image-title">Logging</div>
+		</div>
+		<div class="paragraph">
+			<p>By default Cherokee ships three loggers implementing three different
+				logging formats:
+			</p>
+		</div>
+		<div class="ulist">
+			<ul>
+				<li>
+					<p>
+						combined - <a href="modules_loggers_combined.html">Combined Log Format</a>
+					</p>
+				</li>
+			</ul>
+		</div>
+		<div class="paragraph">
+			<p>Logging using the Apache log format. It is the <tt>de facto standard</tt> nowadays.</p>
+		</div>
+		<div class="ulist">
+			<ul>
+				<li>
+					<p>
+						ncsa - <a href="modules_loggers_ncsa.html">NCSA Log Format</a>
+					</p>
+				</li>
+			</ul>
+		</div>
+		<div class="paragraph">
+			<p>Logging using the NCSA log format.</p>
+		</div>
+		<div class="ulist">
+			<ul>
+				<li>
+					<p>
+						custom - <a href="modules_loggers_custom.html">Customizable Log Format</a>
+					</p>
+				</li>
+			</ul>
+		</div>
+		<div class="paragraph">
+			<p>Logging using a user-specified format.</p>
+		</div>
+		<div class="paragraph">
+			<p>Besides, this sections allows you to specify several other options,
+				such as the backend used to store errors.
+			</p>
+		</div>
+		<h3 id="security">Security</h3>
+		<div style="clear:left"></div>
+		<div class="paragraph">
+			<p>The virtual server must be configured with the path to the certificate
+				before using secure connections (https). There is a document which
+				might help to generate SSL <a href="cookbook_ssl.html">keys</a> and that
+				should provide tips and information on how to configure SSL, TLS and
+				certificates.
+			</p>
+		</div>
+		<div class="paragraph">
+			<p>Cherokee fully supports the usage of different certificates for each
+				virtual server in a given host by using SNI as defined in
+				<a href="http://www.rfc-archive.org/getrfc.php?rfc=3546">RFC 3546</a>.
+			</p>
+		</div>
+		<div class="imageblock">
+			<div class="content">
+				<img src="media/images/admin_vserver_security.png" alt="media/images/admin_vserver_security.png" />
+			</div>
+			<div class="image-title">Security</div>
+		</div>
+		<div class="paragraph">
+			<p>If you want HTTPS to work, you must remember this:</p>
+		</div>
+		<div class="olist arabic">
+			<ol class="arabic">
+				<li>
+					<p>
+						Providing the PEM-encoded files is mandatory for both <tt>Certificate</tt>
+						and <tt>Certificate key</tt> fields. Providing the <tt>CA List</tt> and the
+						<tt>Client Certs</tt> is optional. The trusted CA certificates file should
+						be a single file with all the certificates concatenated. The <tt>Client
+						Certs</tt>, also PEM-encoded, is used to check the client
+						certificates. You can read more about
+						<a href="cookbook_ssl.html#ssl-support">enabling SSL support</a> on the
+						SSL/TLS section of the documentation.
+					</p>
+				</li>
+				<li>
+					<p>
+						If you have several virtual servers, the <tt>Security</tt> section must be
+						configured for the <tt>default</tt> virtual server besides any other
+						virtual server you want to support HTTPS. This makes sense, since by
+						enabling the feature in any one of them you are opening the HTTPS
+						port in your host, and receiving HTTPS requests for a virtual server
+						that does not provide the service can not be handled correctly.
+						This situation can be dealt with in several ways, none of which are
+						really elegant in design: falling back to HTTP, issuing an error
+						that is likely to restart the HTTPS handshake, etc. The approach
+						taken by Cherokee is at least coherent, folding back to the
+						<tt>default</tt> virtual server. Of course, to do so it needs correct
+						<tt>Security</tt> settings to provide an HTTPS stream, as has just been
+						mentioned.
+					</p>
+				</li>
+			</ol>
+		</div>
+	</div>
+</div>
