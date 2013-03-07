@@ -1,0 +1,603 @@
+---
+layout: documentation
+title: Installer | Cherokee Documentation
+---
+<div id="main_area"><h1>Documentation</h1>
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph"><p>Since release 1.2, Cherokee supports automatic application deployments. Packaging web applications is only a matter of knowing how to build an installer, which in turn is basically a Cherokee Wizard on steroids.</p></div>
+<div class="paragraph"><p>To build an installer you’ll need some basic knowledge about the existing infrastructure, and also some rudimentary knowledge about CTK. Of course, some proficiency with Cherokee is required so that you can obtain a suitable configuration template, but that is pretty much it.</p></div>
+</div>
+</div>
+<h2 id="_installer">Installer</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>A package is basically a tar.gz file containing a web application and some installation scripts. To build a package, at least the following files must be provided:
+. build.py: a definition file that contains the information required to download and build the package.
+. description.py: a definition file that provides the information about the package (name, release, revision, description, supported installation modes, etc).
+. installer.py: initial installation script on which Cherokee-Admin relies once it has downloaded the package to be installed.
+. Additionally, delta files to apply patches can be provided (to use while building the package), as well as other auxiliary installer files to be used by the main installer.py script. Also it is recommended to provide a file with notes about the installer or detailing a QA procedur to ensure the quality of the package.</p></div>
+<div class="paragraph"><p>Lets detail the structure of both essential files and then we can proceed with some more specifics.</p></div>
+<h3 id="_build_py">build.py</h3><div style="clear:left"></div>
+<div class="paragraph"><p>This must provide all the details required to successfully download, patch, and build the installer. The building change is actually quite sophisticated and will cache things whenever possible: it will not attempt to re-download source files, or even rebuild the package if
+.build.py</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt># Remember to modify package revision when upgrading, so that build
+# system doesn't miss it
+REVISION = 25
+
+PY_DEPS  = [
+
+'../common/php.py',
+           '../common/target.py',
+]
+
+PY_FILES = ['installer.py', 'tools.py']
+INCLUDE  = ['bar']
+
+DOWNLOADS = [
+
+{'dir': 'bar',
+'mv’: (('Bar-v2.0.17’, 'bar’),),
+             'url': 'http://example.com/downloads/Bar-v2.0.17.tar.bz2',
+             'patches': [('patch-01-hide_db_block.diff', '-p1')]},
+
+    {'dir': 'bar/plugins', 'fence': True,
+              'skip_if': 'bar/plugins/baz/flagged_file.php',
+              'url': 'http://example.com/downloads/plugins/baz-1.x-dev.tar.gz'},
+]</tt></pre>
+</div></div>
+<div class="paragraph"><p>You can see several interesting properties on this file, which deserve more specific descriptions.</p></div>
+<h4 id="_py_deps">PY_DEPS</h4>
+<div class="paragraph"><p>List of script dependencies. Basically intended to include the modules provided under the <tt>common</tt> directory. These are modules that take care of common functionality used extensively throughout all the installers.</p></div>
+<div class="paragraph"><p>At the moment of writing, it contains the following modules.</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+cc.py: Functionality related to detection and installation of a C development environment.
+</p>
+</li>
+<li>
+<p>
+cpp.py: Functionality related to detection and installation of a C++ development environment.
+</p>
+</li>
+<li>
+<p>
+database.py: Functionality related to detection and usage of several database engines.
+</p>
+</li>
+<li>
+<p>
+java.py: Functionality related to detection and installation of a JRE.
+</p>
+</li>
+<li>
+<p>
+php-mods.py: Functionality related to detection and installation of a PHP modules.
+</p>
+</li>
+<li>
+<p>
+php.py: Functionality related to detection and installation of a PHP interpreter.
+</p>
+</li>
+<li>
+<p>
+pwd_grp.py: Functionality related to system users and groups.
+</p>
+</li>
+<li>
+<p>
+python.py: Functionality related to detection and installation of Python.
+</p>
+</li>
+<li>
+<p>
+ruby.py: Functionality related to detection and installation of Ruby and Ruby Gems.
+</p>
+</li>
+<li>
+<p>
+services.py: Functionality related to system services.
+</p>
+</li>
+<li>
+<p>
+target.py: Module that defines target types for installations (Virtual server, Web directory).
+</p>
+</li>
+</ul></div>
+<h4 id="_py_files">PY_FILES</h4>
+<div class="paragraph"><p>This is the list of scripts that must be packed with your installer (besides the ones specified as dependencies.
+In this list you can also specify files from other installers, which is the case when packing extended versions and you want to have a unique source to maintain when upgrading releases.</p></div>
+<h4 id="_include">INCLUDE</h4>
+<div class="paragraph"><p>This is the list of directories that should be included in the package. It is usually a good idea to specify the names after they have been renamed by the building script, so that you can avoid the need of having to rename directories manually every time you upgrade your package. More on this on the following entry.</p></div>
+<h4 id="_downloads">DOWNLOADS</h4>
+<div class="paragraph"><p>List of files that have to be downloaded from third party repositories. It is provided as a list of dictionaries with several keys, which globally allow you to define precisely what to download and where to put it. It also includes the directions required to apply patches and rename files/directories on demand, which is a good idea since by setting the directory names you can isolate the build script from the installer script.</p></div>
+<h5 id="_download_entry">Download entry</h5>
+<div class="paragraph"><p>Each entry is a dictionary. Providing the <tt>dir</tt> and <tt>url</tt> elements is mandatory. All the rest are optional.</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>entry = {
+      'dir':     'bar',
+      'url':     'http://example.com/downloads/Bar-v2.0.17.tar.bz2',
+      'mv’:      [('Bar-v2.0.17’, 'bar’),],
+      'patches': [('patch-01-hide_db_block.diff', '-p1')],
+      'fence':   True,
+      'skip_if': 'bar/plugins/baz/foo.php',
+}</tt></pre>
+</div></div>
+<div class="tableblock">
+<table cellpadding="4" cellspacing="0" frame="border" rules="all" width="100%">
+<col width="20%"></col>
+<col width="80%"></col>
+<thead>
+<tr>
+<th align="left" valign="top">Key     </th>
+<th align="left" valign="top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left" valign="top"><p class="table">url</p></td>
+<td align="left" valign="top"><p class="table">URL of the remote resource to download. Valid formats are tar.gz, tar.bz2, and zip.</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">dir</p></td>
+<td align="left" valign="top"><p class="table">Directory where the file is unpacked. Should match an element of the INCLUDE property.</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">mv</p></td>
+<td align="left" valign="top"><p class="table">Renaming list, should contain tuples indicating source and target names.</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">patches</p></td>
+<td align="left" valign="top"><p class="table">List of patches to apply</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">fence</p></td>
+<td align="left" valign="top"><p class="table">If True, create directory and change to it before decompression.</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">skip_if</p></td>
+<td align="left" valign="top"><p class="table">If file or directory exists, skip download of this entry.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<h3 id="_description_py">description.py</h3><div style="clear:left"></div>
+<div class="paragraph"><p>As has been mentioned, this file provides information about the package. The repository has to be indexed, and this is the source of such data.</p></div>
+<div class="listingblock">
+<div class="title">description.py</div>
+<div class="content">
+<pre><tt># Short summary to display in app-overview
+DESC_SHORT = """&lt;p&gt;This is the summary.&lt;/p&gt;
+"""
+
+# Longer description to display in app-overview
+DESC_LONG = """&lt;p&gt;This is a longer description.&lt;/p&gt;
+&lt;p&gt;You know the drill.&lt;/p&gt;
+"""
+
+# Set software properties
+software = {
+ 'name':        'example',                  # part of the filename for the package
+ 'version':     '0.9.9',                    # part of the filename for the package
+ 'author':      'Foo Bar,                   # appears in app-overview
+ 'URL':         'http://example.com/',      # appears in app-overview
+ 'screenshots': ('shot1.png', 'shot2.png'), # files inside the screenshots directory to use
+ 'desc_short':  DESC_SHORT,
+ 'desc_long':   DESC_LONG,
+ 'category':    'Development',              # group the app under this category
+}
+
+# Define the support table: installation modes, supported OSes, and
+# database engines
+installation = {
+  'modes': ('vserver', 'webdir'),
+  'OS':    ('linux', 'macosx', 'freebsd', 'solaris'),
+  'DB':    ('mysql', 'postgresql', 'sqlite3')
+}
+
+# Info about the maintainer of the package
+maintainer = {
+ 'name':  'John Doe',
+ 'email': 'john@example.com
+}</tt></pre>
+</div></div>
+<div class="paragraph"><p>Everything is pretty self descriptive. The software dictionary should
+suffice to display information about the package within Cherokee
+Admin. It will be automatically put in place according to the category
+tag. Look for the one that better suits your app and use it, or create
+a new category if necessary.</p></div>
+<h4 id="_installation">installation</h4>
+<div class="paragraph"><p>The installation properties define supported installation modes, supported Operating Systems, and supported database engines.
+These must be chosen among the following lists.</p></div>
+<div class="tableblock">
+<table cellpadding="4" cellspacing="0" frame="border" rules="all" width="100%">
+<caption class="title">modes</caption>
+<col width="20%"></col>
+<col width="80%"></col>
+<thead>
+<tr>
+<th align="left" valign="top">Value      </th>
+<th align="left" valign="top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left" valign="top"><p class="table">vserver</p></td>
+<td align="left" valign="top"><p class="table">Can be installed as a new virtual server</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">webdir</p></td>
+<td align="left" valign="top"><p class="table">Can be installed as a web-directory of an existing virtual server</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="tableblock">
+<table cellpadding="4" cellspacing="0" frame="border" rules="all" width="100%">
+<caption class="title">OS</caption>
+<col width="20%"></col>
+<col width="80%"></col>
+<thead>
+<tr>
+<th align="left" valign="top">Value      </th>
+<th align="left" valign="top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left" valign="top"><p class="table">linux</p></td>
+<td align="left" valign="top"><p class="table">Linux support</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">macosx</p></td>
+<td align="left" valign="top"><p class="table">MacOS X support</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">solaris</p></td>
+<td align="left" valign="top"><p class="table">Solaris support</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">freebsd</p></td>
+<td align="left" valign="top"><p class="table">FreeBSD support</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="tableblock">
+<table cellpadding="4" cellspacing="0" frame="border" rules="all" width="100%">
+<caption class="title">DB</caption>
+<col width="20%"></col>
+<col width="80%"></col>
+<thead>
+<tr>
+<th align="left" valign="top">Value      </th>
+<th align="left" valign="top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left" valign="top"><p class="table">mysql</p></td>
+<td align="left" valign="top"><p class="table">MySQL engine supported by installer</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">postgresql</p></td>
+<td align="left" valign="top"><p class="table">PostgreSQL engine supported by installer</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">sqlite3</p></td>
+<td align="left" valign="top"><p class="table">Sqlite3 engine supported by installer</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<h3 id="_installer_py">installer.py</h3><div style="clear:left"></div>
+<div class="paragraph"><p>After downloading and decompressing a package, Cherokee Admin hands over the control to this script. It basically provides a configuration template, and follows the chain on installation stages until the common final installation stage is reached. Once this happens, Cherokee Admin will save and apply the configuration if possible, or will notify if pending changes remained before the installation so the step can be performed manually.</p></div>
+<div class="paragraph"><p>Control is handed over by visiting a local URL that is used as entry point to the installer, and is returned when, upon completion, the installer visits another URL which is the exit point. In the middle, the chain of URLs must be published by the installer itself, that also has to establish the control flow between them.</p></div>
+<div class="paragraph"><p>You are advised to make extensive use of the logging capabilities provided by market.Install_Log, so that it is easier to develop package-installers and report bugs if necessary.</p></div>
+<div class="paragraph"><p>Have a look at the hello_world installer in the repository to see a thoroughly commented example.
+Here is an excerpt of a very basic example.</p></div>
+<div class="listingblock">
+<div class="title">installer.py</div>
+<div class="content">
+<pre><tt># Load external modules with CTK. Note that absolute paths are specified.
+target = CTK.load_module_pyc (os.path.join (os.path.dirname (os.path.realpath (__file__)), "target.pyo"), "target_util")
+
+# Batch commands, used to setup ownership and permissions, for example
+POST_UNPACK_COMMANDS = [
+    ({'command': 'chown -R root:${root_group} ${app_root}/package*'}),
+    ({'command': 'chmod 755 ${app_root}/package*'}),
+]
+
+# Cfg chunks
+CONFIG_VSERVER = """
+
+# Configuration snippet for virtual-server installations
+"""
+CONFIG_DIR = """
+
+# Configuration snippet for web-directory installations.
+"""
+NEXT_URL = "/market/install/example_app/config"
+
+## Step 1: Target
+class Target (Install_Stage):
+    def __safe_call__ (self):
+       box = CTK.Box()
+       target_wid = target.TargetSelection()
+       target_wid.bind ('goto_next_stage', CTK.DruidContent__JS_to_goto (box.id, NEXT_URL))
+       box += target_wid
+
+       buttons = CTK.DruidButtonsPanel()
+       buttons += CTK.DruidButton_Close(_('Cancel'))
+       buttons += CTK.DruidButton_Submit (_('Next'), do_close=False)
+       box += buttons
+       return box.Render().toStr()
+
+## Step 2: App configuration
+class App_Config (Install_Stage):
+    def __safe_call__ (self):
+       box = CTK.Box()
+       pre = 'tmp!market!install'
+
+       # Replacements
+       root         = CTK.cfg.get_val ('%s!root'   %(pre))
+       target_type  = CTK.cfg.get_val ('%s!target' %(pre))
+
+      # Apply the config
+       if target_type == 'vserver':
+               config = CONFIG_VSERVER %(locals())
+           elif target_type == 'directory':
+               config = CONFIG_DIR %(locals())
+
+           CTK.cfg.apply_chunk (config)
+
+       # Redirect to the Thanks page
+       box += CTK.RawHTML (js = CTK.DruidContent__JS_to_goto (box.id, market.Install.URL_INSTALL_DONE))
+       return box.Render().toStr()
+
+CTK.publish ('^%s$'%(market.Install.URL_INSTALL_SETUP_EXTERNAL), Target)
+CTK.publish ('^%s$'%(NEXT_URL), App_Config)</tt></pre>
+</div></div>
+<div class="paragraph"><p>An overview of each section follows.</p></div>
+<h4 id="_load_of_external_modules">Load of external modules</h4>
+<div class="paragraph"><p>This part is where you would import all the accessory modules into your current name space. Those are the ones with common functionality, or the ones you’ve added to the package besides build.py and installer.py.
+Note that absolute paths are specified on each import.</p></div>
+<div class="paragraph"><p>====Batch commands: POST_UNPACK_COMMANDS
+This is a list of command entries.
+If this property is present in the installer script, the entries will be executed sequentially right after downloading and unpacking the application. When an error occurs the problem is notified within the installation screen. Otherwise, execution proceeds towards the first defined stage.</p></div>
+<div class="paragraph"><p>The list of POST_UNPACK_COMMANDS is comprised of command entries that will be processed through an instance of market.CommandProgress.CommandProgress. Please refer to it later on this document for the specifics.</p></div>
+<h4 id="_market_install">market.Install</h4>
+<div class="paragraph"><p>You need to know market.Install.Install_Stage.
+Every installation stage inherits from this class, and will render the  contents that need be displayed in the installation dialogs.</p></div>
+<div class="paragraph"><p>The flow is determined by the mapped URLs/classes that are published by CTK in each installer.</p></div>
+<div class="paragraph"><p>The entry point is <strong>market.Install.URL_INSTALL_SETUP_EXTERNAL</strong>. An hypothetical installer that wants to handle checks for  dependencies through a class called Precondition that inherits from market.Install.Install_Stage, would map the URL to the class with the following code:</p></div>
+<div class="listingblock">
+<div class="title">Mapping the entry point</div>
+<div class="content">
+<pre><tt>CTK.publish ('^%s$'%(market.Install.URL_INSTALL_SETUP_EXTERNAL),        Precondition)</tt></pre>
+</div></div>
+<div class="paragraph"><p>Each stage must redirect the flow to the next URL, and each URL must be mapped to an Install_Stage with an analogous syntax. This mapping applies to every stage except the last one.  Upon successful completion, the last Install_Stage should redirect the flow towards the standard exit point,  <strong>market.Install.URL_INSTALL_DONE</strong>, which is already mapped</p></div>
+<h3 id="_diff_files">DIFF files</h3><div style="clear:left"></div>
+<div class="paragraph"><p>The build.py script can specify what patches have to be applied on build-time. Those are only applied if the entry specified in build.py is downloaded, so the caching mechanism for downloads and built packages remains consistent.</p></div>
+<div class="paragraph"><p>It is recommended that these patches are generated using <tt>diff -rcu</tt> to maintain uniformity on the repositories and to provide context to the patches, possibly remaining valid after package upgrades.</p></div>
+<h3 id="_important_modules">Important modules</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Some functionality is provided directly  ith Cherokee Admin, which is what will be described in the following lines. Also, there are a series of common elements that can be reused by different installer (target selection, database management, handling PHP and PHP modules, etc.). As was mentioned before, such elements are encapsulated as independent modules distributed under the <tt>common</tt> directory, and are usually well comment, so don’t forget to review them before you begin working on your custom installers.</p></div>
+<h4 id="_popen">popen</h4>
+<div class="paragraph"><p>popen.popen_sync is a function that provides a subset of the functionality of the subprocess.Popen class, but it does so consistently along all Python 2.x versions. Installers frequently need to execute command-line tasks, and this is the function that should be used. It accepts the following arguments.</p></div>
+<div class="tableblock">
+<table cellpadding="4" cellspacing="0" frame="border" rules="all" width="100%">
+<caption class="title">popen_sync arguments</caption>
+<col width="10%"></col>
+<col width="10%"></col>
+<col width="30%"></col>
+<col width="50%"></col>
+<thead>
+<tr>
+<th align="left" valign="top">Argument  </th>
+<th align="left" valign="top">Default     </th>
+<th align="left" valign="top">Example             </th>
+<th align="left" valign="top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left" valign="top"><p class="table">command</p></td>
+<td align="left" valign="top"><p class="table"><strong>mandatory</strong></p></td>
+<td align="left" valign="top"><p class="table">chown root /tmp/foo</p></td>
+<td align="left" valign="top"><p class="table">Command to execute</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">env</p></td>
+<td align="left" valign="top"><p class="table">None</p></td>
+<td align="left" valign="top"><p class="table">{'PATH’: "/usr/bin}</p></td>
+<td align="left" valign="top"><p class="table">Provide custom environment</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">stdout</p></td>
+<td align="left" valign="top"><p class="table">True</p></td>
+<td align="left" valign="top"><p class="table">False</p></td>
+<td align="left" valign="top"><p class="table">Include/exclude stdout in return value</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">stderr</p></td>
+<td align="left" valign="top"><p class="table">True</p></td>
+<td align="left" valign="top"><p class="table">False</p></td>
+<td align="left" valign="top"><p class="table">Include/exclude stderr in return value</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">retcode</p></td>
+<td align="left" valign="top"><p class="table">True</p></td>
+<td align="left" valign="top"><p class="table">False</p></td>
+<td align="left" valign="top"><p class="table">Include/exclude execution return code</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">cd</p></td>
+<td align="left" valign="top"><p class="table">None</p></td>
+<td align="left" valign="top"><p class="table">’/tmp/bar’</p></td>
+<td align="left" valign="top"><p class="table">Change to this directory before running</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">su</p></td>
+<td align="left" valign="top"><p class="table">None</p></td>
+<td align="left" valign="top"><p class="table">0</p></td>
+<td align="left" valign="top"><p class="table">Set process’s user id if possible</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<h4 id="_market_install_log">market.Install_Log</h4>
+<div class="paragraph"><p>The most important function is market.Install_Log.log, which should be used extensively to log absolutely everything performed during an installation. File creation, task execution, and database modifications are logged in a file called <tt>install.log</tt> in the application’s directory.</p></div>
+<div class="paragraph"><p>When maintenance tasks are launched to completely erase orphan or broken installations, this file is parsed to revert the modifications done to your system.</p></div>
+<div class="paragraph"><p>It is also useful to log everything to ease up the troubleshooting process if anything goes wrong.</p></div>
+<h4 id="_market_commandprogress">market.CommandProgress</h4>
+<div class="paragraph"><p>The most relevant class is market.CommandProgress.CommandProgress.</p></div>
+<div class="paragraph"><p>This class provides a way to process time consuming tasks in a sequential manner, without having to worry about the connection timing out.
+It is a CTK widget, and as such can be added to an existing container and will begin execution once it has been rendered. Provided a list of command entries, these will be executed sequentialy, after which the control flow will proceed to the URL specified when CommandProgress object was instanced. During execution, it will display a progress bar, and additionaly the command being executed or a provided description.</p></div>
+<div class="paragraph"><p>Command entries are dictionaries with the following arguments, where specifying either a "command" or a "function" argument is mandatory.</p></div>
+<div class="tableblock">
+<table cellpadding="4" cellspacing="0" frame="border" rules="all" width="100%">
+<caption class="title">Arguments</caption>
+<col width="15%"></col>
+<col width="35%"></col>
+<col width="50%"></col>
+<thead>
+<tr>
+<th align="left" valign="top">Argument    </th>
+<th align="left" valign="top">Default     </th>
+<th align="left" valign="top">Example                       </th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left" valign="top"><p class="table">Description</p></td>
+<td align="left" valign="top"><p class="table">command</p></td>
+<td align="left" valign="top"><p class="table"></p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table"></p></td>
+<td align="left" valign="top"><p class="table">Command to execute</p></td>
+<td align="left" valign="top"><p class="table">function</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table"></p></td>
+<td align="left" valign="top"><p class="table">func_name</p></td>
+<td align="left" valign="top"><p class="table">Function to execute</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">params</p></td>
+<td align="left" valign="top"><p class="table">{}</p></td>
+<td align="left" valign="top"><p class="table">{'arg1’: "hello"}</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">Arguments to pass to executed function</p></td>
+<td align="left" valign="top"><p class="table">description</p></td>
+<td align="left" valign="top"><p class="table">None</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">chown root /tmp/foo</p></td>
+<td align="left" valign="top"><p class="table">Text to show instead of command or function name when command entry is being executed</p></td>
+<td align="left" valign="top"><p class="table">env</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">None</p></td>
+<td align="left" valign="top"><p class="table">{'PATH’: "/usr/bin}</p></td>
+<td align="left" valign="top"><p class="table">Provide custom environment</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">cd</p></td>
+<td align="left" valign="top"><p class="table">None</p></td>
+<td align="left" valign="top"><p class="table">’/tmp/bar’</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">Change to this directory before running</p></td>
+<td align="left" valign="top"><p class="table">su</p></td>
+<td align="left" valign="top"><p class="table">None</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">0</p></td>
+<td align="left" valign="top"><p class="table">Set process’s user id if possible</p></td>
+<td align="left" valign="top"><p class="table">check_ret</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">True</p></td>
+<td align="left" valign="top"><p class="table">False</p></td>
+<td align="left" valign="top"><p class="table">Report error if return code is not 0.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="paragraph"><p></p></div>
+<div class="tableblock">
+<table cellpadding="4" cellspacing="0" frame="border" rules="all" width="100%">
+<caption class="title">Replacement macros</caption>
+<col width="20%"></col>
+<col width="80%"></col>
+<thead>
+<tr>
+<th align="left" valign="top">Macro       </th>
+<th align="left" valign="top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left" valign="top"><p class="table">web_user</p></td>
+<td align="left" valign="top"><p class="table">User under which Cherokee runs</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">web_group</p></td>
+<td align="left" valign="top"><p class="table">Group under which Cherokee runs</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">root_user</p></td>
+<td align="left" valign="top"><p class="table">The system’s root user</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">root_group</p></td>
+<td align="left" valign="top"><p class="table">The system’s root group (root, wheel, etc.)</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">app_root</p></td>
+<td align="left" valign="top"><p class="table">Path where the downloaded application is decompressed</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="paragraph"><p>Additional replacement macros can be specified when the CommandProgress in instanced manually, which is always except for the one that processes the POST_UNPACK_COMMANDS property.
+It is as simple as setting the macros as properties of the CommandProgress object.</p></div>
+<div class="listingblock">
+<div class="title">Example: adding custom replacement macros</div>
+<div class="content">
+<pre><tt>next_url = '/market/installer/example_app/final_stage’ # this can be set arbitrarily.
+commands = [{'command’: touch ${foo}’},]
+progress = market.CommandProgress.CommandProgress (commands, next_url)
+progress["path"] = '/tmp/bar’</tt></pre>
+</div></div>
+<h4 id="_market_util">market.Util</h4>
+<div class="paragraph"><p>The class market.Util.InstructionBox is used extensively, particularly by stages that check for preconditions that need be fulfilled in order to complete the installation of an application.</p></div>
+<div class="paragraph"><p>It is a CTK widget used to display instructions to install software, tailored specifically to the users’ platform. It must be instanced with a mandatory note, such as "PHP not detected in your system.", and a dictionary (or list of dictionaries, for multi-message instructions) with messages for each platform.</p></div>
+<div class="listingblock">
+<div class="title">Example</div>
+<div class="content">
+<pre><tt>PHP_INSTRUCTIONS = {
+    'apt':           "sudo apt-get install php5-fpm  or  sudo apt-get install php5-cgi",
+    'yum':           "sudo yum install php",
+    'zypper':        "sudo zypper install php5-fastcgi",
+    'macports':      "sudo port install php5 +fastcgi",
+    'freebsd_pkg':   "pkg_add -r php5",
+    'freebsd_ports': "cd /usr/ports/lang/php5 &amp;&amp; make WITH_FASTCGI=yes WITH_FPM=yes install distclean",
+    'ips':           "pfexec pkg install 'pkg:/web/php-52'",
+    'default':       N_("PHP is available at http://www.php.net/ "),
+}</tt></pre>
+</div></div>
+<div class="paragraph"><p>If instanced, the InstructionBox will determine which entry is apropriate for the user’s system, and show only that one (or fall through to the default entry and show that one if nothing more specific is found).</p></div>
+</div>
+<div id="footer">
+<div id="footer-text">
+</div>
+</div>
+</div>
