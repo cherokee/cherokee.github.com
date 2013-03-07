@@ -1,0 +1,78 @@
+---
+layout: documentation
+title: Installation from SVN | Cherokee Documentation
+---
+<div id="main_area"><h1>Documentation</h1>
+
+<div class="sectionbody">
+</div>
+<h2 id="_installation_from_svn">Installation from SVN</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>The latest, bleeding edge Cherokee release can always be retrieved via
+SVN. Note that this is the development release and could very well be
+unstable. In general it is not recommended to run this release in
+production environments.</p></div>
+<div class="paragraph"><p>Briefly, SVN is a system tool used to store and maintain files and a
+history of their changes over time, and it is an invaluable development
+tool. The Cherokee source code and related files are kept on a SVN
+server at svn.cherokee-project.com.</p></div>
+<div class="paragraph"><p>To download the SVN repository you will need a special piece of
+software called an SVN client.</p></div>
+<h3 id="checkout">Checking out the sources</h3><div style="clear:left"></div>
+<div class="paragraph"><p>To list the available modules, type:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>svn list svn://svn.cherokee-project.com/</tt></pre>
+</div></div>
+<div class="paragraph"><p>To check out the sources for the first time from the repository, use this command:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>svn co svn://svn.cherokee-project.com/cherokee/trunk cherokee</tt></pre>
+</div></div>
+<h3 id="update">Updating the sources</h3><div style="clear:left"></div>
+<div class="paragraph"><p>To update your sources every day, you use this command:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>svn up cherokee</tt></pre>
+</div></div>
+<h3 id="compile">Compiling and installing</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Once you have downloaded the latest SVN revision, you will need to
+follow the installation instructions for your specific platform.</p></div>
+<div class="paragraph"><p>Note that some of the files present in the tarball are not present in
+SVN. Most noticeably, the file <tt>./configure</tt> that will be needed for the
+installation process.</p></div>
+<div class="paragraph"><p>To generate the missing files simply run this command:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>./autogen.sh</tt></pre>
+</div></div>
+<div class="paragraph"><p>As optional parameters, you can specify any option you want passed
+to <tt>./configure</tt>. This way you can avoid issuing another command for
+the configuration.</p></div>
+<div class="paragraph"><p>For instance, this line will configure your local copy with the four
+specified parameters:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>./autogen.sh --prefix=/usr        --sysconfdir=/etc \
+             --localstatedir=/var --enable-trace</tt></pre>
+</div></div>
+<div class="paragraph"><p>You would then be ready to proceed with the standard compilation
+process for your platform:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+<a href="basics_installation_unix.html">Unix installation</a>
+</p>
+</li>
+<li>
+<p>
+<a href="basics_installation_windows.html">Windows installation</a>
+</p>
+</li>
+</ul></div>
+</div>
+<div id="footer">
+<div id="footer-text">
+</div>
+</div>
+</div>

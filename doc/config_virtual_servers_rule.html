@@ -1,0 +1,443 @@
+---
+layout: documentation
+title: Virtual Server  Rules | Cherokee Documentation
+---
+<div id="main_area"><h1>Documentation</h1>
+
+<div class="sectionbody">
+</div>
+<h2 id="_virtual_server_rules">Virtual Server: Rules</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Besides the connection handler set for the rule, there are other
+parameters that can be set in order to customize the rule behavior.
+This menu offers the following tabs:</p></div>
+<div class="olist arabic"><ol class="arabic">
+<li>
+<p>
+<a href="config_virtual_servers_rule.html#rule">Rule</a>: this is the <strong>rule type</strong>.
+</p>
+</li>
+<li>
+<p>
+<a href="config_virtual_servers_rule.html#handler">Handler</a>: Specifies which handler should manage the
+   requests that match the rule.
+</p>
+</li>
+<li>
+<p>
+<a href="config_virtual_servers_rule.html#transforms">Transforms</a>: Transofmration of output stream on the
+   fly (encoding, and HTTP header alteration).
+</p>
+</li>
+<li>
+<p>
+<a href="config_virtual_servers_rule.html#caching">Caching</a>: Specifies content expiration and caching policies.
+</p>
+</li>
+<li>
+<p>
+<a href="config_virtual_servers_rule.html#security">Security</a>: in this section one can configure <strong>Access Restrictions</strong>
+   and <strong>Authentication</strong>.
+</p>
+</li>
+<li>
+<p>
+<a href="config_virtual_servers_rule.html#restrictions">Restrictions</a>: Specify connection timeouts, and
+   also traffic shaping by setting an outbound traffic limit for this
+   rule, specified in bytes per second.
+</p>
+</li>
+</ol></div>
+<h3 id="rule">Rule</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Several rule types are available to fit the needs of specific
+tasks. Sometimes you will want to restrict the content delivery based
+on a user’s country of origin, sometimes you might want a behavior to
+be applied to a web directory, or you might be interested in modeling
+how the web server behaves if a request matches an existing file (or
+not).</p></div>
+<div class="paragraph"><p>There is a complete list of the types in the
+<a href="config_virtual_servers_rule_types.html">Rule Types</a> section.</p></div>
+<div class="paragraph"><p>The behavior can be specified further by combining several basic
+rule-types into a complex rule. Complex rules can be defined by
+combining several basic types with the boolean operators AND, OR and
+NOT. For instance, we could define a rule that would apply to certain
+directories only if the request was made from a specific country. It
+would be as simple as defining a <em>directory type</em> rule AND a <em>GeoIP
+type</em> rule.</p></div>
+<h3 id="handler">Handler</h3><div style="clear:left"></div>
+<div class="paragraph"><p>This allows to fine tune the behavior of any of the available
+handlers. Since so many options are available, refer to the complete
+list of <a href="modules_handlers.html">handlers</a> shipped with Cherokee.</p></div>
+<div class="paragraph"><p>Handlers are the modules that generate the information with which the
+server responds to a client’s request. By default Cherokee provides a
+number of them:</p></div>
+<div class="sidebarblock">
+<div class="sidebar-content">
+<div class="ulist"><ul>
+<li>
+<p>
+<a href="modules_handlers_common.html">common</a> - <strong>List &amp; Send</strong>
+</p>
+<div class="paragraph"><p>Combines both <tt>Static Content</tt> and <tt>Only listing</tt> handlers
+functionality to behave similarly to common web servers, it will
+display directory listings when a directory is requested and serve the
+requested files.</p></div>
+</li>
+<li>
+<p>
+<a href="modules_handlers_file.html">Static Content</a> - <strong>Static Content</strong>
+</p>
+<div class="paragraph"><p>This is the file handler and it serves files straight from the
+file system.</p></div>
+</li>
+<li>
+<p>
+<a href="modules_handlers_dirlist.html">dirlist</a> - <strong>Only listing</strong>:
+</p>
+<div class="paragraph"><p>Displays a directory content list when a directory is requested,
+but it does not allow to download any content.</p></div>
+</li>
+<li>
+<p>
+<a href="modules_handlers_redir.html">redir</a> - <strong>Redirection</strong>
+</p>
+<div class="paragraph"><p>Perform simple and/or complex redirections using regexes.</p></div>
+</li>
+<li>
+<p>
+<a href="modules_handlers_cgi.html">cgi</a> - <strong>CGI Execution</strong>
+</p>
+<div class="paragraph"><p>Executes CGI programs.</p></div>
+</li>
+<li>
+<p>
+<a href="modules_handlers_fcgi.html">fcgi</a> - <strong>FastCGI Server Support</strong>
+</p>
+<div class="paragraph"><p>Communicates with FastCGI servers.</p></div>
+</li>
+<li>
+<p>
+<a href="modules_handlers_scgi.html">scgi</a> - <strong>SCGI Server Support</strong>
+</p>
+<div class="paragraph"><p>Communicates with SCGI servers.</p></div>
+</li>
+<li>
+<p>
+<a href="modules_handlers_uwsgi.html">uwsgi</a> - <strong>uWSGI Server Support</strong>
+</p>
+<div class="paragraph"><p>Communicates with the uWSGI server.</p></div>
+</li>
+<li>
+<p>
+<a href="modules_handlers_proxy.html">proxy</a> - <strong>HTTP Reverse Proxy</strong>
+</p>
+<div class="paragraph"><p>Advanced proxy services.</p></div>
+</li>
+<li>
+<p>
+<a href="modules_handlers_streaming.html">streaming</a> - <strong>Audio/Video streaming</strong>
+</p>
+<div class="paragraph"><p>Media streaming directly within Cherokee.</p></div>
+</li>
+<li>
+<p>
+<a href="modules_handlers_ssi.html">ssi</a> - <strong>Server Side Includes</strong>
+</p>
+<div class="paragraph"><p>Enables Server Side Includes.</p></div>
+</li>
+<li>
+<p>
+<a href="modules_handlers_secdownload.html">secdownload</a> - <strong>Hidden Downloads</strong>
+</p>
+<div class="paragraph"><p>Creates one-time, secure, time-expiring downloads.</p></div>
+</li>
+<li>
+<p>
+<a href="modules_handlers_dbslayer.html">dbslayer</a> - <strong>MySQL Bridge</strong>
+</p>
+<div class="paragraph"><p>MySQL load-balancing database abstraction layer.</p></div>
+</li>
+<li>
+<p>
+<a href="modules_handlers_custom_error.html">custom_error</a> - <strong>HTTP Error</strong>
+</p>
+<div class="paragraph"><p>Generates customizable HTTP errors.</p></div>
+</li>
+<li>
+<p>
+<a href="modules_handlers_empty_gif.html">empty_gif</a> - <strong>1x1 Transparent GIF</strong>
+</p>
+<div class="paragraph"><p>Returns a 1 pixel transparent image.</p></div>
+</li>
+<li>
+<p>
+<a href="modules_handlers_server_info.html">Server Info</a> - <strong>Server
+  Info</strong>
+</p>
+<div class="paragraph"><p>Provide some configurable information about the server.</p></div>
+</li>
+<li>
+<p>
+<a href="modules_handlers_admin.html">Remote Administration</a> - <strong>Remote
+  Administration</strong>
+</p>
+<div class="paragraph"><p>Implements an administration interface to work with
+<a href="other_bundle_cherokee-tweak.html">cherokee-tweak</a>.</p></div>
+</li>
+</ul></div>
+</div></div>
+<h3 id="transforms">Transforms</h3><div style="clear:left"></div>
+<div class="paragraph"><p>The content sent by Cherokee can be processed before being sent.</p></div>
+<div class="paragraph"><p>Basically, you can apply encoders (or not), and alter HTTP headers by
+adding or removing the ones you choose.</p></div>
+<h4 id="_information_encoders">Information Encoders</h4>
+<div class="paragraph"><p>This tab is used to configure, on a per-rule basis,  what
+<a href="modules_encoders.html">encoders</a>, if any, are to be applied.</p></div>
+<div class="paragraph"><p>You can set up the encoding method to use, and it shall be applied to
+whatever content is handled by the parent rule.</p></div>
+<div class="paragraph"><p>Whenever you set up a virtual server, creating a rule where
+<a href="modules_encoders_gzip.html">gzip</a> is enabled by default for the
+following file types: <tt>html</tt>, <tt>htm</tt>, <tt>txt</tt>, <tt>css</tt> and <tt>js</tt> is a good
+idea. You are encouraged to use this. Hardware is cheap. Bandwidth is
+not.</p></div>
+<h4 id="_header_operations">Header Operations</h4>
+<div class="paragraph"><p>You can specify any given HTTP header and either assign a value or
+delete the header completely.</p></div>
+<h3 id="caching">Caching</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Cherokee allows to define per rule behaviors for content expiration
+and caching.</p></div>
+<h4 id="_content_expiration">Content Expiration</h4>
+<div class="paragraph"><p>This allows to manage the configuration of <strong>HTTP Cache headers</strong> used
+to identify cacheable content.</p></div>
+<div class="paragraph"><p>HTTP/1.1 defines caching methods in HTTP. Cherokee-Admin can
+automatically adjust the <tt>Cache-Control</tt> and <tt>Expire</tt> headers depending
+on the values you have configured. The available options are:</p></div>
+<div class="olist arabic"><ol class="arabic">
+<li>
+<p>
+Not set: Does not write the caching headers.
+</p>
+</li>
+<li>
+<p>
+1970: Corresponds to the Unix Epoch.
+</p>
+</li>
+<li>
+<p>
+2038: Maximum date value representable in POSIX time.
+</p>
+</li>
+<li>
+<p>
+Custom Value: set a value by hand.
+</p>
+</li>
+</ol></div>
+<div class="paragraph"><p>Additionaly, if a content expiration option is set, it is possible to
+specify the way in which an intermediate cache should treat the
+content, for situations such as when the content is requested to
+Cherokee through an HTTP proxy. This is done through the <tt>Management
+by caches</tt> setting, that can be specified to any of the following
+values: <tt>Not set</tt>, <tt>Private</tt>, <tt>Public</tt>, <tt>No Cache</tt>.</p></div>
+<div class="paragraph"><p>If the setting is enabled, four additional parameters can be
+individually turned on and off to fine tune the behavior:</p></div>
+<div class="olist arabic"><ol class="arabic">
+<li>
+<p>
+No Store: Prevents the retention of sensitive information. Caches must not store this content.
+</p>
+</li>
+<li>
+<p>
+No Transform: Forbid intermediate caches from transforming the content.
+</p>
+</li>
+<li>
+<p>
+Must Revalidate: The client must contact the server to revalidate the object.
+</p>
+</li>
+<li>
+<p>
+Proxies Revalidate: Proxy servers must contact the server to revalidate the object.
+</p>
+</li>
+</ol></div>
+<h4 id="_cache">Cache</h4>
+<div class="paragraph"><p>Cherokee has very sophisticated caching mechanisms, allowing to cache
+anything (static files, dynamic content, or whatever) that passes
+by. You can read more into the specifics of this feature in the
+<a href="other_front_line_cache.html">Front-line Cache</a> documentation.</p></div>
+<div class="paragraph"><p>Three settings are available on a per-rule basis for the <tt>Content
+Caching</tt> section: <em>Leave unset</em>, <em>Allow</em> and <em>Forbid</em>.</p></div>
+<div class="paragraph"><p>The <em>Leave unset</em> option means that, whenever a rule is applied, it
+will not change the status of the caching setting that has been
+inherited from previously matched rules.</p></div>
+<div class="paragraph"><p>By default, contents that include cookies are not cached, but the
+setting to allowing cache on a rule gives you the possibility to
+disregard cookies using regular expressions (so that even that content
+can be cached), while a <em>Forbid</em> setting will guarantee that the
+matched rule will not be cached no matter what.</p></div>
+<h3 id="security">Security</h3><div style="clear:left"></div>
+<div class="paragraph"><p>This section will give access to access restriction settings and
+authentication settings.</p></div>
+<h4 id="Logging">Logging</h4>
+<div class="paragraph"><p>Here we can specify whether or not the requests that match this rule
+should be logged. This can be useful in order to tidy up our log
+files, since some rule matches might not provide any relevant logging
+information</p></div>
+<h4 id="restrictions">Access Restrictions</h4>
+<div class="ulist"><ul>
+<li>
+<p>
+Only https::
+  This configuration entry determines that the directory will be
+  served by the secure server (<strong>https</strong>) only.
+  If you access directory /admin -or any sub-directory- through a
+  non-secure connection Cherokee will report a <strong>426 Upgrade Required
+  error</strong>.
+</p>
+</li>
+<li>
+<p>
+Allow From::
+  This parameter lets you set up which IP or IP ranges will be allowed
+  to access the directory contents . The remote client IP will be
+  checked with all the provided list and only if the IP matches with
+  some of the rules the access will be allowed.
+</p>
+<div class="literalblock">
+<div class="content">
+<pre><tt>This field accepts a comma separated list of *Host names*, *IP
+addresses* or *IP ranges*. In the last two cases, both IPv4 and IPv6
+addresses are valid entries.</tt></pre>
+</div></div>
+</li>
+</ul></div>
+<h5 id="examples">Examples</h5>
+<div class="ulist"><ul>
+<li>
+<p>
+Allow access only from the IPv6 localhost address
+</p>
+<div class="listingblock">
+<div class="content">
+<pre><tt>   Allow from ::1</tt></pre>
+</div></div>
+</li>
+<li>
+<p>
+Allow access from the 127.0.0.0/8 network
+</p>
+<div class="listingblock">
+<div class="content">
+<pre><tt>   Allow from 127.0.0.0/8</tt></pre>
+</div></div>
+</li>
+<li>
+<p>
+or it could also we written like
+</p>
+<div class="listingblock">
+<div class="content">
+<pre><tt>   Allow from 127.0.0.0/255.0.0.0</tt></pre>
+</div></div>
+</li>
+<li>
+<p>
+It is also possible to use lists instead of a single IP or network
+range. And there is even the possibility of mixing IPv4 and IPv6
+addresses and networks if you want
+</p>
+<div class="listingblock">
+<div class="content">
+<pre><tt>    Allow from 192.168.0.0/16, ::1, 10.0.0.1, 3ffe:3200::/24</tt></pre>
+</div></div>
+</li>
+</ul></div>
+<h4 id="authentication">Authentication</h4>
+<div class="paragraph"><p>This parameter allows to configure user/password protected entries. A
+validator has to be used in each Auth entry in order to specify the
+validation mechanism. The following <tt>validators</tt> are available:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+<a href="modules_validators_plain.html">plain</a> - <strong>Plain text file</strong>
+</p>
+<div class="paragraph"><p>Uses a plain flat file to perform HTTP authentication.</p></div>
+</li>
+<li>
+<p>
+<a href="modules_validators_htpasswd.html">htpasswd</a> - <strong>Htpasswd file</strong>
+</p>
+<div class="paragraph"><p>Uses an htpasswd file to perform HTTP authentication.</p></div>
+</li>
+<li>
+<p>
+<a href="modules_validators_htdigest.html">htdigest</a> - <strong>Htdigest file</strong>
+</p>
+<div class="paragraph"><p>Uses an htdigest-generated file to perform HTTP authentication.</p></div>
+</li>
+<li>
+<p>
+<a href="modules_validators_ldap.html">ldap</a> - <strong>LDAP server</strong>
+</p>
+<div class="paragraph"><p>Uses an LDAP directory to perform HTTP authentication.</p></div>
+</li>
+<li>
+<p>
+<a href="modules_validators_mysql.html">mysql</a> - <strong>MySQL server</strong>
+</p>
+<div class="paragraph"><p>Uses a MySQL database to perform HTTP authentication.</p></div>
+</li>
+<li>
+<p>
+<a href="modules_validators_pam.html">PAM</a> - <strong>PAM Authentication</strong>
+</p>
+<div class="paragraph"><p>Uses PAM to perform HTTP authentication.</p></div>
+</li>
+<li>
+<p>
+<a href="modules_validators_authlist.html">Fixed list</a> - <strong> Authentication lists</strong>
+</p>
+<div class="paragraph"><p>Uses lists of users and passwords to perform HTTP authentication.</p></div>
+</li>
+</ul></div>
+<div class="paragraph"><p>It is important to take into consideration that there are two different
+authentication mechanisms:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+Basic
+</p>
+</li>
+<li>
+<p>
+Digest
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>Some <a href="modules_validators.html">validators</a> can only handle one of
+those mechanisms because of technical  limitations. In case the module supports
+both of them, the interface allows to choose whether one or both are
+to be used.</p></div>
+<h3 id="restrictions">Restriction</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Both connection timeouts and bandwidth limits can be enforced through
+this tab.</p></div>
+<h4 id="_connections_timeout">Connections Timeout</h4>
+<div class="paragraph"><p>This allows to apply a custom timeout to any connection matching the
+given rule.</p></div>
+<h4 id="_traffic_shaping">Traffic Shaping</h4>
+<div class="paragraph"><p>In order to limit the amount of traffic used for a specific rule you can set
+up a traffic shaper. By default no traffic shaping will occur, all possible
+network resources are used to facilitate the clients.</p></div>
+<div class="paragraph"><p>This parameter will not act globally, but per outgoing connection. Hence,
+20 clients limited to 1kB/s will give 20kB/s as total outbound traffic.
+To limit the amount of traffic a value in Bytes per second should be entered.</p></div>
+</div>
+<div id="footer">
+<div id="footer-text">
+</div>
+</div>
+</div>
