@@ -1,0 +1,188 @@
+---
+layout: documentation
+title: Man pages  cherokee | Cherokee Documentation
+---
+<div id="main_area"><h1>Documentation</h1>
+
+<div class="sectionbody">
+</div>
+<h2 id="_man_pages_cherokee">Man pages: cherokee</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>This command-line tool is the main Cherokee executable. It is used as
+a safety net to invoke <tt>cherokee-worker</tt> and to ensure it is always
+functioning. It also plays an important role in the
+<a href="other_goodies.html#zero-downtime">zero-downtime</a> mechanism
+implemented to allow graceful restarts of the server.</p></div>
+<div class="paragraph"><p>This is the full information provided by the manpage.</p></div>
+<div class="sidebarblock">
+<div class="sidebar-content">
+<div class="dlist"><dl>
+<dt class="hdlist1">
+<strong>NAME</strong>
+</dt>
+<dd>
+<p>
+       cherokee - Cherokee Web Server
+</p>
+</dd>
+<dt class="hdlist1">
+<strong>SYNOPSIS</strong>
+</dt>
+<dd>
+<p>
+       cherokee [options]
+</p>
+</dd>
+<dt class="hdlist1">
+<strong>DESCRIPTION</strong>
+</dt>
+<dd>
+<p>
+<tt>cherokee</tt> is an extremely fast, flexible and embeddable web server.
+</p>
+</dd>
+<dt class="hdlist1">
+<strong>OPTIONS</strong>
+</dt>
+<dd>
+<p>
+       This command will launch the Cherokee webserver. It accepts the following options:
+</p>
+<div class="dlist"><dl>
+<dt class="hdlist1">
+-h, --help
+</dt>
+<dd>
+<p>
+               Prints a brief help message and terminates execution
+</p>
+</dd>
+<dt class="hdlist1">
+-V, --version
+</dt>
+<dd>
+<p>
+               Prints Cherokee’s version and terminates execution
+</p>
+</dd>
+<dt class="hdlist1">
+-t, --test
+</dt>
+<dd>
+<p>
+               Perform a sanity check on the configuration file. The server will not run.
+</p>
+</dd>
+<dt class="hdlist1">
+-d, --detach
+</dt>
+<dd>
+<p>
+               Launches the server as a background process (default behaviour is to stay attached to the controlling terminal).
+</p>
+</dd>
+<dt class="hdlist1">
+-C&lt;PATH&gt;, --config=&lt;PATH&gt;
+</dt>
+<dd>
+<p>
+               Specifies an alternative path for the configuration file to use instead of the default cherokee.conf
+</p>
+</dd>
+<dt class="hdlist1">
+-p&lt;PORT&gt;, --port=&lt;PORT&gt;
+</dt>
+<dd>
+<p>
+               TCP port number to which the server will listen.
+</p>
+</dd>
+<dt class="hdlist1">
+-r&lt;PATH&gt;, --documentroot=&lt;PATH&gt;
+</dt>
+<dd>
+<p>
+               Launches a server exposing statically the specified directory. When launched with -r, the configuration file is ignored, and the Cherokee instance runs with its default values.
+</p>
+</dd>
+<dt class="hdlist1">
+-i, --print-server-info
+</dt>
+<dd>
+<p>
+               Print server technical information.
+</p>
+</dd>
+<dt class="hdlist1">
+-v, --valgrind
+</dt>
+<dd>
+<p>
+               Execute the worker process under Valgrind. Used only for development and troubleshooting purposes.
+</p>
+</dd>
+</dl></div>
+</dd>
+<dt class="hdlist1">
+<strong>SIGNALS</strong>
+</dt>
+<dd>
+<p>
+       The following signals are supported by Cherokee:
+</p>
+<div class="dlist"><dl>
+<dt class="hdlist1">
+SIGHUP
+</dt>
+<dd>
+<p>
+Restarts the server gracefully
+</p>
+</dd>
+<dt class="hdlist1">
+SIGUSR1
+</dt>
+<dd>
+<p>
+Restarts the server closing all the opened connections
+</p>
+</dd>
+<dt class="hdlist1">
+SIGUSR2
+</dt>
+<dd>
+<p>
+Reopens the log files
+</p>
+</dd>
+<dt class="hdlist1">
+SIGTERM
+</dt>
+<dd>
+<p>
+Exits
+</p>
+</dd>
+</dl></div>
+</dd>
+<dt class="hdlist1">
+<strong>SEE ALSO</strong>
+</dt>
+<dd>
+<p>
+       Cherokee can be run either with this command or
+       <tt>cherokee-worker</tt>.  This last option is discouraged if you are
+       not developing though.  Note that, for most systems, a
+       startup/shutdown script such as /etc/init.d/cherokee is
+       provided and will probably be the most convenient invocation
+       method.
+</p>
+</dd>
+</dl></div>
+</div></div>
+</div>
+<div id="footer">
+<div id="footer-text">
+</div>
+</div>
+</div>

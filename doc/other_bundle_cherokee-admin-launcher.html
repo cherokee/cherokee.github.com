@@ -1,0 +1,58 @@
+---
+layout: documentation
+title: Man pages  cherokee-admin-launcher | Cherokee Documentation
+---
+<div id="main_area"><h1>Documentation</h1>
+
+<div class="sectionbody">
+</div>
+<h2 id="_man_pages_cherokee_admin_launcher">Man pages: cherokee-admin-launcher</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>This is a launcher for the administration user interface,
+<a href="other_bundle_cherokee-admin.html">cherokee-admin</a>. It will check
+for port availability, launch <tt>cherokee-admin</tt>, and automatically open
+a web browser to access it.  Since it is a wrapper, it accepts exactly
+the same parameters, but provides several extra features that makes
+this the most convenient way of using <tt>cherokee-admin</tt>.</p></div>
+<div class="paragraph"><p>This tools is intended for local use, and is the natural action to
+associate with a launch icon to conviniently deploy <tt>cherokee-admin</tt>
+from within any desktop environment. Since this is the intended use,
+it will automatically provide the one-time login details to the web
+browser, removing the need to copy and paste the user and password. Of
+course this step is not necessary when invoked with the
+<tt>--unsecure</tt> parameter, but this is not recommended except for
+development purposes.</p></div>
+<div class="paragraph"><p>Refer to the <a href="other_bundle_cherokee-admin.html">cherokee-admin
+documentation</a> for more in-depth explanations of all the parameters
+and options.</p></div>
+<div class="dlist"><dl>
+<dt class="hdlist1">
+<strong>SIGNALS</strong>
+</dt>
+<dd>
+<p>
+       You can send the SIGHUP signal to cherokee-admin-launcher to
+       make it relaunch a web browser conviniently authenticated
+       agains cherokee-admin. This is useful in case you closed the
+       web browser and wished to access cherokee-admin again without
+       restarting it, since manual access would require you to provide
+       the one-time login details that you wouldn’t have.
+</p>
+</dd>
+</dl></div>
+<div class="listingblock">
+<div class="title">Command on Solaris</div>
+<div class="content">
+<pre><tt># pkill -HUP cherokee-admin-launcher</tt></pre>
+</div></div>
+<div class="listingblock">
+<div class="title">Command on most Unix-like systems</div>
+<div class="content">
+<pre><tt># killall -HUP cherokee-admin-launcher</tt></pre>
+</div></div>
+</div>
+<div id="footer">
+<div id="footer-text">
+</div>
+</div>
+</div>

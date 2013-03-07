@@ -1,0 +1,53 @@
+---
+layout: documentation
+title: Other  Signals | Cherokee Documentation
+---
+<div id="main_area"><h1>Documentation</h1>
+
+<div class="sectionbody">
+</div>
+<h2 id="_other_signals">Other: Signals</h2>
+<div class="sectionbody">
+<div class="paragraph"><p><a href="other_bundle_cherokee-admin.html">Cherokee-Admin</a> is all you need to
+interact with Cherokee. However, should you want to tap directly into
+the underlying communication mechanism you would need to send the
+supported signals to the  <a href="other_bundle_cherokee.html">cherokee</a> process.</p></div>
+<div class="paragraph"><p>If needed it will relay the appropriate signals to any
+<a href="other_bundle_cherokee-worker.html">cherokee-worker</a> instances.</p></div>
+<div class="paragraph"><p>The following signals are supported by Cherokee:</p></div>
+<div class="tableblock">
+<table cellpadding="4" cellspacing="0" frame="border" rules="all" width="100%">
+<col width="20%"></col>
+<col width="80%"></col>
+<thead>
+<tr>
+<th align="left" valign="top">Parameters </th>
+<th align="left" valign="top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left" valign="top"><p class="table">SIGHUP</p></td>
+<td align="left" valign="top"><p class="table">Restarts the server gracefully</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">SIGUSR1</p></td>
+<td align="left" valign="top"><p class="table">Restarts the server closing all the opened connections</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">SIGUSR2</p></td>
+<td align="left" valign="top"><p class="table">Reopens the log files</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">SIGTERM</p></td>
+<td align="left" valign="top"><p class="table">Exits</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="footer">
+<div id="footer-text">
+</div>
+</div>
+</div>

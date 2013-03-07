@@ -1,0 +1,84 @@
+---
+layout: documentation
+title: Man pages  cherokee-worker | Cherokee Documentation
+---
+<div id="main_area"><h1>Documentation</h1>
+
+<div class="sectionbody">
+</div>
+<h2 id="_man_pages_cherokee_worker">Man pages: cherokee-worker</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>This executable is meant to be invoked only by the main
+<a href="other_bundle_cherokee.html">cherokee</a> instance. Executing it directly is
+a discouraged practice.</p></div>
+<div class="paragraph"><p>This is the full information provided by the manpage:</p></div>
+<div class="sidebarblock">
+<div class="sidebar-content">
+<div class="dlist"><dl>
+<dt class="hdlist1">
+<strong>NAME</strong>
+</dt>
+<dd>
+<p>
+<tt>cherokee-worker</tt> - Cherokee Web Server internal worker
+</p>
+</dd>
+<dt class="hdlist1">
+<strong>SYNOPSIS</strong>
+</dt>
+<dd>
+<p>
+<tt>cherokee-worker</tt> [options]
+</p>
+</dd>
+<dt class="hdlist1">
+<strong>DESCRIPTION</strong>
+</dt>
+<dd>
+<p>
+<tt>cherokee-worker</tt>  is a part of Cherokee, an extremely fast, flexible and
+       embeddable web server. This executable is meant to be invoked  only  by
+       <tt>cherokee</tt>. Executing it directly is a discouraged practice.
+</p>
+</dd>
+<dt class="hdlist1">
+<strong>DEVELOPMENT</strong>
+</dt>
+<dd>
+<p>
+       This  binary implements the Cherokee Web Server functionality, although
+       it misses a few security features implemented on the main executable,
+       <tt>cherokee</tt>.
+       Executing it alone could be only useful for debugging purposes.
+</p>
+</dd>
+</dl></div>
+</div></div>
+<div class="paragraph"><p>It can be launched in several ways as shown in the section
+<a href="basics_running_cherokee.html">Running Cherokee</a>. Unless specified
+otherwise, <tt>cherokee-worker</tt> will try to run with the configuration
+present in your default <a href="dev_cherokee.conf.html">cherokee.conf</a>
+file. The accepted parameters are those of the
+<a href="other_bundle_cherokee.html">cherokee</a> binary.</p></div>
+<div class="paragraph"><p>To illustrate the usefulness of such options take the following
+example:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>$ cherokee-worker -p 8080 -r `pwd`</tt></pre>
+</div></div>
+<div class="paragraph"><p>Since both absolute and relative paths are accepted, it is equivalent to:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>$ cherokee-worker -p 8080 -r .</tt></pre>
+</div></div>
+<div class="paragraph"><p>This would allow any non-privileged user to statically share the
+contents of the current directory. It’s a great way to share files in a
+local network whenever you are in a hurry. Remember that in Unix
+systems only processes launched by the superuser have privileges to
+be hooked to the lower 1024 ports of the system.</p></div>
+</div>
+<div id="footer">
+<div id="footer-text">
+</div>
+</div>
+</div>

@@ -1,0 +1,150 @@
+---
+layout: documentation
+title: Man pages  cget | Cherokee Documentation
+---
+<div id="main_area"><h1>Documentation</h1>
+
+<div class="sectionbody">
+</div>
+<h2 id="_man_pages_cget">Man pages: cget</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>This is an accessory tool developed for testing purposes of the
+capabilities of Cherokee in the early releases. Over the time new
+functionalities were included and now it can be a really handy
+tool. You might find it useful for your own scripts, especially for
+its ability to read and write HTTP headers.</p></div>
+<div class="paragraph"><p>It can handle both HTTP and HTTPS requests.</p></div>
+<div class="paragraph"><p>This is the full information provided by the manpage:</p></div>
+<div class="sidebarblock">
+<div class="sidebar-content">
+<div class="dlist"><dl>
+<dt class="hdlist1">
+<strong>NAME</strong>
+</dt>
+<dd>
+<p>
+<tt>cget</tt> - Cherokee web downloader
+</p>
+</dd>
+<dt class="hdlist1">
+<strong>SYNOPSIS</strong>
+</dt>
+<dd>
+<p>
+<tt>cget</tt> [options] URL
+</p>
+</dd>
+<dt class="hdlist1">
+<strong>DESCRIPTION</strong>
+</dt>
+<dd>
+<p>
+<tt>cget</tt> is a web downloading tool
+</p>
+</dd>
+<dt class="hdlist1">
+<strong>OPTIONS</strong>
+</dt>
+<dd>
+<p>
+       No  option is mandatory. By default the web is downloaded but it is not
+       saved.  If that is not  the  desired  behavior  it  must  be  specified
+       explicitly.  Below is a summary of the cget options.
+</p>
+<div class="ulist"><ul>
+<li>
+<p>
+<strong>Startup</strong>
+</p>
+<div class="dlist"><dl>
+<dt class="hdlist1">
+-V, --version
+</dt>
+<dd>
+<p>
+              Display version of currently installed cget and exit.
+</p>
+</dd>
+<dt class="hdlist1">
+-h, --help
+</dt>
+<dd>
+<p>
+              Display help screen with common options.
+</p>
+</dd>
+</dl></div>
+</li>
+<li>
+<p>
+<strong>Logging and input file</strong>
+</p>
+<div class="dlist"><dl>
+<dt class="hdlist1">
+-q, --quiet
+</dt>
+<dd>
+<p>
+              Run in quiet mode: no output is displayed.
+</p>
+</dd>
+</dl></div>
+</li>
+<li>
+<p>
+<strong>Download</strong>
+</p>
+<div class="dlist"><dl>
+<dt class="hdlist1">
+-O, --output-document=FILE
+</dt>
+<dd>
+<p>
+              Writes whatever document is downloaded to FILE
+</p>
+</dd>
+</dl></div>
+</li>
+<li>
+<p>
+<strong>HTTP options</strong>
+</p>
+<div class="dlist"><dl>
+<dt class="hdlist1">
+-s, --save-headers
+</dt>
+<dd>
+<p>
+              This  option  saves HTTP headers to the file being saved (speci‐
+              fied with -O option)
+</p>
+</dd>
+<dt class="hdlist1">
+--header=STRING
+</dt>
+<dd>
+<p>
+              this option inserts STRING among the headers sent  in  the  HTTP
+              request.
+</p>
+</dd>
+</dl></div>
+</li>
+</ul></div>
+</dd>
+<dt class="hdlist1">
+<strong>EXAMPLE</strong>
+</dt>
+<dd>
+<p>
+       cget <a href="../index.html">http://www.cherokee-project.com/</a>
+</p>
+</dd>
+</dl></div>
+</div></div>
+</div>
+<div id="footer">
+<div id="footer-text">
+</div>
+</div>
+</div>

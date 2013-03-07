@@ -1,0 +1,194 @@
+---
+layout: documentation
+title: Other  Frequently Asked Questions | Cherokee Documentation
+---
+<div id="main_area"><h1>Documentation</h1>
+
+<div class="sectionbody">
+</div>
+<h2 id="_other_frequently_asked_questions">Other: Frequently Asked Questions</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Here is a list of the most frequently asked questions. Please refer to
+the appropriate section of the documentation for more details.</p></div>
+<h3 id="faq01">How to compile it</h3><div style="clear:left"></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>./configure --prefix=/usr --sysconfdir=/etc --localstatedir=/var
+make</tt></pre>
+</div></div>
+<h3 id="faq02">How to create dynamic modules</h3><div style="clear:left"></div>
+<div class="paragraph"><p>It’s the default way.</p></div>
+<h3 id="faq03">How to configure the module xyz to be linked statically</h3><div style="clear:left"></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>./configure --prefix=/usr --sysconfdir=/etc \
+  --localstatedir=/var                      \
+  --enable-static-module=xyz</tt></pre>
+</div></div>
+<h3 id="faq04">How to build everything statically</h3><div style="clear:left"></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>./configure --prefix=/usr --sysconfdir=/etc \
+  --localstatedir=/var                      \
+  --enable-static-module=all</tt></pre>
+</div></div>
+<h3 id="faq05">How to create a self signed certificate for TLS</h3><div style="clear:left"></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>openssl req -days 1000 -new -x509 -nodes    \
+  -out /etc/cherokee/ssl/cherokee.pem       \
+  -keyout /etc/cherokee/ssl/cherokee.pem</tt></pre>
+</div></div>
+<h3 id="faq06">How to access cherokee-admin from a remote machine</h3><div style="clear:left"></div>
+<div class="paragraph"><p>cherokee-admin binds only to local loopback by default. There are some
+workarounds:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+Create an SSH tunnel. This is the recommended way. In order to do so
+  you must issue the following command:
+</p>
+<div class="listingblock">
+<div class="content">
+<pre><tt>ssh -L 9090:localhost:9090 remote_IP</tt></pre>
+</div></div>
+<div class="paragraph"><p>After that you can access the remote interface through
+  <a href="http://localhost:9090">http://localhost:9090</a> and every request will be forwarded to the
+  remote IP running cherokee-admin.</p></div>
+</li>
+<li>
+<p>
+Launch cherokee-admin with the -b parameter in order to force it to
+  listen to all the network interfaces.
+</p>
+</li>
+<li>
+<p>
+Finally you could always install cherokee on your local host,
+  configure it there and then copy the generated cherokee.conf file to
+  the device running the cherokee instance you wanted to set up.
+</p>
+</li>
+</ul></div>
+<h3 id="faq07">How to manually write configuration files without cherokee-admin</h3><div style="clear:left"></div>
+<div class="paragraph"><p>The configuration file is a plain text file and its syntax is well
+documented. Check the <a href="dev_cherokee.conf.html">cherokee.conf</a>
+internal format information. Notice that manually editing the
+configuration is not the recommended method, but the format will
+always be kept updated to facilitate scripting tasks, working with
+embedded devices and other similar situations.</p></div>
+<h3 id="faq08">Does Cherokee speak WSGI natively like <tt>mod_wsgi</tt> does?</h3><div style="clear:left"></div>
+<div class="paragraph"><p>In short: not like <tt>mod_wsgi</tt> at all. There is native support for the
+<a href="http://projects.unbit.it/uwsgi/">uWSGI server</a>, which is a fast
+(pure C), self-healing, developer-friendly WSGI server aimed for
+professional python webapps deployment and development. Cherokee also
+provides a wizard to adjust its settings to those defined in the uWSGI
+configuration file of your project.</p></div>
+<h3 id="faq09">I need to make an administration script: What signals are supported by Cherokee?</h3><div style="clear:left"></div>
+<div class="paragraph"><p>The list is documented in the <a href="other_signals.html">Signals</a> entry.</p></div>
+<h3 id="faq10">Is there a clean way of switching Cherokee to Maintenance mode?</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Check the <a href="cookbook.html">Cookbook</a>, there is a
+<a href="cookbook_maintenance.html">recipe on the subject</a>.</p></div>
+<h3 id="faq11">What licensing is used by the Cherokee web server?</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Cherokee is licensed under the GNU General Public License, version 2,
+which can be found in the file <strong>COPYING</strong> distributed with the source
+code. For more details, read the
+<a href="http://svn.cherokee-project.com/browser/cherokee/trunk/COPYING">full
+license</a> in the project’s SVN repository.</p></div>
+<div class="paragraph"><p>If for whatever reason this license does not suit your needs, other
+licensing schemes can be negotiated on a particular basis. Contact
+<a href="http://www.octality.com/">Octality</a> if this is your case.</p></div>
+<h3 id="faq12">And what about the documentation?</h3><div style="clear:left"></div>
+<div class="paragraph"><p>The documentation is distributed under a
+<a href="http://creativecommons.org/licenses/by/3.0/">Creative Commons
+Attribution (by)</a> license, which is the most accommodating in terms of
+what others can do with it. It lets others distribute, remix, tweak,
+and build upon the work, even commercially.</p></div>
+<h3 id="faq13">How can I contribute contents to the documentation?</h3><div style="clear:left"></div>
+<div class="paragraph"><p>The documentation is written and maintained using
+<a href="http://www.methods.co.nz/asciidoc/">AsciiDoc</a>, a text document
+format for writing short documents, articles, books and UNIX man pages
+that can be easily translated to HTML and DocBook markups. It is
+really easy to get the hang of it, so if you want to contribute,
+please take a look at the
+<a href="http://powerman.name/doc/asciidoc">AsciiDoc Cheatsheet</a> and start
+editing the documentation sources right ahead. They are distributed
+with the source code and are located under <tt>./doc</tt> of the source tree.
+If you don’t have SVN access, simply mail your contributions to
+<a href="mailto:feedback@cherokee-project.com">feedback@cherokee-project.com</a>.</p></div>
+<h3 id="faq14">Can encoders be set for specific file types?</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Yes. Since content encoding is set on a per-rule basis, simply add a
+rule at the beginning of the virtual server that matches the specific
+file extensions and has the encoding enabled. Set the rule to be
+non-final. That should do the trick.</p></div>
+<h3 id="faq15">I can’t set TLS/SSL in Cherokee-Admin. There’s no TLS/SSL (and nothing in the pulldown) for me.</h3><div style="clear:left"></div>
+<div class="paragraph"><p>First, make sure openssl in installed. If you are not installing from
+source, most likely you’ve missed installing libcherokee-mod-libssl</p></div>
+<h3 id="faq16">Can I use an old configuration file with a new Cherokee release?</h3><div style="clear:left"></div>
+<div class="paragraph"><p>The answer is yes. Please refer to the
+<a href="basics_upgrade.html">Upgrading Cherokee</a> section of the
+documentation.</p></div>
+<h3 id="faq17">I’m using *BSD and can’t compile Cherokee. What’s wrong?</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Make sure you are building it with <tt>gmake</tt>.</p></div>
+<h3 id="faq18">Why do I keep getting HTTP Error 400 while uploading files to a PHP back-end?</h3><div style="clear:left"></div>
+<div class="paragraph"><p>PHP is configured by default to limit the size of uploaded
+files. Check the <a href="cookbook_php.html#upload_limits">PHP upload
+limits</a> note to tweak the appropriate settings.</p></div>
+<h3 id="faq19">Why are my nicknames not matched, while *.example.com does work?</h3><div style="clear:left"></div>
+<div class="paragraph"><p>The Cherokee Virtual Server nickname is not the first thing that is
+evaluated. In fact all the Host Matches are first evaluated from top
+to bottom, then the nicknames from top to bottom, and on last resort:
+Default.</p></div>
+<div class="paragraph"><p>For example: a virtual server (<tt>A</tt>) with the nickname test.example.com, and
+a second virtual server (<tt>B</tt>) with a hostmatch .*\.example.com. In this
+example, the virtual server <tt>B</tt> will be matched first.</p></div>
+<div class="paragraph"><p>If you are specifically looking for the virtual server <tt>A</tt> to be
+matched first, you will have rely on it being matched by <tt>Host Match</tt>
+instead of by nickname.</p></div>
+<div class="ulist"><div class="title">Solution</div><ul>
+<li>
+<p>
+Virtual Server A RegEx: ^test.example.com$
+</p>
+</li>
+<li>
+<p>
+Virtual Server B RegEx: .*\.example.com$
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>Carefully read the way in which
+<a href="config_virtual_servers.html#domain_names">host matches</a> are
+performed if you still need further clarification.</p></div>
+<h3 id="faq20">SSLv2 is ancient, OpenSSL 1.0.0+ doesn’t like it, how can I disable it?</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Within cherokee-admin, in the Advanced Menu, you can find the option
+to enable/disable SSLv2 all together. It is disabled by default. No
+need to resort to special ciphers such
+(<tt>ALL:!ADH:-LOW:-SSLv2:-EXP:-eNULL:@STRENGTH</tt>), or anythingh else for
+that matter. If you need it, simply enable the check-box to allow
+SSLv2.</p></div>
+<h3 id="faq21">I’m used to Apache’s .htaccess. Will Cherokee ever support it?</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Short answer: No. Cherokee is designed to be efficient. Using
+.htaccess is not: it’s not a scalable architecture at all, it’s
+horrible for performance, you can’t use it with Cherokee, and even if
+you could, you shouldn’t. If you need .htaccess, you’re probably doing
+it wrong. For .htaccess to work, Apache has to check <strong>every</strong> directory
+in the requested path for the existence of a .htaccess file, and if
+present, read and parse <strong>every</strong> one of them. This happens for <strong>every</strong>
+request. Sure, changes in .htaccess are effective instantly, but
+that’s because Apache has to read and process the files every time. As
+the requests dig deeper into the directory tree, the associated
+overhead of stats an reads grows. And it is not negligible at all: an
+increase in anything from 5 to 50 is usual for very typical
+configurations.</p></div>
+<div class="paragraph"><p>Yes, the use of .htaccess is very extended. Yes, it has been around
+for a while. No, that doesn’t mean it is a good architecture. There
+are better ways of doing things. Converting the behavior of a
+.htaccess file to an efficient set of rules for Cherokee is not
+complicated.</p></div>
+</div>
+<div id="footer">
+<div id="footer-text">
+</div>
+</div>
+</div>

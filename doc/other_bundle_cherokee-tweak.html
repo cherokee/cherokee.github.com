@@ -1,0 +1,230 @@
+---
+layout: documentation
+title: Man pages  cherokee-tweak | Cherokee Documentation
+---
+<div id="main_area"><h1>Documentation</h1>
+
+<div class="sectionbody">
+</div>
+<h2 id="_man_pages_cherokee_tweak">Man pages: cherokee-tweak</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>This command-line tool is also not as well known as it should. Again
+this is not by lack of merits, which in fact are considerable. Its
+intended audience are also system administrators and developers.</p></div>
+<div class="paragraph"><p><tt>cherokee-tweak</tt> is a swiss army knife that allows to perform several
+administrative tasks from the command line. It can connect to a
+running Cherokee instance, be it in the local computer or at a remote
+location, and request it to perform several actions.</p></div>
+<div class="paragraph"><p>These actions are:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+Log rotation: <tt>logrotate</tt>.
+</p>
+</li>
+<li>
+<p>
+Live tracing: <tt>trace</tt>.
+</p>
+</li>
+<li>
+<p>
+Provide information: <tt>info</tt>.
+</p>
+</li>
+<li>
+<p>
+Report the list of Information Sources of a running server and
+    their individual statuses.
+</p>
+</li>
+<li>
+<p>
+Kill remotely any information source.
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>This is the full information provided by the manpage.</p></div>
+<div class="sidebarblock">
+<div class="sidebar-content">
+<div class="dlist"><dl>
+<dt class="hdlist1">
+<strong>NAME</strong>
+</dt>
+<dd>
+<p>
+       cherokee-tweak  - Command-line interface to the administration interface of Cherokee
+</p>
+</dd>
+<dt class="hdlist1">
+<strong>SYNOPSIS</strong>
+</dt>
+<dd>
+<p>
+       cherokee-tweak [options] URL info
+       cherokee-tweak [options] URL sources
+       cherokee-tweak [options] URL kill-source ID
+       cherokee-tweak [options] URL logrotate   PATH
+       cherokee-tweak [options] URL trace       TRACE
+</p>
+</dd>
+<dt class="hdlist1">
+<strong>DESCRIPTION</strong>
+</dt>
+<dd>
+<p>
+       cherokee-tweak connects to a running cherokee instance, either  local  or
+       remote, and requests it to perform one of several actions.
+</p>
+</dd>
+<dt class="hdlist1">
+<strong>COMMANDS</strong>
+</dt>
+<dd>
+<div class="dlist"><dl>
+<dt class="hdlist1">
+info
+</dt>
+<dd>
+<p>
+               Prints info about the server status
+</p>
+</dd>
+<dt class="hdlist1">
+sources
+</dt>
+<dd>
+<p>
+               Prints a list of the information sources
+</p>
+</dd>
+<dt class="hdlist1">
+kill-source
+</dt>
+<dd>
+<p>
+               Kill a remote information source, specified by its reported ID
+</p>
+</dd>
+<dt class="hdlist1">
+logrotate
+</dt>
+<dd>
+<p>
+               Rotates a local (<strong>and only local</strong>) log file specified by PATH.
+</p>
+</dd>
+<dt class="hdlist1">
+trace
+</dt>
+<dd>
+<p>
+               Manipulates the tracing mechanism. TRACE should be the
+               string that specifies the modules to be traced, and
+               Cherokee must have been compiled with the
+               --enable-trace option for this to work. Everything
+               traceable with CHEROKEE_TRACE can also be traced this
+               way.
+</p>
+</dd>
+</dl></div>
+</dd>
+<dt class="hdlist1">
+<strong>PARAMETERS</strong>
+</dt>
+<dd>
+<div class="dlist"><dl>
+<dt class="hdlist1">
+URL
+</dt>
+<dd>
+<p>
+               Required before any command. This is the URL where the
+               administrative interface can be found.  This target
+               must be defined previously in cherokee-admin, enabling
+               a "Remote Administration" type handler (Virtual
+               Servers→Behavior→Rule Management→Add new rule, and
+               then Handler→"Remote Administration").  The definition
+               of a security mechanism is highly encouraged.
+</p>
+</dd>
+<dt class="hdlist1">
+-h,  --help
+</dt>
+<dd>
+<p>
+               Shows brief usage information
+</p>
+</dd>
+<dt class="hdlist1">
+-V,  --version
+</dt>
+<dd>
+<p>
+               Print version and exit
+</p>
+</dd>
+</dl></div>
+</dd>
+<dt class="hdlist1">
+<strong>OPTIONS</strong>
+</dt>
+<dd>
+<p>
+       cherokee-tweak accepts the following options:
+</p>
+<div class="dlist"><dl>
+<dt class="hdlist1">
+-u,  --user=STRING
+</dt>
+<dd>
+<p>
+               Specifies the user name with which to identify to the server
+</p>
+</dd>
+<dt class="hdlist1">
+-p,  --password=STRING
+</dt>
+<dd>
+<p>
+               Specifies the password with which to identify to the server
+</p>
+</dd>
+</dl></div>
+</dd>
+</dl></div>
+</div></div>
+<div class="paragraph"><p>To use <tt>cherokee-tweak</tt>, an administrative interface must be defined
+within <a href="other_bundle_cherokee-admin.html">cherokee-admin</a>. That is, you
+must define a path managed by the handler <tt>Remote
+Administration</tt>. This can be done through the <em>Virtual Servers</em> option,
+in <em>Behavior</em> and using the <em>Add new rule</em> option.</p></div>
+<div class="imageblock">
+<div class="content">
+<img alt="media/images/admin_handler_admin.png" src="media/images/admin_handler_admin.png"/>
+</div>
+</div>
+<div class="paragraph"><p>Please note that while you are at it, the definition of a security
+(through the <em>Security</em> tab) is highly encouraged. Although you have
+the choice to, you should never use <em>None</em> as security mechanism
+since this would leave your system exposed to third parties using
+<tt>cherokee-tweak</tt>.</p></div>
+<div class="paragraph"><p>Also note that the usage of the <tt>trace</tt> command has no effect unless
+Cherokee is compiled with the <tt>--enable-trace</tt>. This is a debugging
+option and it is unlikely to be present in binary version of Cherokee
+not specifically compiled with this in mind.</p></div>
+<div class="paragraph"><p>Every module traceable with CHEROKEE_TRACE can also be traced this
+way. Refer to the <a href="dev_debug.html">"Debugging"</a> section of the
+documentation for more information on this matter.</p></div>
+<div class="paragraph"><p>Keep in mind one important thing: when the <tt>trace</tt> command is
+specified, <tt>cherokee-tweak</tt> activates the tracing functionality within
+the <tt>cherokee</tt> instance. It does not provide tracing of its own. This
+means the debugging information will appear in the machine that is
+actually running the <tt>cherokee</tt> instance. This may or may not be the
+same that is running the <tt>cherokee-tweak</tt> process.</p></div>
+</div>
+<div id="footer">
+<div id="footer-text">
+</div>
+</div>
+</div>
