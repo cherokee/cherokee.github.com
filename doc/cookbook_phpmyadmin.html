@@ -1,0 +1,178 @@
+---
+layout: documentation
+title: Cookbook  Setting up phpMyAdmin | Cherokee Documentation
+---
+<div id="main_area"><h1>Documentation</h1>
+
+<div class="sectionbody">
+</div>
+<h2 id="_cookbook_setting_up_phpmyadmin">Cookbook: Setting up phpMyAdmin</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Setting up <a href="http://www.phpmyadmin.net">phpMyAdmin</a> to work with
+Cherokee is trivial, as Cherokee already provides everything that is
+needed to work.</p></div>
+<div class="paragraph"><p>According to phpMyAdmin’s documentation, the software requirements
+are just:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+PHP:
+</p>
+<div class="ulist"><ul>
+<li>
+<p>
+You need PHP 5.2.0 or newer, with session support and the
+      Standard PHP Library (SPL) extension.
+</p>
+</li>
+<li>
+<p>
+To support uploading of ZIP files, you need the PHP zip
+      extension.
+</p>
+</li>
+<li>
+<p>
+For proper support of multibyte strings (eg. UTF-8, which is
+      currently default), you should install mbstring and ctype
+      extensions.
+</p>
+</li>
+<li>
+<p>
+You need GD2 support in PHP to display inline thumbnails of
+      JPEGs ("image/jpeg: inline") with their original aspect ratio
+</p>
+</li>
+<li>
+<p>
+When using the "cookie" authentication method, the mcrypt
+      extension is strongly suggested for most users and is required
+      for 64–bit machines. Not using mcrypt will cause phpMyAdmin to
+      load pages significantly slower.
+</p>
+</li>
+</ul></div>
+</li>
+<li>
+<p>
+MySQL 5.0 or newer (details);
+</p>
+</li>
+<li>
+<p>
+Web browser with cookies enabled.
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>This means that you don’t need to modify Cherokee at all provided you
+have PHP with MySQL support.</p></div>
+<div class="paragraph"><p>Simply use Cherokee-Admin’s phpMyAdmin Wizard, located under the
+<tt>Database</tt> category. It checks for the presence of phpMyAdmin, so you
+better have the package installed prior to using the Wizard, or else
+the Wizard will not let you proceed.</p></div>
+<h3 id="_express_setup">Express setup</h3><div style="clear:left"></div>
+<div class="paragraph"><p>The only thing you need to do is make phpMyAdmin accessible by
+Cherokee and all the script files must have permissions suitable for
+the user running Cherokee.</p></div>
+<div class="paragraph"><p>Most platforms provide packages with all that you need. For Debian
+based Linux distributions, You can issue the following commands as
+root (or through sudo) and the whole installation will take a matter
+of seconds.</p></div>
+<div class="listingblock">
+<div class="title">Debian installation</div>
+<div class="content">
+<pre><tt># apt-get install php5-cgi php5-mysql mysql-server-5.0 phpmyadmin</tt></pre>
+</div></div>
+<div class="paragraph"><p>Since Cherokee doesn’t appear in the list of web servers provided by
+the package installation script, select any of them to proceed with
+phpMyAdmin’s configuration.</p></div>
+<div class="paragraph"><p>The commands above assume you are running Cherokee as <tt>root</tt> and that
+your web server’s <tt>document root</tt> is <tt>/var/www</tt>.</p></div>
+<div class="paragraph"><p>If you were to run it as <tt>www-data</tt>, simply change the script’s
+owner:</p></div>
+<div class="listingblock">
+<div class="title">Script owner</div>
+<div class="content">
+<pre><tt># chown -R www-data:www-data /usr/share/phpmyadmin</tt></pre>
+</div></div>
+<div class="paragraph"><p>Now point your web browser to <tt>http://localhost/phpmyadmin</tt>, and use
+the MySQL user information to access the databases.</p></div>
+<div class="imageblock">
+<div class="content">
+<img alt="media/images/cookbook_phpmyadmin.png" src="media/images/cookbook_phpmyadmin.png"/>
+</div>
+<div class="image-title">phpMyAdmin in action</div>
+</div>
+<h3 id="_generic_setup">Generic setup</h3><div style="clear:left"></div>
+<div class="paragraph"><p>If your platform doesn’t provide phpMyAdmin, download it from the
+<a href="http://www.phpmyadmin.net/home_page/downloads.php">main download
+site</a> and follow the <tt>Quick Install</tt> notes in the
+<a href="http://www.phpmyadmin.net/documentation/">phpMyAdmin
+documentation</a>. As before, you simply need to make the program
+accessible to your web server, so simply use the Wizard and fill in
+the required information. Alternatively you can either install
+directly under your <tt>document root</tt> or make a symbolic link.</p></div>
+<h3 id="wizard">Configuring with the Wizard</h3><div style="clear:left"></div>
+<div class="paragraph"><p>There is also a wizard to assist you with your configuration. Once
+phpMyAdmin is installed, simply access one of your virtual servers in
+<tt>Cherokee-Admin</tt>. Then, access the <tt>Behavior</tt> tab and trigger the
+<tt>Rule panel</tt> by clicking on the <tt>Rule Management</tt> button. Once in
+there, use the <tt>Add</tt> button at the top of the panel to see the
+available wizards, and choose the phpMyAdmin wizard that can be found
+under the <tt>Web Applications</tt> category.</p></div>
+<h3 id="_considerations">Considerations</h3><div style="clear:left"></div>
+<div class="ulist"><ul>
+<li>
+<p>
+Cherokee’s default setup encodes the output of PHP with gzip, which
+  in turn improves the server’s performance. You will get garbled
+  output if you also enable phpMyAdmin’s gzip compression, since your
+  web browser will be receiving content encoded twice.
+</p>
+</li>
+<li>
+<p>
+If you are using the auth_type <tt>config</tt>, it is suggested that you
+  protect the phpMyAdmin installation directory because using config
+  does not require a user to enter a password to access the phpMyAdmin
+  installation. Use of an alternate authentication method is
+  recommended, either by switching to using auth_type cookie or http,
+  or alternatively by using Cherokee’s authentication features.  Refer
+  to the <a href="http://www.phpmyadmin.net/documentation/">phpMyAdmin
+  documentation</a> for more details on the former, or to our
+  <a href="cookbook_authentication.html">authentication recipe</a> for the
+  latter.
+</p>
+</li>
+<li>
+<p>
+It is generally good idea to protect public phpMyAdmin installation
+  against access by robots as they usually can not do anything good
+  there. You can do this using robots.txt file in root.
+</p>
+</li>
+<li>
+<p>
+The Wizard already takes care of this, but if you have installed it
+  manually you should deny access to the <tt>./libraries</tt> and <tt>./setup/lib</tt>
+  subfolders in Cherokee’s configuration. Such configuration prevents
+  from possible path exposure and cross side scripting vulnerabilities
+  that might happen to be found in that code. To do so, configure
+  directory-type rules for those and manage them with the <tt>HTTP Error</tt>
+  handler.
+</p>
+</li>
+</ul></div>
+<div class="imageblock">
+<div class="content">
+<img alt="media/images/cookbook_phpmyadmin_denied.png" src="media/images/cookbook_phpmyadmin_denied.png"/>
+</div>
+<div class="image-title">Handler HTTP Error</div>
+</div>
+</div>
+<div id="footer">
+<div id="footer-text">
+</div>
+</div>
+</div>

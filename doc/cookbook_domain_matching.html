@@ -1,0 +1,90 @@
+---
+layout: documentation
+title: Cookbook  Matching domain and subdomains with Cherokee | Cherokee Documentation
+---
+<div id="main_area"><h1>Documentation</h1>
+
+<div class="sectionbody">
+</div>
+<h2 id="_cookbook_matching_domain_and_subdomains_with_cherokee">Cookbook: Matching domain and subdomains with Cherokee</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Knowing how to match a domain or subdomain name is important to
+configure the behavior of your web server. The way in which HTTP
+redirections are performed, or what content is delivered to whom is
+determined by such matches.</p></div>
+<div class="paragraph"><p>The order in which the virtual servers are listed determines what
+domain names are matched. The purpose of this recipe is to document
+what to do <strong>after</strong> these matches have been determined.</p></div>
+<h3 id="_host_match">Host Match</h3><div style="clear:left"></div>
+<div class="paragraph"><p>As it was mentioned before, Cherokee can handle any number of virtual
+servers. The list of defined virtual servers can be reviewed and
+manipulated, and the order in which the virtual servers are listed is
+very significant. Whenever Cherokee receives a request, the list is
+evaluated from top to bottom, and the first virtual server that
+matches the given request will be the one used to handle the connection.</p></div>
+<div class="paragraph"><p>The domain matching method can be selected through the <tt>Host Match</tt>
+tab of any virtual server. The available options are:</p></div>
+<div class="olist arabic"><ol class="arabic">
+<li>
+<p>
+Match Nickname: which will use the nick name that has been defined
+  for the virtual server.
+</p>
+</li>
+<li>
+<p>
+Wildcards: which will use a list of names, each of which can contain
+  the wildcard characters <tt>?</tt> (one character) and <tt>*</tt> (one or more
+  characters).
+</p>
+</li>
+<li>
+<p>
+Regular Expressions: which will use a list of provided regular
+  expressions. Group matching is allowed, so this one can be very
+  handy.
+</p>
+</li>
+<li>
+<p>
+Server IP: the match is performed according to the IP/Subnet.
+</p>
+</li>
+</ol></div>
+<div class="paragraph"><p>Additionally, a combination of two such methods can be used, and it
+will be evaluated as a logical OR. This can be useful on some rare
+occasions, but is usually not needed.</p></div>
+<h3 id="_dictating_the_behavior_based_on_the_match">Dictating the behavior based on the match</h3><div style="clear:left"></div>
+<div class="paragraph"><p>You could always define a virtual servers for each subdomain of a
+given domain name. Modeling the behavior in such scenario is trivial,
+since you would know exactly what you wanted to accomplish on each
+case. But lets assume you want to define a single entry point to
+handle a specific subdomain for all your virtual servers.</p></div>
+<div class="paragraph"><p>You can do this by using the <tt>Regular Expression</tt> method to match the
+host. For instance, if you set the match of that virtual server to
+something like <tt>^admin\.(.*)$</tt> it will store a replacement variable
+with the name of your domain (without the <tt>admin.</tt> prefix).</p></div>
+<div class="paragraph"><p>Then, you’d have to set the default rule of the virtual server to
+<tt>Redirection</tt>, with the expression <tt>^/(.*)$</tt> that stores the whole
+request. Finally, just adding the following substitution would allow
+you to redirect every such request to the <tt>admin</tt> webdirectory within
+each of your virtual servers: <tt>http://^1/admin/$1</tt></p></div>
+<div class="paragraph"><p>This is very useful if all your virtual servers would behave in a
+similar fashion, providing an <tt>/admin</tt> directory to handle such
+requests. When this is not the case, you can still avoid creating
+multiple virtual servers for a given domain name.</p></div>
+<div class="paragraph"><p>You can configure self contained virtual servers using behavior rules
+which dictate site behavior based on domain name matching.  Behaviour
+rules can match against HTTP headers, such as the Host: header (Host:
+admin.example.com in this case). Be advised that although such
+self-contained configuration is achievable, it is less efficient than
+defining different virtual servers. This is due to the fact that
+virtual server evaluation is performed in one step for any given
+virtual server request, while performing a domain comparison on each
+rule can be cumbersome.</p></div>
+</div>
+<div id="footer">
+<div id="footer-text">
+</div>
+</div>
+</div>

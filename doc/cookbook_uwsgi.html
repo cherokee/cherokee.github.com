@@ -1,0 +1,128 @@
+---
+layout: documentation
+title: Cookbook  Deployment of an uWSGI application | Cherokee Documentation
+---
+<div id="main_area"><h1>Documentation</h1>
+
+<div class="sectionbody">
+</div>
+<h2 id="_cookbook_deployment_of_an_uwsgi_application">Cookbook: Deployment of an uWSGI application</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Python applications can be deployed in many ways, be it using flup,
+FastCGI, SCGI, WSGI, etc. <a href="http://projects.unbit.it/uwsgi/">uWSGI</a>
+is a feature rich, developer friendly application to do exactly
+that. It is a fast (pure C), self-healing, feature-rich WSGI server,
+aimed for professional python webapps deployment and development.</p></div>
+<div class="paragraph"><p>Cherokee offers native support for it. The configuration is quite
+easy, and uses the <a href="modules_handlers_uwsgi.html">uWSGI</a> handler.</p></div>
+<div class="paragraph"><p>There is a
+<a href="../screencasts.html#django_uwsgi">screencast</a>
+available at the
+<a href="../index.html">Cherokee-Project website</a> to
+demonstrate how easy it is to use the uWSGI wizard.</p></div>
+<div class="paragraph"><p><span class="image">
+<a class="image" href="../screencasts.html#django_uwsgi">
+<img alt="media/images/screencast.png" src="media/images/screencast.png"/>
+</a>
+</span></p></div>
+<div class="paragraph"><p>To run Cherokee with uWSGI four simple steps will suffice:</p></div>
+<div class="olist arabic"><ol class="arabic">
+<li>
+<p>
+You will need to complete a regular
+<a href="http://projects.unbit.it/uwsgi/wiki/Install">uWSGI installation</a>
+</p>
+</li>
+<li>
+<p>
+Add the produced binary into your PATH under the name "uwsgi"
+</p>
+</li>
+<li>
+<p>
+Adapt your application to work with uWSGI.
+</p>
+</li>
+<li>
+<p>
+Run the uWSGI Wizard provided by Cherokee and let it handle
+everything by itself.
+</p>
+</li>
+</ol></div>
+<div class="admonitionblock">
+<table><tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">uWSGI has evolved quite a lot since both the recipe and the
+uWSGI-wizard were written.  Currently the uWSGI-wizard has been
+reported as not working out of the box, and the task of fixing the
+wizard has been assigned. If you have trouble using the wizard, don’t
+hesitate to look for assistance on our
+<a href="other_community.html#mailing_lists">mailing lists</a>.</td>
+</tr></table>
+</div>
+<div class="paragraph"><p>The last step, configuring Cherokee, is trivial. The wizard will read
+the specified configuration file and will configure the web server
+accordingly.</p></div>
+<div class="paragraph"><p>Adapting your project is also fairly easy. For example, suppose you
+have a Django application which you want to adapt. You’ll have to
+create 2 configuration files on your django project directory.</p></div>
+<h3 id="Django">Django</h3><div style="clear:left"></div>
+<div class="paragraph"><p>We’ll call this one <tt>django_wsgi.py</tt>:</p></div>
+<div class="listingblock">
+<div class="title">django_wsgi.py</div>
+<div class="content">
+<pre><tt>import os
+import django.core.handlers.wsgi
+
+os.environ['DJANGO_SETTINGS_MODULE'] = 'settings'
+application = django.core.handlers.wsgi.WSGIHandler()</tt></pre>
+</div></div>
+<h3 id="_uwsgi">uWSGI</h3><div style="clear:left"></div>
+<div class="listingblock">
+<div class="title">uwsgi.xml</div>
+<div class="content">
+<pre><tt>&lt;uwsgi&gt;
+    &lt;pythonpath&gt;/var/www/example/&lt;/pythonpath&gt;
+    &lt;pythonpath&gt;/var/www/&lt;/pythonpath&gt;
+    &lt;app mountpoint="/"&gt;
+        &lt;script&gt;django_wsgi&lt;/script&gt;
+    &lt;/app&gt;
+&lt;/uwsgi&gt;</tt></pre>
+</div></div>
+<div class="paragraph"><p>Since it is unlikely you’ll have the Django project on your system
+path, it should be reflected on the <em>pythonpath</em> line. In this example,
+it would be under <em>/var/www/example/</em></p></div>
+<h3 id="_cherokee">Cherokee</h3><div style="clear:left"></div>
+<div class="paragraph"><p>The wizard will look for the uWSGI server, find out the mountpoint and
+configure the web server accordingly. Nothing more to do.</p></div>
+<h3 id="_troubleshooting">Troubleshooting</h3><div style="clear:left"></div>
+<div class="paragraph"><p>This should work out of the box, but in case it doesn’t you might need
+some pointers to determine what is going wrong exactly.</p></div>
+<div class="paragraph"><p>You should check both your error and access log files, and it comes in
+very handy to execute uWSGI by hand when running your tests. This will
+give all the help you need in the form of backtraces.</p></div>
+<div class="paragraph"><p>The simplest way to do so is looking into the <tt>Information Sources</tt>
+section in <tt>Cherokee-Admin</tt>, exploring the one created by the uWSGI
+wizard, and running that command by hand.</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>/usr/local/bin/uwsgi -s /tmp/cherokee-source1.sock -C -x /&lt;path to my django project&gt;/uwsgi.conf</tt></pre>
+</div></div>
+<div class="paragraph"><p>Make sure to kill other instances running in the background.</p></div>
+<div class="paragraph"><p>Another thing to keep in mind is that sometimes you might modify
+Python sources and not see the changes reflected on the server. In
+those cases simply restart <tt>Cherokee</tt> through <tt>Cherokee-Admin</tt> or
+simply by sending the SIGHUP signal.</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt># killall -SIGHUP cherokee</tt></pre>
+</div></div>
+</div>
+<div id="footer">
+<div id="footer-text">
+</div>
+</div>
+</div>

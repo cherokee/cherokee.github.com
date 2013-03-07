@@ -1,0 +1,206 @@
+---
+layout: documentation
+title: Cookbook  Setting up Symfony Framework | Cherokee Documentation
+---
+<div id="main_area"><h1>Documentation</h1>
+
+<div class="sectionbody">
+</div>
+<h2 id="_cookbook_setting_up_symfony_framework">Cookbook: Setting up Symfony Framework</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>If you need to deploy a Symfony application with Cherokee, the
+configuration is trivial. You will find a <tt>Wizard</tt> that can be used
+both to deploy the application under a dedicated <tt>Virtual Server</tt> and
+under a web folder from one already existent.</p></div>
+<h3 id="package_configuration">Prepare your Symfony project</h3><div style="clear:left"></div>
+<div class="paragraph"><p>The <a href="http://www.symfony-project.org/">Symfony Framework</a> is a PHP
+framework focused on building more secure, reliable, and modern Web
+2.0 applications.</p></div>
+<div class="paragraph"><p>It is essential that Cherokee supports PHP before starting with this
+recipe. That should not be a problem since Cherokee-Admin provides a
+PHP configuration Wizard. However, you can follow the
+<a href="cookbook_php.html">setting up PHP</a> recipe for further hints on
+fine tuning this feature.</p></div>
+<div class="paragraph"><p>To make sure the recipe works, we’ll initialize a simple symfony
+application.</p></div>
+<div class="paragraph"><p>This assumes that you already have symfony installed and configured.
+You can find information about installation here:
+<a href="http://www.symfony-project.org/installation">Symfony
+Installation</a>. At the time of writing, symfony stable version is 1.2.</p></div>
+<div class="paragraph"><p>Now that you have symfony installed, we shall create a symfony
+application in the folder <tt>~/demo</tt></p></div>
+<div class="paragraph"><p>Open a terminal, and execute the following commands (note that if
+symfony is not in your $PATH, you need to prefix <em>symfony</em> with the
+actual path to the script):</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>mkdir ~/demo
+cd ~/demo
+symfony generate:project demo
+symfony generate:app demo
+symfony generate:module demo demo</tt></pre>
+</div></div>
+<div class="paragraph"><p>The above commands will create a symfony project called <tt>demo</tt> inside
+the demo folder we just created. Next, it will create an application
+called <tt>demo</tt> as well, and then create a module, also called <tt>demo</tt>.</p></div>
+<div class="paragraph"><p>So now that we have the files in place, we’ll just create the needed
+rules for the web server. Specially important will be the rewrite
+rules.</p></div>
+<h3 id="wizard_configuration">Configure Cherokee using the Wizard</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Launch cherokee-admin, and proceed to the
+<a href="config_virtual_servers.html">Virtual servers</a> section and either
+enter the chosen one to install under a web folder, or directly click
+on the <tt>Symfony Wizard</tt> to create a customised one.</p></div>
+<div class="paragraph"><p>In either case you will be asked for the basic information and
+everything will be handled for you. The two main data pieces will be
+the location of the public web folder of your Symfony project (that
+is, the part that you wish to make publicly accessible, not the whole
+project), and the path to the installed release of Symfony in your
+system.</p></div>
+<div class="paragraph"><p>There is nothing else you need to do on Cherokee.</p></div>
+<div class="paragraph"><p>You may need to edit your "hosts" file to include the domain name you
+call the virtual server. Your symfony application should then be
+accessible. You can find more information about setting up symfony
+applications in the symfony manual.</p></div>
+<div class="imageblock">
+<div class="content">
+<img alt="media/images/cookbook_symfony.png" src="media/images/cookbook_symfony.png"/>
+</div>
+<div class="image-title">Running application</div>
+</div>
+<div class="paragraph"><p>Note that the Wizard configures Cherokee for your project’s production
+frontend. Should you wish to access the development environment simply
+adjust the redirection to the appropriate frontend.</p></div>
+<h3 id="manual_configuration">Configure Cherokee manually</h3><div style="clear:left"></div>
+<div class="paragraph"><p>In case you are wondering, these are manual steps you would have to
+follow if you opted for not using the configuration Wizard.</p></div>
+<div class="paragraph"><p>Select or create the virtual server that you will be configuring and
+go to the <tt>Behavior</tt> tab to set up the rules.  Remember that the
+document root for this virtual server should be the <tt>web</tt> folder in
+your demo project.</p></div>
+<div class="olist arabic"><div class="title">Steps</div><ol class="arabic">
+<li>
+<p>
+You will need to keep the rule for the <tt>php</tt> extension. If this rule
+  is not present, create it as described in
+  <a href="cookbook_php.html">setting up PHP</a>.
+</p>
+</li>
+<li>
+<p>
+Next, configure a rule with the handler <tt>File Exists</tt> that should be
+  set to a priority lower than that of the <tt>php</tt> rule.  This one can
+  be set to match whatever files you like, but the important thing is
+  to check the <tt>Match any file</tt> checkbox. Let this rule be handled by
+  the <a href="modules_handlers_file.html">Static Content</a> handler.
+</p>
+</li>
+<li>
+<p>
+Afterwards, modify your <tt>Default</tt> rule by configuring the
+  <a href="modules_handlers_redir.html">redirection handler</a>, through the
+  <tt>Handler</tt> tab.
+</p>
+<div class="tableblock">
+<table cellpadding="4" cellspacing="0" frame="border" rules="all" width="100%">
+<col width="33%"></col>
+<col width="33%"></col>
+<col width="33%"></col>
+<thead>
+<tr>
+<th align="left" valign="top">Type     </th>
+<th align="left" valign="top">Regular Expression </th>
+<th align="left" valign="top">Substitution</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left" valign="top"><p class="table">Internal</p></td>
+<td align="left" valign="top"><p class="table">^.*$</p></td>
+<td align="left" valign="top"><p class="table">/index.php</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</li>
+<li>
+<p>
+Symfony includes two controllers. One of them is "index.php". The
+  redirection above only makes the "index.php" controller accessible.
+  If you are actively developing the web application, you may wish to
+  have access to the symfony debug toolbar. In this case, replace
+  "/index.php" substitution with "appname_dev.php" where <tt>appname</tt> is
+  the name of the symfony application you are setting up. In this
+  example, our application name is "demo" so this controller will be
+  called "demo_dev.php".
+</p>
+</li>
+<li>
+<p>
+A slight addition must be added to fix an issue with how requests for
+  the root are managed when there is a rule with the <tt>File exists</tt>
+  handler in place. If this is not put in place, you will receive 403
+  errors. Simply define yet another redirection rule for this regular
+  expression:
+</p>
+<div class="tableblock">
+<table cellpadding="4" cellspacing="0" frame="border" rules="all" width="100%">
+<col width="33%"></col>
+<col width="33%"></col>
+<col width="33%"></col>
+<thead>
+<tr>
+<th align="left" valign="top">Type     </th>
+<th align="left" valign="top">Regular Expression </th>
+<th align="left" valign="top">Redirection</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left" valign="top"><p class="table">Internal</p></td>
+<td align="left" valign="top"><p class="table">^/$</p></td>
+<td align="left" valign="top"><p class="table">/index.php</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</li>
+<li>
+<p>
+Finally, you need to set up a rule for the "/sf" directory.
+</p>
+<div class="tableblock">
+<table cellpadding="4" cellspacing="0" frame="border" rules="all" width="100%">
+<col width="25%"></col>
+<col width="25%"></col>
+<col width="25%"></col>
+<col width="25%"></col>
+<thead>
+<tr>
+<th align="left" valign="top">Type      </th>
+<th align="left" valign="top">Web Directory </th>
+<th align="left" valign="top">Handler        </th>
+<th align="left" valign="top">Document Root</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left" valign="top"><p class="table">Directory</p></td>
+<td align="left" valign="top"><p class="table">/sf</p></td>
+<td align="left" valign="top"><p class="table">Static content</p></td>
+<td align="left" valign="top"><p class="table">/usr/share/php/data/symfony/web/sf</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</li>
+</ol></div>
+<div class="paragraph"><p>Note that the document root for the /sf directory depends on your
+installation. The value given above corresponds to a pear installation
+of symfony on an Ubuntu 8.10 (Intrepid Ibex) system.</p></div>
+</div>
+<div id="footer">
+<div id="footer-text">
+</div>
+</div>
+</div>

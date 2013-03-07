@@ -1,0 +1,90 @@
+---
+layout: documentation
+title: Cookbook  Setting up ColdFusion | Cherokee Documentation
+---
+<div id="main_area"><h1>Documentation</h1>
+
+<div class="sectionbody">
+</div>
+<h2 id="_cookbook_setting_up_coldfusion">Cookbook: Setting up ColdFusion</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Supporting <a href="http://www.adobe.com/products/coldfusion/">ColdFusion</a>
+with Cherokee is almost trivial.</p></div>
+<h3 id="cherokee">Configuring Cherokee</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Cherokee provides a wizard that will assist you on this task. You can
+either dedicate a new virtual server to the task, or use a preexisting
+one. It is your choice, since the Wizard contemplates both scenarios.
+For the former you’ll have to access the Wizard from the list of
+available ones within the <tt>Virtual Servers</tt> panel. The latter is
+accessed through the same list of Wizards of the <tt>Rule Management</tt>
+panel. This panel is accessed by visiting the <tt>Behavior</tt> tab of the
+selected virtual server, and triggering the <tt>Rule panel</tt> by clicking
+on the <tt>Rule Management</tt> button. In either case, use the <tt>Add</tt> button
+at the top of the panel to see the available wizards.</p></div>
+<div class="paragraph"><p>The wizard will simply ask for the host to be proxied and will set it
+up for you to see. It will automatically detect if the provided
+hostname:port are in fact running ColdFusion by probing for the
+presence of the JRun service. Should you need to add more machines
+to your cluster, you can add extra information sources to your
+Cherokee configuration and let it deal with all the load balancing.</p></div>
+<div class="paragraph"><p>No extra steps are necessary. If for any reason the Wizard doesn’t
+work for you, you can always use the manual method described below.</p></div>
+<h4 id="_manual_method">Manual method</h4>
+<div class="paragraph"><p>Getting Cherokee to work with ColdFusion (MX 6 versions and newer) is
+simple and this emulates how tie-in is done with Apache and other
+out-of-box supported web servers.</p></div>
+<div class="paragraph"><p>ColdFusion (actually the JRUN Java server which Coldfusion runs on top
+of) processes web requests by default on port 8500.</p></div>
+<div class="paragraph"><p>So create as many <tt>Information Sources</tt> running ColdFusion as needed
+in Cherokee:</p></div>
+<div class="tableblock">
+<table cellpadding="4" cellspacing="0" frame="border" rules="all" width="100%">
+<col width="33%"></col>
+<col width="33%"></col>
+<col width="33%"></col>
+<thead>
+<tr>
+<th align="left" valign="top">Type        </th>
+<th align="left" valign="top">Nick        </th>
+<th align="left" valign="top">Connection</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left" valign="top"><p class="table">Remote host</p></td>
+<td align="left" valign="top"><p class="table">ColdFusion1</p></td>
+<td align="left" valign="top"><p class="table">192.168.1.101:8500</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">Remote host</p></td>
+<td align="left" valign="top"><p class="table">ColdFusion2</p></td>
+<td align="left" valign="top"><p class="table">192.168.1.102:8500</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">Remote host</p></td>
+<td align="left" valign="top"><p class="table">ColdFusion3</p></td>
+<td align="left" valign="top"><p class="table">192.168.1.103:8500</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="paragraph"><p>Then, add a rule to your virtual server that is managed by the
+<a href="modules_handlers_proxy.html">HTTP reverse proxy</a>, and assign the
+above mentioned sources to it.</p></div>
+<div class="paragraph"><p>Round robin or IPHash will work for the balancer type. It is
+recommended to stick with IPHash if you have multiple ColdFusion app
+servers behind Cherokee so that session data will be preserved by
+sending the user to the same backend always - thus eliminating
+complicated and expensive load balancing solution to accomplish the
+same.</p></div>
+<div class="paragraph"><p>That’s all there is to this.</p></div>
+<div class="paragraph"><p>One note: This is good for a single domain operation.  If you have
+multiple sites that are to be handled by the same ColdFusion
+backend(s) you will need to modify JRUN configuration files to handle
+such.</p></div>
+</div>
+<div id="footer">
+<div id="footer-text">
+</div>
+</div>
+</div>
