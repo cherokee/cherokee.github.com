@@ -1,0 +1,513 @@
+---
+layout: documentation
+title: Configuration Walkthrough | Cherokee Documentation
+---
+
+<div id="main_area">
+	<h1>Configuration</h1>
+	<h2 id="_a_href_index_html_index_a_8594_a_href_config_html_configuration_a"><a href="index.html">Index</a> → <a href="config.html">Configuration</a></h2>
+	<div class="sectionbody"></div>
+	<h2 id="_configuration_walkthrough">Walkthrough</h2>
+	<div class="sectionbody">
+		<div class="paragraph">
+			<p>This section briefly describes a typical usage of the administration
+				web interface provided by
+				<a href="other_bundle_cherokee-admin.html">cherokee-admin</a>. This is the
+				recommended way of configuring Cherokee. If you are looking for
+				development information relevant to your automation and scripting
+				needs, you should refer to the appropriate section, specifically the
+				<a href="dev_cherokee.conf.html">cherokee.conf</a> file specification.
+			</p>
+		</div>
+		<div class="paragraph">
+			<p>We will first show a quick overview of the available options, followed
+				by a simple walkthrough. You can learn more about the options in their
+				specific documentation entries.
+			</p>
+		</div>
+		<div class="paragraph">
+			<p>You can also take a quick look at the
+				<a href="screencast_intro.html">introductory
+				screencast</a>.
+			</p>
+		</div>
+		<div class="paragraph">
+			<p><span class="image">
+				<a class="image" href="screencast_intro.html">
+				<img src="media/images/screencast.png" alt="media/images/screencast.png" />
+				</a>
+				</span>
+			</p>
+		</div>
+		<h3 id="overview">Overview</h3>
+		<div style="clear:left"></div>
+		<div class="ulist">
+			<ul>
+				<li>
+					<p>
+						<a href="config_index.html">Home</a>:
+						This is the initial screen of cherokee-admin. From here you will be
+						able to launch and stop the webserver, change the language of the
+						configuration-interface, check a quick view of the server status and
+						access relevant support and contact Cherokee-Project links.
+					</p>
+				</li>
+				<li>
+					<p>
+						<a href="config_status.html">Status</a>:
+						This gives access to usage graphs and statistics regarding each
+						virtual host and the server as a whole.
+					</p>
+				</li>
+				<li>
+					<p>
+						<a href="config_general.html">General</a>:
+						There are a number of entries that specify the most significant
+						configuration options such as the port - or ports - that the server
+						will listen to, the default timeout, whether to support keep-alive
+						connections, default icon and MIME type definitions and so on.
+					</p>
+				</li>
+				<li>
+					<p>
+						<a href="config_virtual_servers.html">vServers</a>:
+						If you want your web server to work with more than one domain you
+						will have to create <a href="config_virtual_servers.html">Virtual
+						servers</a> other than the <tt>default</tt> one. Each one will have a
+						completely independent configuration: paths, behavior, logging
+						facilities, etc.
+					</p>
+				</li>
+				<li>
+					<p>
+						<a href="config_info_sources.html">Sources</a>:
+						Define the resources that will be providing information. For
+						instance, PHP.
+					</p>
+				</li>
+				<li>
+					<p>
+						<a href="config_advanced.html">Advanced</a>:
+						This is to configure the most complex parameters of the server and how
+						it interacts with the operating system. If you are unsure about any of
+						the options here, better not mingle with them. Default values should
+						work just fine.
+					</p>
+				</li>
+			</ul>
+		</div>
+		<h3 id="walkthrough">Walkthrough</h3>
+		<div style="clear:left"></div>
+		<div class="paragraph">
+			<p>There is very little set up you must do to have a perfectly functional
+				web server out of the box. Cherokee’s default configuration can be
+				used to serve any typical static website. For dynamic contents you
+				should check the wizards, available using the buttons located at the
+				top section of the left panel in the <tt>vServers</tt> section. This panel
+				can either display information relevant to every virtual host in your
+				system, or rule management information specific to a given virtual
+				host if you are browsing a specific virtual host at the moment. In the
+				first scenario, the wizards will be able to create new virtual servers
+				customized for a specific need, while the second case would apply to
+				the -preexisting- selected virtual host.
+			</p>
+		</div>
+		<div class="paragraph">
+			<p>If you have a specific need, you should check out the recipes present
+				in the link:cookbook.html’Cookbook] section of the
+				documentation. Among other subjects, you can find information about
+				<a href="cookbook_optimizations.html">Cherokee optimizations</a>, setting up
+				efficient <a href="cookbook_authentication.html">authentication</a>
+				mechanisms, or configuring several popular application frameworks.
+			</p>
+		</div>
+		<div class="paragraph">
+			<p>In this tutorial we will be setting up a system with a couple of
+				virtual servers, PHP support, some redirection rules and a simple
+				authentication mechanism.
+			</p>
+		</div>
+		<div class="paragraph">
+			<p>To follow this walkthrough you need to be running
+				<a href="other_bundle_cherokee-admin.html">cherokee-admin</a>. This is an
+				administration tool, so you will need system administrator rights. You
+				can either launch it manually, letting it generate a one-time-password
+				that you will use to securely connect to the user interface, or you
+				can follow the recommended way and simply use
+				<a href="other_bundle_cherokee-admin-launcher.html">cherokee-admin-launcher</a>.
+			</p>
+		</div>
+		<h4 id="auto-launch">Launching the admin through cherokee-admin-launcher</h4>
+		<div class="paragraph">
+			<p>Assuming you are using a desktop environment on the same host where
+				Cherokee is installed, you can follow the launcher approach.
+			</p>
+		</div>
+		<div class="listingblock">
+			<div class="content">
+				<pre><tt># cherokee-admin-launcher
+Checking TCP port 9090 availability.. OK
+Launching /usr/sbin/cherokee-admin.. OK
+Connecting.. OK</tt></pre>
+			</div>
+		</div>
+		<div class="paragraph">
+			<p>This will automatically open a web browser window pointing at
+				<a href="http://localhost:9090">http://localhost:9090</a>, so you will be able to begin using
+				<tt>cherokee-admin</tt> right away. If there is no web browser registered in
+				your system, you will have to forget about using the launcher option,
+				and run <tt>cherokee-admin</tt> directly. If this is not your case, you can
+				skip the details for the manual launch.
+			</p>
+		</div>
+		<h4 id="manual-launch">Manually launching cherokee-admin</h4>
+		<div class="listingblock">
+			<div class="content">
+				<pre><tt># cherokee-admin
+
+Login:
+  User:              admin
+  One-time Password: yp7F1pMhtmD58DbB
+
+Cherokee Web Server 1.0.2 (Jun 19 2010): Listening on port 127.0.0.1:9090,
+TLS disabled, IPv6 enabled, using epoll, 4096 fds system limit, max. 2041
+connections, caching I/O, single thread</tt></pre>
+			</div>
+		</div>
+		<div class="paragraph">
+			<p>Now you can access the administration interface simply by opening your
+				web browser and visiting
+				<a href="http://localhost:9090">http://localhost:9090</a>.
+				<a href="other_bundle_cherokee-admin.html">Cherokee-admin</a> supports several
+				command line parameters, so you can change the predefined port in case
+				it was already in use in your system.
+			</p>
+		</div>
+		<div class="paragraph">
+			<p>The User and One-time Password will be required initially. This is to
+				prevent other users of the local host from being able to configure the
+				server unless they have access to the password. This is also very
+				useful to allow temporary access to a remote administrator.
+			</p>
+		</div>
+		<h4 id="cherokee-admin">cherokee-admin</h4>
+		<div class="paragraph">
+			<p>If your user doesn’t have enough privileges you will be notified. Also
+				if no configuration file exists you will be prompted to create one
+				with the default settings.
+			</p>
+		</div>
+		<div class="imageblock">
+			<div class="content">
+				<img src="media/images/admin_noconfig.png" alt="media/images/admin_noconfig.png" />
+			</div>
+		</div>
+		<div class="paragraph">
+			<p>The regular template is a good starting point. Right now your web
+				server will not be running yet. We will only be using two of the
+				available tabs to adjust some more settings:
+				<a href="config_general.html">General</a> and
+				<a href="config_virtual_servers.html">Virtual Servers</a>.
+			</p>
+		</div>
+		<div class="imageblock">
+			<div class="content">
+				<img src="media/images/admin_notrunning.png" alt="media/images/admin_notrunning.png" />
+			</div>
+			<div class="image-title">Sample view</div>
+		</div>
+		<div class="paragraph">
+			<p>Of course, once we’re done we will have to apply our changes and
+				launch the server. The configuration changes must be submitted to the
+				server, be it automatically if possible or by using the appropriate
+				form submitting buttons. But no change is reflected in the
+				configuration file until you actually <tt>Save</tt> the changes. You can be
+				sure of not damaging anything while playing around with
+				<tt>cherokee-admin</tt>. At least not until you <tt>Save</tt> the changes by using
+				the <tt>SAVE</tt> button on the main toolbar. Note that, if the Cherokee
+				server is running, the applied modifications will only affect the
+				instance being executed if either <tt>Graceful restart</tt> or <tt>Hard restart</tt>
+				are selected.  <tt>No restart</tt> simply modifies the configuration file,
+				but doesn’t affect the currently running instance. A <tt>graceful
+				restart</tt> will preserve the old set-up for any prior connections, while
+				a <tt>hard restart</tt> will kill every connection and instantly apply the
+				changes.
+			</p>
+		</div>
+		<div class="imageblock">
+			<div class="content">
+				<img src="media/images/admin_general.png" alt="media/images/admin_general.png" />
+			</div>
+			<div class="image-title">Sample of tab for general settings</div>
+		</div>
+		<div class="paragraph">
+			<p>We will only be modifying the <strong>Permissions</strong> tab. It usually is a poor
+				choice to run services with super user privileges. Set both <strong>User</strong> and
+				<strong>Group</strong> to <tt>www-data</tt>. Your system might already have another user account
+				specifically for the purpose of running a webserver. Use that instead
+				if so, or create the <tt>www-data</tt> user if you don’t already have one.
+			</p>
+		</div>
+		<div class="paragraph">
+			<p>Next is the <a href="config_virtual_servers.html">vServers</a> tab.</p>
+		</div>
+		<div class="imageblock">
+			<div class="content">
+				<img src="media/images/admin_vserver.png" alt="media/images/admin_vserver.png" />
+			</div>
+			<div class="image-title">Virtual server tab</div>
+		</div>
+		<div class="paragraph">
+			<p>When you start, you will only have one virtual server called
+				<tt>default</tt>. You can begin by cloning it as <tt>example</tt>. This can be
+				achieved with the <tt>Clone Selected Virtual Server</tt> button, which is
+				placed in the upper side of the left panel, adjacent to the <tt>Virtual
+				Servers</tt> label and the <tt>Add New Virtual Server</tt> button.
+			</p>
+		</div>
+		<div class="paragraph">
+			<p>While you are at it you should also append the following line to your
+				<tt>/etc/hosts</tt> file (in Windows you will find this as
+				<tt>%WINDIR%\system32\drivers\etc\hosts</tt>).
+			</p>
+		</div>
+		<div class="listingblock">
+			<div class="content">
+				<pre><tt>127.0.0.1       example.com example.net example.org</tt></pre>
+			</div>
+		</div>
+		<div class="paragraph">
+			<p>This is to allow your system to resolve requests for <tt>example.net</tt> or
+				<tt>example.org</tt> locally. Of course, once you are out in the Wild (you
+				know, in the Internet), you will need proper DNS records.
+			</p>
+		</div>
+		<div class="dlist">
+			<dl>
+				<dt class="hdlist1">
+					<strong><tt>default</tt></strong>
+				</dt>
+				<dd>
+					<p>
+						We will leave default untouched except for the document root path,
+						which we will change. This is done through the <tt>Basics</tt> tab.
+						You could create by hand <em>/var/www/default</em> for example and set it up
+						in the appropriate field.
+					</p>
+					<div class="paragraph">
+						<p>If you access your machine by IP or a DNS resolution points in that
+							direction for any particular domain, the contents of your document
+							root directory will be exposed (<em>/var/www</em> by default unless you
+							changed that during the build process). Whenever there is no match for
+							a virtual server specifically defined in your list, the <tt>default</tt>
+							virtual server will be the one responding.
+						</p>
+					</div>
+					<div class="paragraph">
+						<p>To enable PHP support you will have to select the desired virtual
+							server, access the <tt>Behavior</tt> tab, and click on the <tt>Rule Management</tt>
+							button. This will replace the <tt>Virtual Servers</tt> panel with a <tt>Rules</tt>
+							panel that applies only to the selected virtual server. The <tt>Add</tt>
+							button now will give you access to manually adding rules or to the
+							list of wizards. You will find PHP under the <tt>Languages</tt>
+							category. Simply point and click, and this will make the required
+							adjustments. Any file with the <em>php</em> extension will be served after being
+							processed by the PHP interpreter. You should have <tt>php-cgi</tt> installed
+							in your system for this, though. Don’t worry too much about it: the
+							wizard will give you instructions and will notify any further
+							requirements not yet satisfied by your system.
+						</p>
+					</div>
+					<div class="paragraph">
+						<p>Any requested file would be sent. If a directory is requested, a file
+							called index.php or index.html will be served if it is present (the
+							search will be performed in that order; you can configure this in the
+							<tt>Basics</tt> tab). If not, a directory listing is offered instead. If you
+							would want to prevent this behavior but would like to keep up
+							serving whatever content is requested directly, simply change the
+							<tt>List &amp; Send</tt> handler for the <tt>Static Content</tt> handler.
+						</p>
+					</div>
+				</dd>
+				<dt class="hdlist1">
+					<strong><tt>example</tt></strong>
+				</dt>
+				<dd>
+					<p>
+						Make sure to select the correct virtual server in the <tt>Virtual
+						Servers</tt> panel displayed in the left side of the interface. If the
+						panel was titled <tt>Behavior</tt> instead, make sure it applies to the
+						desired virtual server. This can be easily checked, since it is
+						displayed as a title in the upper part of the contents area, which is
+						everything else on the screen that doesn’t belong to the panel. If you
+						are inside another virtual server, just click on the host name to
+						restore the <tt>Virtual Servers</tt> panel. If you have already selected the
+						correct virtual host, access the <tt>Behavior</tt> tab and click on the <tt>Rule
+						Management</tt> button to see the <tt>Behavior</tt> panel that will enable you to
+						modify the rules of your virtual host.
+					</p>
+					<div class="paragraph">
+						<p>For now this virtual server is an exact copy of the untouched
+							<tt>default</tt> virtual server. Create some new directories by hand:
+							<em>/var/www/example</em> and <em>/var/www/example/auth</em>, and configure the
+							first one as default document root path. Just access the <tt>Basics</tt> tab,
+							and set the <tt>Document Root</tt> field to <em>/var/www/example</em>.
+						</p>
+					</div>
+					<div class="paragraph">
+						<p>Next, setup <tt>example.net</tt> and <tt>example.com</tt> in the <tt>Host match</tt> tab,
+							so that requests to both domains can be managed byt your <tt>example</tt>
+							virtual server. To do so just choose <tt>Wildcards</tt> as method, and add
+							both names as wildcard strings.  We’ll erase everything in the
+							<strong>Targets</strong> list within the <tt>Behavior</tt> tab, except the <tt>default</tt>
+							rule. With this we’ll only be able to serve static content.
+						</p>
+					</div>
+					<div class="paragraph">
+						<p>Accessing the URL <a href="http://example.org">http://example.org</a> should now show a list of
+							available files and directories under <em>/var/www/example/</em>.
+						</p>
+					</div>
+					<div class="paragraph">
+						<p>Now lets password protect the <tt>auth</tt> directory. Add a new
+							<tt>Directory</tt>-type rule pointing to <tt>/auth</tt>. Then, through the
+							<tt>Security</tt> tab, add a <tt>Validation Mechanism</tt> under <tt>Authentication</tt>.
+						</p>
+					</div>
+					<div class="paragraph">
+						<p>The field <tt>Realm</tt> is mandatory. Lets set it as <tt>Secured Area</tt>.
+							If you choose <tt>PAM</tt> and impose no more restrictions, only users with
+							a local account in your system will be able to access the secured zone
+							at <a href="http://example.net/auth">http://example.net/auth</a>
+							Other mechanisms would work in a similar fashion but with their
+							specific requirements. For example, had you chosen <tt>Plain text file</tt>
+							instead of PAM you would have had to specify a <tt>Password File</tt>.
+							For example, it could have been <tt>/var/www/passwords.txt</tt> with the
+							following contents:
+						</p>
+					</div>
+					<div class="listingblock">
+						<div class="content">
+							<pre><tt>testuser1:password1
+testuser2:password2</tt></pre>
+						</div>
+					</div>
+					<div class="paragraph">
+						<p>Note that the rule must not be flagged as <tt>Final</tt>, or else no other
+							rules will be applied afterwards and no access will be given to any
+							contents. This is because at this point we have not defined any
+							handler for the <tt>/auth</tt> rule and nothing would be served.
+						</p>
+					</div>
+					<div class="paragraph">
+						<p>Refer to the <a href="cookbook_authentication.html">Cookbook</a> for detailed
+							examples on the different options.
+						</p>
+					</div>
+					<div class="paragraph">
+						<p>Lastly, lets configure a redirection rule by choosing a "Regular
+							Expression" as the new rule type. Type the following regex: <tt>^/rss.*$</tt>
+							Then, configure the <tt>Handler</tt> tab with the following settings.
+						</p>
+					</div>
+					<div class="olist arabic">
+						<ol class="arabic">
+							<li>
+								<p>
+									<strong>Handler</strong>: <tt>Redirection</tt>
+								</p>
+							</li>
+							<li>
+								<p>
+									<strong>Type</strong>: <tt>External</tt>
+								</p>
+							</li>
+							<li>
+								<p>
+									<strong>Regular Expression</strong>: you can leave it empty or specify a series of
+									new matches. The shot has the base regex for ilustration purposes:
+									<tt>^/rss.*$</tt>
+								</p>
+							</li>
+							<li>
+								<p>
+									<strong>Substitution</strong>: this will be the target: <tt>/feed</tt>
+								</p>
+							</li>
+						</ol>
+					</div>
+					<div class="imageblock">
+						<div class="content">
+							<img src="media/images/admin_rule_regex.png" alt="media/images/admin_rule_regex.png" />
+						</div>
+						<div class="image-title">Redirection handler</div>
+					</div>
+					<div class="paragraph">
+						<p>And voilà! A request of the form <a href="http://example.net/rss2">http://example.net/rss2</a> would be
+							redirected to <a href="http://example.net/feed">http://example.net/feed</a>
+						</p>
+					</div>
+					<div class="paragraph">
+						<p>Any rule type can be used with the redirection handler: Directory,
+							Extensions, Regular Expression, etc. In this case the fact that the
+							rule type is "Regular Expression" affects only slightly. Refer to the
+							appropriate section of the documentation,
+							<a href="modules_handlers_redir.html">Redirection Handler</a>, for more
+							details.
+						</p>
+					</div>
+					<div class="paragraph">
+						<p>Note that the <tt>Type</tt> of the <strong>Redirection</strong> is <tt>External</tt>. This means
+							the server will instruct the requesting web client to fetch the
+							redirected URL, which in turn means the client will always know what
+							the final URL is. This also means the redirection can be done to
+							servers other than your own. If it were internal, the redirection
+							would be invisible (not showing the target URL), but it would be
+							limited to the same <tt>virtual server</tt>.
+						</p>
+					</div>
+					<div class="paragraph">
+						<p>A much more general redirection could be one using these values:</p>
+					</div>
+					<div class="dlist">
+						<dl>
+							<dt class="hdlist1">
+								<strong>Regular Expression</strong>
+							</dt>
+							<dd>
+								<p>
+									<tt>^/(.*)$</tt>
+								</p>
+							</dd>
+							<dt class="hdlist1">
+								<strong>Substitution</strong>
+							</dt>
+							<dd>
+								<p>
+									<a href="http://www.example.com/example.net/$1">http://www.example.com/example.net/$1</a>
+								</p>
+							</dd>
+						</dl>
+					</div>
+					<div class="paragraph">
+						<p>Note that this rule would have to be external since <tt>example.com</tt> is
+							not among the domains managed by our configuration.
+						</p>
+					</div>
+					<div class="paragraph">
+						<p>This would redirect every petition to a site hosted under
+							<tt>http://example.com/example.net</tt>. For instance, the request for
+							<tt>http://example.net/image.jpg</tt> would return
+							<tt>http://example.com/example.net/image.jpg</tt>.
+						</p>
+					</div>
+					<div class="paragraph">
+						<p>If you need more details, Check out the documentation for the
+							<a href="modules_handlers_redir.html">redirection</a> handler.
+						</p>
+					</div>
+				</dd>
+			</dl>
+		</div>
+	</div>
+</div>

@@ -1,0 +1,259 @@
+---
+layout: documentation
+title: Advanced Configuration | Cherokee Documentation
+---
+
+<div id="main_area">
+	<h1>Configuration</h1>
+	<h2 id="_a_href_index_html_index_a_8594_a_href_config_html_configuration_a"><a href="index.html">Index</a> → <a href="config.html">Configuration</a></h2>
+	<div class="sectionbody"></div>
+	<h2 id="_advanced_configuration">Advanced Configuration</h2>
+	<div class="sectionbody">
+		<div class="paragraph">
+			<p>Through this section you can fine-tune several of Cherokee’s
+				parameters. You should not attempt to do so unless you really know
+				what you are doing. For most cases the default parameters will work
+				just fine.
+			</p>
+		</div>
+		<div class="imageblock">
+			<div class="content">
+				<img src="media/images/admin_advanced0.png" class="normal_image_width" alt="media/images/admin_advanced0.png" />
+			</div>
+			<div class="image-title">Warning</div>
+		</div>
+		<div class="paragraph">
+			<p>You should at least read the chapter
+				<a href="cookbook_optimizations.html">Optimizing Cherokee</a> before you
+				start tweaking things here.
+			</p>
+		</div>
+		<h3 id="connections">Connections</h3>
+		<div style="clear:left"></div>
+		<div class="ulist">
+			<ul>
+				<li>
+					<p>
+						KeepAlive:
+						Enables the global keep-alive support for the client requests. It
+						increases the client performance by reusing a connection for more
+						than one request. It should most probably be turned on.
+					</p>
+				</li>
+				<li>
+					<p>
+						Max keepalive reqs:
+						This limits the number of HTTP requests that can be served by each
+						keepalive connection. Keepalive connections improve performance, but
+						surpassing certain amount of requests per each connection is an
+						indicator that something out of the ordinary is happening. This
+						prevents the appearance of any problems related to these situations.
+					</p>
+				</li>
+				<li>
+					<p>
+						Chunked encoding:
+						Enabled by default to try to keep enabled Keep-Alive.
+					</p>
+				</li>
+				<li>
+					<p>
+						Polling Method: This affects the internal file descriptor polling
+						method among the ones supported by the OS. The full list of options
+						is <tt>epoll()</tt>, <tt>kqueue</tt>, <tt>poll()</tt>, <tt>Solaris ports</tt>, <tt>select()</tt> and
+						<tt>Win32</tt>. Only the alternatives available for your specific
+						architectures are shown. If you don’t know what this is or how this
+						affects performance, just choose <tt>Automatic</tt>. This will choose the
+						most efficient one among the present at any given time.
+					</p>
+				</li>
+				<li>
+					<p>
+						Sendfile min/max size:
+						These allow to configure the range of file sizes that can be sent
+						with <tt>sendfile()</tt>. Default: [32768 Bytes - 2 GB].
+					</p>
+				</li>
+			</ul>
+		</div>
+		<div class="imageblock">
+			<div class="content">
+				<img src="media/images/admin_advanced1.png" class="normal_image_width" alt="media/images/admin_advanced1.png" />
+			</div>
+			<div class="image-title">Connections</div>
+		</div>
+		<h3 id="resources">Resources</h3>
+		<div style="clear:left"></div>
+		<div class="ulist">
+			<ul>
+				<li>
+					<p>
+						Thread Number:
+						Adjust the number of threads for Cherokee to work with. Increasing
+						this will allow for better parallelization at the cost of system
+						resources. Highly constrained environments such as embedded devices
+						will probably be fine with just one. This doesn’t translate into
+						just one connection at the time, since a thread can handle many.
+					</p>
+				</li>
+				<li>
+					<p>
+						Thread Policy:
+						Defines the thread policy to be applied by the OS: FIFO, Round Robin
+						or Dynamic.
+					</p>
+				</li>
+				<li>
+					<p>
+						File descriptors:
+						This can alter the number of file descriptors handled by the server
+						should handle. The default value is what <tt>ulimit -n</tt> reports. An
+						increase in this value improves performance under very high server load.
+					</p>
+				</li>
+				<li>
+					<p>
+						Listening queue length: This specifies the size of the incoming
+						connection queue. It is the effective buffer of connections that
+						will be served even if there are no connection slots available at
+						the moment.
+					</p>
+				</li>
+				<li>
+					<p>
+						Reuse connections:
+						Cherokee implements an intelligent mechanism to reuse connections if
+						possible, allowing it to improve performance by not having to
+						reinitialize structures in memory that can serve perfectly well for
+						more than one time. It defaults to 20. Though this mechanism is an obvious
+						improvement, reducing this limit is useful for cases when a sudden
+						burst of connections happens. In those cases it doesn’t make much
+						sense to keep reusing many more connections than those of an average
+						load for any other moment.
+					</p>
+				</li>
+				<li>
+					<p>
+						Log flush time:
+						Time interval in seconds to wait between log updates. Defaults to 10
+						seconds.
+					</p>
+				</li>
+				<li>
+					<p>
+						Nonces clean up time:
+						Time interval in seconds between Nonce cache clean ups. Defaults to
+						60 seconds.
+					</p>
+				</li>
+			</ul>
+		</div>
+		<div class="imageblock">
+			<div class="content">
+				<img src="media/images/admin_advanced2.png" class="normal_image_width" alt="media/images/admin_advanced2.png" />
+			</div>
+			<div class="image-title">Resources</div>
+		</div>
+		<h3 id="io_cache">I/O cache</h3>
+		<div style="clear:left"></div>
+		<div class="ulist">
+			<ul>
+				<li>
+					<p>
+						Status:
+						Enabled by default. This is a system-wide setting required if you
+						wish to enable caching in any of your virtual hosts. Useful for debugging.
+					</p>
+				</li>
+				<li>
+					<p>
+						Max pages:
+						This specifies the maximum number of pages that are handled by the cache.
+					</p>
+				</li>
+				<li>
+					<p>
+						File Min Size:
+						Specifies the smallest filesize limit to be cached.
+					</p>
+				</li>
+				<li>
+					<p>
+						File Max Size:
+						Specifies the biggest filesize limit to be cached.
+					</p>
+				</li>
+				<li>
+					<p>
+						Lasting <em>stat</em>:
+						Specifies the duration of the file information in the cache without
+						refreshing.
+					</p>
+				</li>
+				<li>
+					<p>
+						Lasting <em>mmap</em>:
+						Specifies how long the file contents last cached.
+					</p>
+				</li>
+			</ul>
+		</div>
+		<div class="imageblock">
+			<div class="content">
+				<img src="media/images/admin_advanced3.png" class="normal_image_width" alt="media/images/admin_advanced3.png" />
+			</div>
+			<div class="image-title">IO/Cache</div>
+		</div>
+		<h3 id="special_files">Special Files</h3>
+		<div style="clear:left"></div>
+		<div class="ulist">
+			<ul>
+				<li>
+					<p>
+						Panic action:
+						This specifies the program that will be called in case the server
+						fails. It defaults to <tt>cherokee-panic</tt>, which is provided with
+						Cherokee. This in turn performs the actions specified in the
+						<tt>CHEROKEE_PANIC_OUTPUT</tt> environment variable. If none is set, it will
+						attempt to send an email to the system administrator with a
+						backtrace of what happened. As a last resort, if no mailer is
+						available in the system, it will simply try to show this information
+						on screen if possible.
+					</p>
+				</li>
+				<li>
+					<p>
+						PID file:
+						If specified, a PID file will be created in that path. This is
+						useful to trace what is going on with Cherokee.
+					</p>
+				</li>
+			</ul>
+		</div>
+		<div class="imageblock">
+			<div class="content">
+				<img src="media/images/admin_advanced4.png" class="normal_image_width" alt="media/images/admin_advanced4.png" />
+			</div>
+			<div class="image-title">Special files</div>
+		</div>
+		<h3 id="tls">TLS</h3>
+		<div style="clear:left"></div>
+		<div class="ulist">
+			<ul>
+				<li>
+					<p>
+						DH parameters:
+						Here you can specify the paths to your Diffie Hellman parameters PEM
+						files for 512, 1024, 2048 and 4096 bits.
+					</p>
+				</li>
+			</ul>
+		</div>
+		<div class="imageblock">
+			<div class="content">
+				<img src="media/images/admin_advanced5.png" class="normal_image_width" alt="media/images/admin_advanced5.png" />
+			</div>
+			<div class="image-title">TLS</div>
+		</div>
+	</div>
+</div>

@@ -1,0 +1,56 @@
+---
+layout: documentation
+title: Running Cherokee | Cherokee Documentation
+---
+
+<div id="main_area">
+	<h1>Cherokee Basics</h1>
+	<h2 id="_a_href_index_html_index_a_8594_a_href_basics_html_getting_started_a"><a href="index.html">Index</a> → <a href="basics.html">Getting started</a></h2>
+	<div class="sectionbody"></div>
+	<h2 id="_running_cherokee">Running Cherokee</h2>
+	<div class="sectionbody">
+		<div class="paragraph">
+			<p>There are several ways you can run Cherokee:</p>
+		</div>
+		<div class="olist arabic">
+			<ol class="arabic">
+				<li>
+					<p>
+						Automatic start: this makes use of the mechanism offered by your OS
+						that should have been configured when Cherokee was installed. It
+						will run making use of the <a href="dev_cherokee.conf.html"><tt>cherokee.conf</tt></a>
+						present in your system.
+					</p>
+				</li>
+				<li>
+					<p>
+						Guardian wrapper: The <a href="other_bundle_cherokee.html">cherokee</a> program
+						comes as a standard part of the Cherokee bundle. It is a security
+						mechanism that ensures Cherokee’s recovery in case of any system
+						failure and wraps the calls to <tt>cherokee-worker</tt>. This is what is
+						actually launched when Cherokee is automatically started.
+					</p>
+				</li>
+				<li>
+					<p>
+						Stand alone instance: Cherokee supports a series of parameters to
+						launch it from the command line. Refer to the the appropriate
+						documentation section about
+						<a href="other_bundle_cherokee-worker.html"><tt>cherokee-worker</tt></a> to see the
+						complete list of optional arguments.
+					</p>
+				</li>
+				<li>
+					<p>
+						Cherokee-Admin: The administration web interface allows you to
+						configure and launch Cherokee. This is probably where you want to
+						start if you have just installed the web server. Launch the
+						<a href="other_bundle_cherokee-admin.html"><tt>cherokee-admin</tt></a> process and follow
+						the <a href="config_walkthrough.html">Quickstart</a> section of the
+						documentation.
+					</p>
+				</li>
+			</ol>
+		</div>
+	</div>
+</div>
