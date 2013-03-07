@@ -1,0 +1,27 @@
+---
+layout: documentation
+title: Balancer  IP Hash | Cherokee Documentation
+---
+<div id="main_area"><h1>Documentation</h1>
+
+<div class="sectionbody">
+</div>
+<h2 id="_balancer_ip_hash">Balancer: IP Hash</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>The IP Hash load balancer module distributes the incoming requests
+among the upstreams based on the IP address of the client. This method
+guarantees that the client request will always be transferred to the
+same server.</p></div>
+<div class="paragraph"><p>In case one of the back-end servers were detected as inoperative, it
+would be disabled for a period of time. After this safety time, it
+would be reactivated. Meanwhile, the requests that would have normally
+targeted the off-lined server would be delivered to another one.</p></div>
+<div class="paragraph"><p>The only thing needed to configure this balancer is a list of
+<a href="config_info_sources.html">information sources</a>. At least one must
+be selected in order for this to work.</p></div>
+</div>
+<div id="footer">
+<div id="footer-text">
+</div>
+</div>
+</div>

@@ -1,0 +1,82 @@
+---
+layout: documentation
+title: 428441616MANUAL EDITING REQUIRED | Cherokee Documentation
+---
+<div id="main_area"><h1>Documentation</h1>
+
+<div class="sectionbody">
+<h3 id="_validator_ldap">Validator: LDAP</h3><div style="clear:left"></div>
+<div class="paragraph"><p>The LDAP validator allows you to authenticate a user using the
+Lightweight Directory Access Protocol v3.</p></div>
+<h4 id="parameters">Parameters</h4>
+<div class="tableblock">
+<table cellpadding="4" cellspacing="0" frame="border" rules="all" width="100%">
+<col width="20%"></col>
+<col width="80%"></col>
+<thead>
+<tr>
+<th align="left" valign="top">Parameter   </th>
+<th align="left" valign="top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left" valign="top"><p class="table"><em>server</em></p></td>
+<td align="left" valign="top"><p class="table">Name of the host providing the LDAP service.</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table"><em>port</em></p></td>
+<td align="left" valign="top"><p class="table">Optional. Port number of the LDAP service.
+              Default: <em>389</em>.</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table"><em>binddn</em></p></td>
+<td align="left" valign="top"><p class="table">Optional. Bind Distinguished Name (<tt>user</tt>). If none
+              is provided an anonymous bind will be attempted.</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table"><em>bindpw</em></p></td>
+<td align="left" valign="top"><p class="table">Bind Password (<tt>password</tt>).</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table"><em>basedn</em></p></td>
+<td align="left" valign="top"><p class="table">Base Distinguished Name.</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table"><em>filter</em></p></td>
+<td align="left" valign="top"><p class="table">A filter that defines the conditions that must be
+              fulfilled in order for the search to match a given
+              entry. Use <tt>${user}</tt> in a filter as a substitution to
+              match the identifier inputted by a user accessing the
+              resource. The filter must resolve to a single user object.
+              For LDAP filter syntax, refer to RFC 2254.</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table"><em>tls</em></p></td>
+<td align="left" valign="top"><p class="table">Optional. Enable the use of TLS based integrity.
+              Defaults to <em>0</em>.</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table"><em>ca_file</em></p></td>
+<td align="left" valign="top"><p class="table">Optional. It’s the CA filename. Must be provided
+              if TLS is enabled.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<h4 id="compatibility">Compatibility</h4>
+<div class="paragraph"><p>This validator is compatible with the <strong>basic</strong> scheme.</p></div>
+<h4 id="notes">Notes</h4>
+<div class="paragraph"><p>The server address can be specified as an IP address or a hostname.</p></div>
+<div class="paragraph"><p>Base DN, also known as search base, identifies the part of the
+directory tree you want to manage.</p></div>
+<div class="paragraph"><p>Bind DN is the user name.</p></div>
+<div class="paragraph"><p>To select any user from LDAP as part of the <tt>filter</tt>, specify
+<tt>(uid=${user})</tt>, where <tt>uid</tt> is the attribute that serves as your LDAP
+user identifier.</p></div>
+</div>
+<div id="footer">
+<div id="footer-text">
+</div>
+</div>
+</div>

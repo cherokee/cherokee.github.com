@@ -1,0 +1,72 @@
+---
+layout: documentation
+title: Handler  Server Side Includes | Cherokee Documentation
+---
+<div id="main_area"><h1>Documentation</h1>
+
+<div class="sectionbody">
+</div>
+<h2 id="_handler_server_side_includes">Handler: Server Side Includes</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Server Side Includes, also known as SSI, are directives placed in HTML
+pages meant to be evaluated on the web server while the requests are
+being delivered. The intended use is adding some dynamic content to
+existing HTML pages without having to serve the whole content
+dynamically (be it through CGI, SCGI, FastCGI, etc.).</p></div>
+<div class="paragraph"><p>SSI are very useful to add small pieces of information, but are not
+the way to go if the majority of the content has to be generated at
+the time it is served. Traditionally the web server was notified that
+it should apply SSI when it processed files ending with the <tt>.shtml</tt>
+extension.</p></div>
+<div class="paragraph"><p>Although this will be the majority of cases where this can be of
+usefulness, Cherokee is not limited to just one file extension. The
+SSI handler applies to whatever is matched by the rule where it has
+been configured.</p></div>
+<div class="paragraph"><p>Currently Cherokee supports the following SSI directives:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+<em>include</em>: this tag inserts the contents of a file. Both <tt>virtual</tt>
+  and <tt>file</tt> includes can be performed. The former uses paths
+  beginning at the Document Root, and the latter uses paths relative
+  to the current directory.
+</p>
+</li>
+<li>
+<p>
+<em>fsize</em>: inserts the size of a given file.
+</p>
+</li>
+<li>
+<p>
+<em>flastmod</em>: inserts the last modification date of a given file.
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>In any of the above cases, the specified data is inserted into the
+HTML page at the location of the token.</p></div>
+<h3 id="examples">Examples</h3><div style="clear:left"></div>
+<div class="paragraph"><p>A typical use would be using and include file for header and footer,
+allowing for an easy and fast way of updating the whole theme of a
+website. Only one header and footer file would have to be created, and
+that could be inserted through SSI in the rest of the pages with SSI
+directives like the following ones:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>   &lt;!--#include virtual="/header.html" --&gt;</tt></pre>
+</div></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>   &lt;!--#include virtual="/footer.html" --&gt;</tt></pre>
+</div></div>
+<div class="paragraph"><p>Note that the include element can determine what file to include based
+on the <tt>virtual</tt> or <tt>file</tt> attributes, which have the behavior
+specified above. In any case, despite specifying absolute or relative
+paths containing <tt>..</tt>, the SSI handler will not include any files
+outside the webserver document root.</p></div>
+</div>
+<div id="footer">
+<div id="footer-text">
+</div>
+</div>
+</div>

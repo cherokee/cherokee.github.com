@@ -1,0 +1,151 @@
+---
+layout: documentation
+title: Handler  List & Send | Cherokee Documentation
+---
+<div id="main_area"><h1>Documentation</h1>
+
+<div class="sectionbody">
+</div>
+<h2 id="_handler_list_amp_send">Handler: List &amp; Send</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>The <strong>List &amp; Send</strong> (<tt>`common</tt>` internally) handler behavior depends
+on whether it replies a request for a directory or a file.</p></div>
+<div class="paragraph"><p>In case a directory is requested, it will use the
+<a href="modules_handlers_dirlist.html">Listing Only</a> handler in order to
+list its contents. And, in case a file is request, it will use the
+<a href="modules_handlers_file.html">File Sending</a> handler.</p></div>
+<h3 id="parameters">Parameters</h3><div style="clear:left"></div>
+<div class="tableblock">
+<table cellpadding="4" cellspacing="0" frame="border" rules="all" width="100%">
+<col width="20%"></col>
+<col width="10%"></col>
+<col width="70%"></col>
+<thead>
+<tr>
+<th align="left" valign="top">Parameters       </th>
+<th align="left" valign="top">Type    </th>
+<th align="left" valign="top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left" valign="top"><p class="table"><tt>allow_pathinfo</tt></p></td>
+<td align="left" valign="top"><p class="table">boolean</p></td>
+<td align="left" valign="top"><p class="table">Makes the handler to stop parsing the
+                            pathinfo string. Default: <tt>Disabled</tt>.</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table"><tt>allow_dirlist</tt></p></td>
+<td align="left" valign="top"><p class="table">boolean</p></td>
+<td align="left" valign="top"><p class="table">Enables showing the contents of a
+                            directory.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="paragraph"><p>Besides, it inherits all the parameters from the
+<a href="modules_handlers_file.html">file/Static Content</a> and
+<a href="modules_handlers_dirlist.html">dirlist/Only listing</a> handlers.</p></div>
+<div class="dlist"><dl>
+<dt class="hdlist1">
+This example shows the practical effect of <strong>pathinfo</strong>
+</dt>
+<dd>
+<div class="listingblock">
+<div class="content">
+<pre><tt>    $ echo "This is a test" &gt; /tmp/1/2/test
+    $ curl http://localhost/1/2/test
+    This is a test
+    $ curl http://localhost/1/2/test/this/is/pathinfo
+    This is a test
+    $ curl -D - http://localhost/1/2/test.no | grep HTTP
+    HTTP/1.1 404 Not Found</tt></pre>
+</div></div>
+</dd>
+</dl></div>
+<h3 id="examples">Examples</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Here is a basic example.</p></div>
+<div class="tableblock">
+<table cellpadding="4" cellspacing="0" frame="border" rules="all" width="100%">
+<caption class="title">Sample configuration</caption>
+<col width="50%"></col>
+<col width="50%"></col>
+<tbody>
+<tr>
+<td align="left" valign="top"><p class="table">Field</p></td>
+<td align="left" valign="top"><p class="table">Value</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">Handler</p></td>
+<td align="left" valign="top"><p class="table"><tt>Only listing</tt></p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">Document Root</p></td>
+<td align="left" valign="top"><p class="table">None</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">Show Size</p></td>
+<td align="left" valign="top"><p class="table">Enabled</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">Show Date</p></td>
+<td align="left" valign="top"><p class="table">Enabled</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">Show User</p></td>
+<td align="left" valign="top"><p class="table">Disabled</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">Show Group</p></td>
+<td align="left" valign="top"><p class="table">Disabled</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">Show Backup files</p></td>
+<td align="left" valign="top"><p class="table">Disabled</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">Show Hidden files</p></td>
+<td align="left" valign="top"><p class="table">Disabled</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">Allow symbolic links</p></td>
+<td align="left" valign="top"><p class="table">Enabled</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">Redirect symbolic links</p></td>
+<td align="left" valign="top"><p class="table">Disabled</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">Theme</p></td>
+<td align="left" valign="top"><p class="table"><tt>default</tt></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="imageblock">
+<div class="content">
+<img alt="media/images/admin_handler_dirlist.png" src="media/images/admin_handler_dirlist.png"/>
+</div>
+<div class="image-title">Configuration screenshot</div>
+</div>
+<div class="imageblock">
+<div class="content">
+<img alt="media/images/admin_handler_dirlist_ex.png" src="media/images/admin_handler_dirlist_ex.png"/>
+</div>
+<div class="image-title">Actual output</div>
+</div>
+<h3 id="indexes">Indexes</h3><div style="clear:left"></div>
+<div class="paragraph"><p>This is the behavior inherited from the
+<a href="modules_handlers_dirlist.html">dirlist/Only listing</a> handler.</p></div>
+<div class="paragraph"><p>Simply enable the desired file attributes to be shown under <tt>Listing</tt>,
+and choose the HTML template to use (<tt>default</tt> -with the Cherokee logo-,
+<tt>plain</tt> -a fixed width theme- and <tt>firefox3</tt>).</p></div>
+<div class="paragraph"><p>You can also include a <tt>Notice file</tt> to show its contents on top of
+every automatically generated list.</p></div>
+<div class="paragraph"><p>Of course, the lists are sortable by any of the displayed attributes.</p></div>
+</div>
+<div id="footer">
+<div id="footer-text">
+</div>
+</div>
+</div>

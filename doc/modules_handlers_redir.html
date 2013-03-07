@@ -1,0 +1,234 @@
+---
+layout: documentation
+title: Handler  Redirection | Cherokee Documentation
+---
+<div id="main_area"><h1>Documentation</h1>
+
+<div class="sectionbody">
+</div>
+<h2 id="_handler_redirection">Handler: Redirection</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>The main idea of a redirection is telling the web client to go to
+another URL when the requested URL matches a rule. It could happen
+that this is not precisely what you are looking for. Check the
+<a href="modules_handlers_proxy.html">reverse proxy</a> handler if you are
+looking for more complex layer 7 operations.  However, for URL
+redirections this handler is the place to go. A very common scenario
+would be rewriting URLS.</p></div>
+<div class="dlist"><dl>
+<dt class="hdlist1">
+Lets suppose you have URLs like
+</dt>
+<dd>
+<div class="listingblock">
+<div class="content">
+<pre><tt>    http://example.com/inst/photogallery/viewphoto?photoid=1235
+    http://example.com/inst/photogallery/viewcomments?photoid=1235
+    http://example.com/inst/photogallery/admin?photoid=1235&amp;method=delete</tt></pre>
+</div></div>
+</dd>
+<dt class="hdlist1">
+You probably would prefer URLs like
+</dt>
+<dd>
+<div class="listingblock">
+<div class="content">
+<pre><tt>    http://example.com/photo/1235
+    http://example.com/photo/1235/cmts
+    http://example.com/photo/1235/delete</tt></pre>
+</div></div>
+</dd>
+</dl></div>
+<h3 id="parameters">Parameters</h3><div style="clear:left"></div>
+<div class="paragraph"><p>This directive uses PCRE (Perl Compatible Regular Expressions) to make
+the substitution.</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+Type: [External | Internal]
+</p>
+<div class="ulist"><ul>
+<li>
+<p>
+<strong>Internal</strong>:
+    The redirection will happen internally, hence the internal URL in
+    which the address is translated will be invisible for the client.
+</p>
+</li>
+<li>
+<p>
+<strong>External</strong>:
+    It works in the same way as the previous one, but in this case, it
+    will redirect the connection to the new resource.
+</p>
+</li>
+</ul></div>
+</li>
+<li>
+<p>
+<strong>Regular Expression</strong> and <strong>Substitution</strong> are the matching request and
+   the intended target of such petition. Getting into details of
+   regular expressions is out of the scope of this document. Besides,
+   there are many <a href="http://perldoc.perl.org/perlre.html">Perl
+   regular expressions</a> references. Macros can be used for these
+   substitutions, which is specially handy for some cases that cannot
+   be covered any other way, such as uniformly managing virtual
+   servers with multiple matches. Take a look at the examples at the
+   end of this section for further clarification.
+</p>
+<div class="tableblock">
+<table cellpadding="4" cellspacing="0" frame="border" rules="all" width="100%">
+<col width="33%"></col>
+<col width="33%"></col>
+<col width="33%"></col>
+<thead>
+<tr>
+<th align="left" valign="top">Variable           </th>
+<th align="left" valign="top">Example          </th>
+<th align="left" valign="top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left" valign="top"><p class="table"><tt>${host}</tt></p></td>
+<td align="left" valign="top"><p class="table">example.com</p></td>
+<td align="left" valign="top"><p class="table">Host of the matching virtual server</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="paragraph"><p>This macro uses the standard template subsystem , which provides
+<a href="config_virtual_servers_evhost.html#slicing">slicing support</a>. You
+should read more about this powerful feature if you are not already
+familiar with it.</p></div>
+</li>
+</ul></div>
+<div class="paragraph"><p>The maximum allowed number of substitutions on an expression is
+limited to 20, and even though it could be raised even more, this
+wouldn’t actually make any difference for any real-life case.</p></div>
+<h3 id="vhosts">Virtual hosts and redirections</h3><div style="clear:left"></div>
+<div class="paragraph"><p>The internal redirections, using the <tt>internal</tt> keyword, are limited to
+work in the same virtual host. All the internal redirections will be
+processed in the original virtual host, which makes a lot of sense in
+terms of security.</p></div>
+<div class="paragraph"><p>In case you do need to redirect a resource to another virtual host
+and/or domain, you will have to use an explicit redirection using the
+<tt>external</tt> keyword.</p></div>
+<h3 id="rule_type">The influence of the rule type</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Any rule type can be used with the redirection handler: Directory,
+Extensions, Regular Expression, etc. Only the case where the type is
+<strong>Regular Expression</strong> will require some more extra information.
+Because of Cherokee’s design, modularity and inheritance is heavily
+used throughout the code base. This one is a special case because the
+regex entry of the redirection handler can be empty whenever the
+matching rule used is a regular expression (because it is inherited by
+it).</p></div>
+<div class="paragraph"><p>The logic behind this is that you can set up a regular expression to
+match the rule, but once you’re in the redirection handler you could
+or could not be needing another matching to be performed. If not, the
+original one (the one from the rule) will be enough. If you do, you
+can specify a completely different expression to be matched. For
+instance, you could match the rule taking just the beginning part of
+the request as meaningful, and once you are into the handler you might
+want to consider just the end of it before making the substitution.</p></div>
+<h3 id="examples">Examples</h3><div style="clear:left"></div>
+<div class="paragraph"><p>This example will perform internal redirections:</p></div>
+<div class="tableblock">
+<table cellpadding="4" cellspacing="0" frame="border" rules="all" width="100%">
+<col width="30%"></col>
+<col width="70%"></col>
+<thead>
+<tr>
+<th align="left" valign="top">Regular Expression    </th>
+<th align="left" valign="top">Substitution</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left" valign="top"><p class="table"><em>/(\d+)$</em></p></td>
+<td align="left" valign="top"><p class="table"><a href="http://example.com/inst/photogallery/viewphoto?photoid=$1">http://example.com/inst/photogallery/viewphoto?photoid=$1</a></p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table"><em>/(\d+)/cmts</em></p></td>
+<td align="left" valign="top"><p class="table"><a href="http://example.com/viewcomments?photoid=$1">http://example.com/viewcomments?photoid=$1</a></p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table"><em>/(\d+)/delete</em></p></td>
+<td align="left" valign="top"><p class="table"><a href="http://example.com/inst/photogallery/admin?photoid=$1&amp;method=delete">http://example.com/inst/photogallery/admin?photoid=$1&amp;method=delete</a></p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table"><em>/https_redir/(\d+)</em></p></td>
+<td align="left" valign="top"><p class="table"></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="paragraph"><p>Which would translate into the following redirections for the listed
+matching requests:</p></div>
+<div class="tableblock">
+<table cellpadding="4" cellspacing="0" frame="border" rules="all" width="100%">
+<col width="30%"></col>
+<col width="70%"></col>
+<thead>
+<tr>
+<th align="left" valign="top">Request               </th>
+<th align="left" valign="top">Internal translation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left" valign="top"><p class="table"><em>/photo/123</em></p></td>
+<td align="left" valign="top"><p class="table"><a href="http://example.com/inst/photogallery/viewphoto?photoid=123">http://example.com/inst/photogallery/viewphoto?photoid=123</a></p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table"><em>/photo/213/cmts</em></p></td>
+<td align="left" valign="top"><p class="table"><a href="http://example.com/viewcomments?photoid=213">http://example.com/viewcomments?photoid=213</a></p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table"><em>/photo/501/delete</em></p></td>
+<td align="left" valign="top"><p class="table"><a href="http://example.com/inst/photogallery/admin?photoid=501&amp;method=delete">http://example.com/inst/photogallery/admin?photoid=501&amp;method=delete</a></p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table"><em>/https_redir/555</em></p></td>
+<td align="left" valign="top"><p class="table"><a href="https://example.com/secure?photoid=555">https://example.com/secure?photoid=555</a></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="paragraph"><p>You might also want to check out the cookbook entry titled
+<a href="cookbook_http_to_https.html">HTTP to HTTPS</a> on how to redirect all
+traffic from HTTP to HTTPS.</p></div>
+<h3 id="global">Global redirections</h3><div style="clear:left"></div>
+<div class="paragraph"><p>If you want to implement global redirections that can be defined once
+and apply to every virtual server on your configuration, you will also
+have to perform matches against the host part of the request. This can
+be done by creating an additional virtual server using "Regular
+Expression" as method to match the host, which can be specified
+through the the <tt>Host Match</tt> tab. You will then have to define a
+substitution that uses both type of regex matches:</p></div>
+<div class="tableblock">
+<table cellpadding="4" cellspacing="0" frame="border" rules="all" width="100%">
+<caption class="title">Match groups</caption>
+<col width="20%"></col>
+<col width="80%"></col>
+<tbody>
+<tr>
+<td align="left" valign="top"><p class="table"><tt>^1,^2,^3,..</tt></p></td>
+<td align="left" valign="top"><p class="table">These are substituted by the host name match.</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table"><tt>$1,$2,$3,..</tt></p></td>
+<td align="left" valign="top"><p class="table">These are substituted by either the handler match (if any) or its own match groups.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="paragraph"><p>For more information, check out the practical example in the cookbook
+describing how to implement
+<a href="cookbook_redirs.html#global-redirs">global redirections</a>.</p></div>
+</div>
+<div id="footer">
+<div id="footer-text">
+</div>
+</div>
+</div>

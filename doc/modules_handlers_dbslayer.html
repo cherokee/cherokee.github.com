@@ -1,0 +1,121 @@
+---
+layout: documentation
+title: Handler  MySQL bridge | Cherokee Documentation
+---
+<div id="main_area"><h1>Documentation</h1>
+
+<div class="sectionbody">
+</div>
+<h2 id="_handler_mysql_bridge">Handler: MySQL bridge</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>This handler offers a lightweight database abstraction layer that
+will provide all the benefits of connection pooling. This in turn
+offers scalable advantages for high-load websites.</p></div>
+<div class="paragraph"><p>The original implementation of
+<a href="http://code.nytimes.com/projects/dbslayer/">DBSlayer</a> was a MySQL
+to JSON over HTTP bridge. This handler outperforms any other
+implementation by far,  and many more advantages are derived of using
+the MySQL bridge, including:</p></div>
+<div class="olist arabic"><ol class="arabic">
+<li>
+<p>
+Possibility of being proxied: imagine caching your database queries
+with any standard mechanism currently in place.
+</p>
+</li>
+<li>
+<p>
+Chunked encoding: make your database connections persistent between
+the bridge and the database server. Experience a huge performance
+boost independently of your application’s design.
+</p>
+</li>
+<li>
+<p>
+Possibility of applying any of the encoding modules provided by
+Cherokee: deliver your database results in gzipped format and save
+bandwidth.
+</p>
+</li>
+<li>
+<p>
+More languages available: besides JSON, the handler can also return
+the information to be used directly by Python, Ruby and PHP.
+</p>
+</li>
+</ol></div>
+<div class="imageblock">
+<div class="content">
+<img alt="media/images/admin_handler_dbslayer.png" src="media/images/admin_handler_dbslayer.png"/>
+</div>
+<div class="image-title">Interface example</div>
+</div>
+<div class="paragraph"><p>It also makes use of a <a href="modules_balancers.html">balancing strategy</a>
+to manage <strong>at least one</strong> <a href="config_info_sources.html">information
+source</a>: the MySQL server being bridged.</p></div>
+<h3 id="parameters">Parameters</h3><div style="clear:left"></div>
+<div class="tableblock">
+<table cellpadding="4" cellspacing="0" frame="border" rules="all" width="100%">
+<col width="50%"></col>
+<col width="50%"></col>
+<thead>
+<tr>
+<th align="left" valign="top">Parameter    </th>
+<th align="left" valign="top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left" valign="top"><p class="table"><em>user</em></p></td>
+<td align="left" valign="top"><p class="table">The MySQL user to authenticate as.</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table"><em>password</em></p></td>
+<td align="left" valign="top"><p class="table">The MySQL user password to use.</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table"><em>db</em></p></td>
+<td align="left" valign="top"><p class="table">Optional. A MySQL database name.</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table"><em>lang</em></p></td>
+<td align="left" valign="top"><p class="table">Language from which the information will
+               be consumed: json | python | ruby | php</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="paragraph"><p>Note that for this module to be correctly compiled, the MySQL database
+development files are required.</p></div>
+<div class="paragraph"><p>As stated above, the MySQL bridge handler is merely an abstraction
+layer. An excellent one at that, but that is all. No more, no less.
+This means you can perform regular operations on your database, but
+you cannot expect magic to happen. For instance, when you perform an
+INSERT, the Cherokee DB balancer will return a tuple indicating
+whether it succeeded or not, the number of rows affected, a rollback
+flag, etc. It will not, however, replicate the operation among each
+one of you MySQL servers. These arrangements must be made
+independently using MySQL’s specific mechanisms.</p></div>
+<div class="paragraph"><p>Since the handler can manage multiple SQL requests in the same
+instruction, a list of responses is delivered containing as many as
+commands were issued.</p></div>
+<div class="paragraph"><p>Warning: When performing multiple operations in a single call to the
+handler, you need to keep one <strong>very important</strong> thing in mind.  Because
+of MySQL’s design, when an error is returned no other statements are
+executed. Check MySQL’s mysql_next_result() function for more details
+about this limitation. This is not just limited to transactions. This
+means you should make atomic calls to the handler if you want to
+determine precisely what SQL commands where performed. A multiple
+operation can be executed with no further issue, but if one of the
+group fails the rest will not be run. You will receive at least one
+error among the results, which is probably all what you need in case
+you were in the middle of a transaction or that sort of situation.</p></div>
+<div class="paragraph"><p>Further information about this handler can be found in the
+<a href="cookbook.html">cookbook</a> section, specifically in the recipe about
+<a href="cookbook_dbslayer.html">setting up the MySQL balancing</a>.</p></div>
+</div>
+<div id="footer">
+<div id="footer-text">
+</div>
+</div>
+</div>

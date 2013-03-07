@@ -1,0 +1,162 @@
+---
+layout: documentation
+title: Handler  HTTP reverse proxy | Cherokee Documentation
+---
+<div id="main_area"><h1>Documentation</h1>
+
+<div class="sectionbody">
+</div>
+<h2 id="_handler_http_reverse_proxy">Handler: HTTP reverse proxy</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>This handler is one of the most demanded features of Cherokee. It
+dispatches in-bound network traffic to a set of servers, and presents
+a single interface to the requesters. This is particularly useful to
+load balance a cluster of webservers at a much higher network stack
+level than the one allowed by a generic balancer.</p></div>
+<div class="paragraph"><p>All connections coming from the Internet addressed to one of the Web
+servers are routed through the proxy, which can either deal with the
+request or pass it (with or without modifications) to the other web
+servers.</p></div>
+<div class="paragraph"><p>The reverse proxy can do several interesting things besides simply
+load balancing. It can rewrite headers, and it can try to establish
+keep-alive connections with every system interfacing with it. That is,
+it doesn’t matter if all the clients requesting contents from our
+publicly available Reverse Proxy do not support this feature: the
+Keep-Alive connections can still be kept within the local pool,
+greatly improving performance.</p></div>
+<div class="paragraph"><p>Cherokee’s HTTP Reverse proxy is a powerful and modern implementation
+that also provides X-Sendfile and X-Accel-Redirect. These headers are
+automatically handled by the server and there is no need to manually
+specify anything for this functionality to work. Both X-Sendfile and
+X-Accel-Redirect work in the same way, so there are no artificial
+restrictions in place. The X-Sendfile/X-Accel-Redirect features work
+with any kind of object, not only static files, so dynamically
+generated contents are not a problem at all.</p></div>
+<div class="paragraph"><p>The task of the reverse proxy can be summarized in the following
+steps.</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+Phase 1: The proxy receives a request, adds the necessary HTTP
+  headers and rewrites the existing ones according to the specified
+  rules. It then dispatches the request to one of the machines in the
+  pool of specified <tt>information sources</tt>.
+</p>
+</li>
+</ul></div>
+<div class="imageblock">
+<div class="content">
+<img alt="media/images/proxy_phase1.png" src="media/images/proxy_phase1.png"/>
+</div>
+<div class="image-title">Phase 1</div>
+</div>
+<div class="ulist"><ul>
+<li>
+<p>
+Phase 2: Once the server that has received the request sends back the
+  response, the reverse proxy deletes the unnecessary return HTTP
+  headers and sends the response  back to the requesting client.
+</p>
+</li>
+</ul></div>
+<div class="imageblock">
+<div class="content">
+<img alt="media/images/proxy_phase2.png" src="media/images/proxy_phase2.png"/>
+</div>
+<div class="image-title">Phase 2</div>
+</div>
+<div class="paragraph"><p>To use the HTTP reverse proxy handler you simply have to specify
+several parameters. First define a series of
+<a href="config_info_sources.html">information sources</a>. Those will be the
+ones handling the requests in the end.</p></div>
+<div class="paragraph"><p>Then you will have to specify the Reverse Proxy Settings by adjusting
+the following settings.</p></div>
+<h3 id="handler">Handler</h3><div style="clear:left"></div>
+<div class="ulist"><ul>
+<li>
+<p>
+Reuse connections: the maximum number of connections per server to be
+  kept with Keep-alive. If not specified, the default value of 16 will
+  be taken.
+</p>
+</li>
+<li>
+<p>
+Allow Keepalive: Allow the server to use Keep-alive connections with
+  the back-end servers, which is a good idea.
+</p>
+</li>
+<li>
+<p>
+Preserve Host Header: Preserve the original "Host:" header sent by
+  the client. It defaults to no, but it is of use in scenarios where
+  you need to uniquely identify a proxied machine. In these cases, IP
+  and port might not be enough, particularly if you are proxying a
+  server on a different port of that which it uses by default. For
+  example, when proxying a Java Server on the same machine through
+  port 80, resorting to the host header will most likely make things
+  work as expected.
+</p>
+</li>
+<li>
+<p>
+Preserve Server Header: Preserve the "Server:" header sent by the
+  back-end server. As before, it default to no, but the mechanism is
+  completely analogous.
+</p>
+</li>
+<li>
+<p>
+Use VServer error handler: Whenever an error response is received
+from a back-end server, use the error handler defined for the virtual
+server to handle it.
+</p>
+</li>
+</ul></div>
+<h3 id="request_reply">Request / Reply</h3><div style="clear:left"></div>
+<div class="paragraph"><p>These setting apply respectively to the HTTP request or response.</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+URL rewriting rules, which are specified using regular expressions
+  to modify URLs before relaying the requests.
+</p>
+</li>
+<li>
+<p>
+Header additions: to add specific HTTP headers.
+</p>
+</li>
+<li>
+<p>
+Hidden returned headers: to eliminate specific HTTP headers.
+</p>
+</li>
+</ul></div>
+<h3 id="backend">Back-end Servers</h3><div style="clear:left"></div>
+<div class="ulist"><ul>
+<li>
+<p>
+Balancer: the type of load balancing strategy to be used to dispatch connections.
+</p>
+</li>
+<li>
+<p>
+Information sources: where you will assign the previously defined
+  sources, which are all the servers from the set to be used in the
+  cluster of web servers.
+</p>
+</li>
+</ul></div>
+<div class="imageblock">
+<div class="content">
+<img alt="media/images/admin_handler_proxy.png" src="media/images/admin_handler_proxy.png"/>
+</div>
+<div class="image-title">Reverse Proxy</div>
+</div>
+</div>
+<div id="footer">
+<div id="footer-text">
+</div>
+</div>
+</div>
