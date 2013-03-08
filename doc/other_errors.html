@@ -1,0 +1,93 @@
+---
+layout: documentation
+title: 90900476MANUAL EDITING REQUIRED | Cherokee Documentation
+---
+<div id="main_area"><h1>Documentation</h1>
+
+<div class="sectionbody">
+<h3 id="_most_common_production_server_errors_with_cherokee">Most common production server errors with Cherokee</h3><div style="clear:left"></div>
+<div class="ulist"><ul>
+<li>
+<p>
+<strong>Page 500</strong>
+</p>
+<div class="literalblock">
+<div class="content">
+<pre><tt>The most common cause of an Internal Server Error within Cherokee is
+problem of invalid headers. If your cgi script for some reason does
+not send out a headerless (eq. Content-type: text/html) streams, you
+will hit this bug. Check scripts, error log etc. to find out what
+causes it.</tt></pre>
+</div></div>
+</li>
+<li>
+<p>
+<strong>Page 503</strong>
+</p>
+<div class="literalblock">
+<div class="content">
+<pre><tt>When an information source is unavailable, the server will return a
+503 for that request. Cherokee will constantly try to find a new
+information sources, but it will take (as most) the total amount of
+defined sources in request to find back a working information
+source. If a 503 stays present, you can safely assume Cherokee is
+unable to start an interpreter or connect to the remote host that
+has the information source defined.</tt></pre>
+</div></div>
+</li>
+<li>
+<p>
+<strong>Page 400</strong>
+</p>
+<div class="literalblock">
+<div class="content">
+<pre><tt>If you are repeatedly receiving a 400 error while uploading files to
+a PHP backend, it could very well be related to PHP being the one
+restricting uploads bigger than a certain size. Check the [PHP
+recipe] for more details on how to fix this.</tt></pre>
+</div></div>
+</li>
+<li>
+<p>
+<strong>CLI</strong>: Can’t bind() socket (port=80, UID=1000, GID=1000)
+</p>
+<div class="literalblock">
+<div class="content">
+<pre><tt>Most likely Cherokee is unable to start because you are not
+root. And you want to bind the webserver to a privileged port (80).</tt></pre>
+</div></div>
+</li>
+<li>
+<p>
+<strong>CLI</strong>: Can’t bind() socket (port=80, UID=0, GID=0)
+</p>
+<div class="literalblock">
+<div class="content">
+<pre><tt>When you are root and get this message. There is a running Cherokee
+instance. The most efficient way to get rid of it:</tt></pre>
+</div></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>  killall -s KILL cherokee
+  killall -s KILL cherokee-worker</tt></pre>
+</div></div>
+</li>
+</ul></div>
+<h3 id="_restarting">Restarting</h3><div style="clear:left"></div>
+<div class="ulist"><ul>
+<li>
+<p>
+If you just want to restart the webserver, this will do:
+</p>
+<div class="listingblock">
+<div class="content">
+<pre><tt>  killall -s HUP cherokee</tt></pre>
+</div></div>
+</li>
+</ul></div>
+</div>
+<div id="footer">
+<div id="footer-text">
+</div>
+</div>
+</div>

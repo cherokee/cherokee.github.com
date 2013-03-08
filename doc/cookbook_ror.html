@@ -1,0 +1,222 @@
+---
+layout: documentation
+title: Cookbook  Setting up Ruby on Rails | Cherokee Documentation
+---
+<div id="main_area"><h1>Documentation</h1>
+
+<div class="sectionbody">
+</div>
+<h2 id="_cookbook_setting_up_ruby_on_rails">Cookbook: Setting up Ruby on Rails</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Setting up a Rails application to run with Cherokee is not only
+easy. It is also the best possible solution to manage the load among a
+bunch of servers running Rails. This is done by using an extremely
+efficient web server to manage the web part and leaving as many free
+resources as possible to Rails.</p></div>
+<div class="paragraph"><p>There is a
+<a href="../screencasts.html#rails">screencast</a>
+available at the
+<a href="../index.html">Cherokee-Project website</a> to
+demonstrate how easy it is to use the Rails wizard.</p></div>
+<div class="paragraph"><p><span class="image">
+<a class="image" href="../screencasts.html#rails">
+<img alt="media/images/screencast.png" src="media/images/screencast.png"/>
+</a>
+</span></p></div>
+<h3 id="framework">Preparing the framework</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Of course you will need a working Rails installation for this to
+succeed. You can set this up easily. If you have Ruby and Ruby Gems
+installed, you can directly install the <em>Rails</em> gem like this:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt># gem update --system
+# gem install rails</tt></pre>
+</div></div>
+<div class="paragraph"><p>Note that on Debian based systems you don’t even need to install
+Rubygems. There is already a package that will install every needed
+dependency:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt># apt-get install rails</tt></pre>
+</div></div>
+<div class="paragraph"><p>The installation of the <em>Rails</em> gem directly would also work, but note
+that you cannot execute the first command because it is disabled by
+default.</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt># gem update --system
+ERROR:  While executing gem ... (RuntimeError)
+    gem update --system is disabled on Debian. RubyGems can be updated \
+    using the official Debian repositories by aptitude or apt-get.</tt></pre>
+</div></div>
+<div class="paragraph"><p>You can also install some other gems. <tt>thin</tt>, <tt>mongrel</tt>, <tt>unicorn</tt>,
+<tt>rack</tt> and <tt>fcgi</tt> are some that you might find useful.</p></div>
+<div class="paragraph"><p>Once you are done with that, you must deploy your Rails project:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>$ rails example</tt></pre>
+</div></div>
+<div class="paragraph"><p>You can do so wherever you want, but the usual recommended way of doing
+this is by deploying it outside of your web root path and then
+creating a symbolic link. This is simply to protect from exposing all
+the files that do not need to be in your document root.</p></div>
+<div class="paragraph"><p>Assuming you deployed the <tt>example</tt> project in <tt>/home/foo/example</tt>,
+and you have writing permissions to your web path, <tt>/var/www</tt>, simply
+type:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>$ ln -s /home/foo/example/public /var/www/example</tt></pre>
+</div></div>
+<div class="paragraph"><p>Now you are ready to configure Cherokee.</p></div>
+<h3 id="cherokee">Preparing Cherokee</h3><div style="clear:left"></div>
+<div class="paragraph"><p>You can either do it by hand, or you can use the appropriate wizard
+for a hassle-free configuration.</p></div>
+<h3 id="wizard">Setting up Cherokee with the wizard</h3><div style="clear:left"></div>
+<div class="paragraph"><p>You should really use the recommended method, which is using the
+configuration wizard provided by Cherokee-Admin. Simply go to the
+virtual server list page and click on the <tt>Add</tt> button at the top of
+the panel to show the list of available wizards. This will allow you
+to set up a new dedicated virtual host for your Rails application.
+Once in there, use the <tt>Add</tt> button at the top of the panel to see the
+available wizards.</p></div>
+<div class="paragraph"><p>If you wanted to configure Rails to run under a web directory of an
+existing virtual server, you would have to launch the wizard from
+within the specific virtual server, visiting the <tt>Behavior</tt> tab and
+trigger the <tt>Rule panel</tt> by clicking on the <tt>Rule Management</tt>
+button.</p></div>
+<div class="imageblock">
+<div class="content">
+<img alt="media/images/admin_vservers_wizard.png" src="media/images/admin_vservers_wizard.png"/>
+</div>
+<div class="image-title">Wizards</div>
+</div>
+<div class="paragraph"><p>Now, you will have to select the <tt>Platforms</tt> category, and run the
+<tt>RoR</tt> wizard. You will be asked for some basic parameters about the
+installation, and the wizard will try to fill in automatically as many
+entries as possible. The virtual server configuration will cover the
+vast majority of the cases. Most probably it will cover your needs,
+although you are free to modify it as you will. No more configuration
+is needed after this step.</p></div>
+<div class="imageblock">
+<div class="content">
+<img alt="media/images/cookbook_ror_wizard.png" src="media/images/cookbook_ror_wizard.png"/>
+</div>
+<div class="image-title">The wizard in action</div>
+</div>
+<div class="paragraph"><p>It is usually best to proxy one or several of the servers used by
+Rails, be it Thin, Mongrel, Unicorn or whatever it can handle.  You
+could also choose the FastCGI alternative if there is a suitable
+spawning method in your system. This approach, however, has been known
+to give inconsistent results on several releases of Rails. In
+particular, Rails releases 2.3 or higher are known to give errors when
+used with FastCGI. You will have to test it out and choose the method
+that best suits your need.</p></div>
+<h3 id="_setting_up_cherokee_by_hand">Setting up Cherokee by hand</h3><div style="clear:left"></div>
+<div class="paragraph"><p>If you decide to ignore the configuration wizard you can set up
+everything by hand. Although it is not complicated, this method is not
+recommended.</p></div>
+<div class="paragraph"><p>You only need to know that you can spawn the FastCGI process using a
+script that is already in your deployed project. In this case,
+<tt>/home/foo/example/script/process/spawner</tt>.  We will be using the
+default parameters (3 instances starting at port 8000) but you can
+fine tune this using the many parameters provided by the script.</p></div>
+<div class="paragraph"><p>The process is fairly simple. Set up a new rule for this new path and
+manage it with the FastCGI handler.</p></div>
+<div class="paragraph"><div class="title">Common CGI options</div><p>Under <tt>Common CGI options</tt> make sure to check the <tt>Error handler</tt> box and
+uncheck <tt>Check file</tt>. This is to prevent possible errors with the
+<tt>INFO_PATH</tt> generation that can happen when an application, in this
+case <em>Rails</em>, manages the whole subtree. This is mentioned in the
+<a href="modules_handlers_cgi.html">Common CGI</a> section of the
+documentation. It is a good idea to enable the <tt>Error handler</tt>
+checkbox since it will help you determine if an error is associated
+with your Ruby on Rails application or with Cherokee. This, however,
+is not required.</p></div>
+<div class="imageblock">
+<div class="content">
+<img alt="media/images/cookbook_ror_common.png" src="media/images/cookbook_ror_common.png"/>
+</div>
+<div class="image-title">FastCGI handler</div>
+</div>
+<div class="paragraph"><div class="title">FastCGI specific</div><p>Under <tt>FastCGI specific</tt> make sure to add the hosts providing the
+service. Do this by adding one or more
+<a href="config_info_sources.html">Information Sources</a>.</p></div>
+<div class="paragraph"><p>Note that, in the definition of the information source, you will have
+to manually launch the <tt>spawner</tt> if you use a <tt>Remote host</tt> as
+<tt>Information source</tt> instead of a <tt>Local interpreter</tt>.</p></div>
+<div class="paragraph"><p>You will simply have to add as many sources as desired, for instance
+our example uses the default values to set up ports 8000 through
+8002. These sources will be nicknamed <strong>ror0</strong>, <strong>ror1</strong> and <strong>ror2</strong>.</p></div>
+<div class="tableblock">
+<table cellpadding="4" cellspacing="0" frame="border" rules="all" width="100%">
+<col width="20%"></col>
+<col width="80%"></col>
+<thead>
+<tr>
+<th align="left" valign="top">Host           </th>
+<th align="left" valign="top">Interpreter</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left" valign="top"><p class="table">localhost:8000</p></td>
+<td align="left" valign="top"><p class="table"><tt>/home/foo/example/script/process/spawner fcgi</tt></p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">localhost:8001</p></td>
+<td align="left" valign="top"><p class="table"><tt>/home/foo/example/script/process/spawner fcgi</tt></p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">localhost:8002</p></td>
+<td align="left" valign="top"><p class="table"><tt>/home/foo/example/script/process/spawner fcgi</tt></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="paragraph"><p>If any of those ports was not reachable, the <tt>interpreter</tt> command
+would be launched and the fallen one would be reinstantiated.</p></div>
+<div class="paragraph"><p>According to that table, the creation of the <strong>ror0</strong> information source
+would use the following settings. The rest are similar using the port
+variation detailed above.</p></div>
+<div class="tableblock">
+<table cellpadding="4" cellspacing="0" frame="border" rules="all" width="100%">
+<caption class="title">ror0 information source</caption>
+<col width="15%"></col>
+<col width="20%"></col>
+<col width="65%"></col>
+<thead>
+<tr>
+<th align="left" valign="top">Nick </th>
+<th align="left" valign="top">Connection     </th>
+<th align="left" valign="top">Interpreter</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left" valign="top"><p class="table">ror0</p></td>
+<td align="left" valign="top"><p class="table">localhost:8000</p></td>
+<td align="left" valign="top"><p class="table"><tt>/home/foo/example/script/process/spawner fcgi</tt></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="imageblock">
+<div class="content">
+<img alt="media/images/cookbook_ror_fcgi.png" src="media/images/cookbook_ror_fcgi.png"/>
+</div>
+<div class="image-title">ror0 information source</div>
+</div>
+<div class="paragraph"><p>Once everything is done you can check if Rails  is really
+working. Simply navigate to the path configured by your rule,
+<a href="http://localhost/example/">http://localhost/example/</a> for instance, and you should see some notes
+about your recently created project.</p></div>
+<div class="imageblock">
+<div class="content">
+<img alt="media/images/cookbook_ror.png" src="media/images/cookbook_ror.png"/>
+</div>
+</div>
+</div>
+<div id="footer">
+<div id="footer-text">
+</div>
+</div>
+</div>

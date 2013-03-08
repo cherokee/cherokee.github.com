@@ -1,0 +1,155 @@
+---
+layout: documentation
+title: Handler  CGI | Cherokee Documentation
+---
+<div id="main_area"><h1>Documentation</h1>
+
+<div class="sectionbody">
+</div>
+<h2 id="_handler_cgi">Handler: CGI</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>The cgi handler executes CGI programs.</p></div>
+<h3 id="parameters">Parameters</h3><div style="clear:left"></div>
+<div class="paragraph"><p>This module accepts three parameters:</p></div>
+<div class="tableblock">
+<table cellpadding="4" cellspacing="0" frame="border" rules="all" width="100%">
+<col width="30%"></col>
+<col width="15%"></col>
+<col width="55%"></col>
+<thead>
+<tr>
+<th align="left" valign="top">Parameters           </th>
+<th align="left" valign="top">Type    </th>
+<th align="left" valign="top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left" valign="top"><p class="table">Script Alias</p></td>
+<td align="left" valign="top"><p class="table">String</p></td>
+<td align="left" valign="top"><p class="table">It defines a kind of execution
+                                interpreter. The CGI will be run as a
+                                parameter of this script.</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">Change to UID</p></td>
+<td align="left" valign="top"><p class="table">String</p></td>
+<td align="left" valign="top"><p class="table">Executes each CGI under its owner’s
+                                user ID.</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">Error handler</p></td>
+<td align="left" valign="top"><p class="table">Boolean</p></td>
+<td align="left" valign="top"><p class="table">Use CGI output as error message.</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">Check file</p></td>
+<td align="left" valign="top"><p class="table">Boolean</p></td>
+<td align="left" valign="top"><p class="table">Check file existence to build
+                                PATH_INFO and SCRIPT_NAME.</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">Pass request</p></td>
+<td align="left" valign="top"><p class="table">Boolean</p></td>
+<td align="left" valign="top"><p class="table">Pass request headers.</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">Allow X-Sendfile</p></td>
+<td align="left" valign="top"><p class="table">Boolean</p></td>
+<td align="left" valign="top"><p class="table">Use the non-standard X-Sendfile
+                                header.</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">Pass Request Headers</p></td>
+<td align="left" valign="top"><p class="table">Boolean</p></td>
+<td align="left" valign="top"><p class="table">Forward all the headers to the CGI as
+                                HTTP_*</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="paragraph"><p>Note that the <a href="other_goodies.html#x-sendfile">X-Sendfile</a> feature
+also supports <tt>X-Accel-Redirect</tt> headers transparently. This is to
+allow the migration of applications supporting it whithout having to
+make major code rewrites.</p></div>
+<h3 id="check_file_warning">Warning:</h3><div style="clear:left"></div>
+<div class="paragraph"><p>The <tt>Check file</tt> flag affects how PATH_INFO and SCRIPT_NAME are
+generated. You should disable this when you have an application that
+is running the whole virtual server tree, as it is a common source of
+problems. You can look at a practical example about PATH_INFO in the
+<a href="modules_handlers_common.html">List &amp; Send</a> handler documentation.</p></div>
+<div class="paragraph"><p><tt>Check file</tt> must be disabled for cases such as Rails, Django, etc,
+where everything that arrives to Cherokee must be re-sent to the
+framework as request.</p></div>
+<div class="paragraph"><p>Enabling <tt>Check file</tt> is the way to go if you are using any kind of
+file-based system, such as PHP.</p></div>
+<div class="paragraph"><p>If you are unsure of the way this is being taken into account, try
+both settings and see how your application behaves.</p></div>
+<h3 id="examples">Examples</h3><div style="clear:left"></div>
+<div class="paragraph"><p>This is a pretty common example. It defines a directory called <tt>cgi</tt>
+that points to a path out of the Sever root directory where the
+CGI programs are located.</p></div>
+<div class="tableblock">
+<table cellpadding="4" cellspacing="0" frame="border" rules="all" width="100%">
+<caption class="title">Handler CGI configuration</caption>
+<col width="50%"></col>
+<col width="50%"></col>
+<tbody>
+<tr>
+<td align="left" valign="top"><p class="table">Handler</p></td>
+<td align="left" valign="top"><p class="table">CGI</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">Document Root</p></td>
+<td align="left" valign="top"><p class="table">/usr/lib/cgi-bin</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">Script Alias</p></td>
+<td align="left" valign="top"><p class="table">None</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">Change UID</p></td>
+<td align="left" valign="top"><p class="table">Disabled</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">Error handler</p></td>
+<td align="left" valign="top"><p class="table">Disabled</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">Check file</p></td>
+<td align="left" valign="top"><p class="table">Enabled</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">Pass Request Headers</p></td>
+<td align="left" valign="top"><p class="table">Enabled</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">Allow X-Sendfile</p></td>
+<td align="left" valign="top"><p class="table">Disabled</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="imageblock">
+<div class="content">
+<img alt="media/images/admin_handler_cgi.png" src="media/images/admin_handler_cgi.png"/>
+</div>
+<div class="image-title">Handler CGI intreface</div>
+</div>
+<div class="paragraph"><div class="title">Script Alias</div><p>Another example could be the case where you wanted your default
+requests to be managed by a specific script.</p></div>
+<div class="paragraph"><p>A real life example could be running
+<a href="http://trac.edgewall.org">Trac</a> as a CGI script. In that case you
+would want to map an URL to the trac.cgi script.</p></div>
+<div class="paragraph"><p>For this you only need to set up the Script Alias option. Assuming you
+are using a <tt>Directory</tt>-type rule for the path <tt>/trac</tt> managed by the
+<tt>CGI</tt> handler, you could set <tt>/usr/share/trac/cgi-bin/trac.cgi</tt> as
+Script Alias.</p></div>
+<div class="paragraph"><p>After this, every request that matched the <tt>/trac</tt> path would be
+managed by the <tt>trac.cgi</tt> script.</p></div>
+</div>
+<div id="footer">
+<div id="footer-text">
+</div>
+</div>
+</div>

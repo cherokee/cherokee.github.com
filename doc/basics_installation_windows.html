@@ -1,0 +1,253 @@
+---
+layout: documentation
+title: Installation on Windows | Cherokee Documentation
+---
+<div id="main_area"><h1>Documentation</h1>
+
+<div class="sectionbody">
+</div>
+<h2 id="_installation_on_windows">Installation on Windows</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>The latest Windows bundled release is available at the
+<a href="http://www.cherokee-project.com/download/windows">Windows
+download</a> section of the Cherokee Project website.</p></div>
+<div class="admonitionblock">
+<table><tr>
+<td class="icon">
+<div class="title">Warning</div>
+</td>
+<td class="content">The Windows native build is currently broken. It will be
+fixed as soon as possible. A Windows binary release will be available
+too. In the meantime, if you need to run Cherokee on a Windows host
+you will have to rely on Cygwin and the likes. Almost all the code
+base of the Cherokee-Project can be used natively under Windows, as it
+was 100% compatible not too long ago. However, since resources and
+man-power are limited, and due to Cherokee’s fast evolution, we are
+not yet there. Reacquiring binary compatibility with the Windows
+platform is a medium-to-long term goal.</td>
+</tr></table>
+</div>
+<h3 id="quickstart">Quickstart</h3><div style="clear:left"></div>
+<div class="paragraph"><p>The installation process requires little explanation, as it is simply
+a matter of pointing and clicking.</p></div>
+<div class="paragraph"><p>You have to check the desired components to be installed, select the
+desired installation path and that’s it.</p></div>
+<div class="paragraph"><p>However, if you want to try out the latest development release or
+simply want to compile from source, you will need to setup a proper
+building environment.</p></div>
+<h3 id="environment">Configuring the building the environment</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Cherokee for Windows runs in fully native mode, but the environment
+for its development has always been Unix/Linux. Building in
+non-native mode (i.e., using Cygwin) would incur in a big loss of
+performance, though it would be much simpler to maintain and build.</p></div>
+<div class="paragraph"><p>However, a big effort is made to ensure Cherokee’s complete
+cross-platform compatibility. To be able to build Cherokee you will
+need a unix-like environment that provides the necessary tools listed
+in the <a href="basics_requirements.html">requirements</a> section. Unfortunately
+this environment is far from trivial to set up.</p></div>
+<div class="paragraph"><p>You can either follow these instructions on how to accomplish such
+task, or simply download the <a href="http://cherokee-project.com/download/windows/Win32_Building_Environment.rar">Win32
+preconfigured building environment bundle</a> provided by the
+Cherokee-Project and skip the rest of this section, right to the
+<strong>building</strong> part.</p></div>
+<div class="paragraph"><p>This is what you need to install. Check the
+<a href="http://www.mingw.org/">MinGW</a> site to download most of the
+software mentioned in the following lines.</p></div>
+<div class="ulist"><div class="title"><strong>MinGW</strong>: minimalist GNU for Windows (GCC &amp; binutils)</div><ul>
+<li>
+<p>
+Download MinGW release 5.1.4 at the time of this writing.
+</p>
+</li>
+<li>
+<p>
+Run it and select ‘Candidate’. Check base tools &amp; g++
+</p>
+</li>
+<li>
+<p>
+Install in a directory with no spaces (the default directory
+      C:\MinGW is fine).
+</p>
+</li>
+</ul></div>
+<div class="ulist"><div class="title"><strong>MSYS</strong>: Minimal SYStem</div><ul>
+<li>
+<p>
+Download MSYS, tests were made with release 1.0.10
+</p>
+</li>
+<li>
+<p>
+Install it in the same directory as MinGW (remove “1.0″ from
+      the install path).
+</p>
+</li>
+<li>
+<p>
+Answer y, y, c:/MinGW
+</p>
+</li>
+<li>
+<p>
+You should add something like this to your ~/.profile to process
+      your preferences:
+</p>
+<div class="listingblock">
+<div class="content">
+<pre><tt>if [ -f ${HOME}/.bashrc ] then
+  . ${HOME}/.bashrc
+fi</tt></pre>
+</div></div>
+</li>
+</ul></div>
+<div class="ulist"><div class="title"><strong>MSYS DTK</strong>: Dev Toolkit</div><ul>
+<li>
+<p>
+Get DTK
+</p>
+</li>
+<li>
+<p>
+Install it in the same path as above
+</p>
+</li>
+</ul></div>
+<div class="ulist"><div class="title"><strong>Update Autoconf &amp; Automake</strong></div><ul>
+<li>
+<p>
+You might encounter problems if you do not have up to date
+    <tt>Autoconf</tt> and <tt>Automake</tt>. We recommend the usage of at least
+    versions 2.61 and 1.10.1, that are the ones we used.
+</p>
+</li>
+</ul></div>
+<div class="ulist"><div class="title"><strong>Pthreads Win32</strong>: POSIX Threads</div><ul>
+<li>
+<p>
+Cherokee will need these. Just download
+      <a href="ftp://sourceware.org/pub/pthreads-win32/dll-latest/">Pthreads-Win32</a>
+      and copy the appropriate files to /lib and /include
+</p>
+</li>
+</ul></div>
+<div class="ulist"><div class="title"><strong>Python</strong></div><ul>
+<li>
+<p>
+You will need this, since both the build process and
+      Cherokee-Admin use Python. Just
+      <a href="http://python.org/download/">download</a> a Python Windows
+      installer, remember to include the directory in your path
+      environment variable, and you’re done.
+</p>
+</li>
+<li>
+<p>
+rxvt seems to be broken, which is most noticeable when you try
+      to run Python interactively, so just comment out its line in
+      msys.bat.
+</p>
+</li>
+</ul></div>
+<h3 id="building">Building</h3><div style="clear:left"></div>
+<div class="olist arabic"><ol class="arabic">
+<li>
+<p>
+<a href="basics_download.html">Download</a> a fresh copy of Cherokee
+</p>
+</li>
+<li>
+<p>
+Configure the package for your system:
+</p>
+<div class="listingblock">
+<div class="content">
+<pre><tt>./configure --prefix=/usr --sysconfdir=/etc --localstatedir=/var  \
+--enable-trace --enable-static-module=all --enable-static         \
+--enable-shared=no --enable-beta --disable-readdir_r</tt></pre>
+</div></div>
+</li>
+<li>
+<p>
+Compile the package:
+</p>
+<div class="listingblock">
+<div class="content">
+<pre><tt>make</tt></pre>
+</div></div>
+</li>
+<li>
+<p>
+Install the programs and any data files:
+</p>
+<div class="listingblock">
+<div class="content">
+<pre><tt>make install</tt></pre>
+</div></div>
+</li>
+</ol></div>
+<h3 id="advanced">Advanced parameters</h3><div style="clear:left"></div>
+<div class="paragraph"><p>If you want to learn more about <em>configure</em> you can run <tt>./configure
+--help</tt>.</p></div>
+<div class="tableblock">
+<table cellpadding="4" cellspacing="0" frame="border" rules="all" width="100%">
+<col width="30%"></col>
+<col width="70%"></col>
+<thead>
+<tr>
+<th align="left" valign="top">Parameter             </th>
+<th align="left" valign="top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left" valign="top"><p class="table"><tt>--with-wwwroot=DIR</tt></p></td>
+<td align="left" valign="top"><p class="table">Specify the webserver root directory</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table"><tt>--with-user=USER</tt></p></td>
+<td align="left" valign="top"><p class="table">Custom username under which the server will run</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table"><tt>--with-user=GROUP</tt></p></td>
+<td align="left" valign="top"><p class="table">Custom group under which the server will run</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table"><tt>--disable-epoll</tt></p></td>
+<td align="left" valign="top"><p class="table">Disable epoll() support</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table"><tt>--disable-pthread</tt></p></td>
+<td align="left" valign="top"><p class="table">Disable threading support</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table"><tt>--disable-readdir_r</tt></p></td>
+<td align="left" valign="top"><p class="table">Disable readdir_r usage</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table"><tt>--disable-ipv6</tt></p></td>
+<td align="left" valign="top"><p class="table">Disable IPv6 support</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table"><tt>--disable-pam</tt></p></td>
+<td align="left" valign="top"><p class="table">Disable PAM support</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table"><tt>--enable-trace</tt></p></td>
+<td align="left" valign="top"><p class="table">Allows debugging options</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table"><tt>--disable-admin</tt></p></td>
+<td align="left" valign="top"><p class="table">Stops cherokee-admin from installing</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<h3 id="autostart">Autostart</h3><div style="clear:left"></div>
+<div class="paragraph"><p>To be written</p></div>
+</div>
+<div id="footer">
+<div id="footer-text">
+</div>
+</div>
+</div>

@@ -1,0 +1,189 @@
+---
+layout: documentation
+title: 880445120MANUAL EDITING REQUIRED | Cherokee Documentation
+---
+<div id="main_area"><h1>Documentation</h1>
+
+<div class="sectionbody">
+<h3 id="_logger_custom">Logger: Custom</h3><div style="clear:left"></div>
+<div class="paragraph"><p>This module implements a flexible mechanism for logging requests made
+to the server, using a user-specified format.</p></div>
+<div class="paragraph"><p>The format in which the request will be logged is defined by a string.
+This string is used to log each request to the log. It can contain
+both literal characters and a set of variables. All the literal
+characters will be copied to the log. The following variables will be
+evaluated right before writing each log entry:</p></div>
+<div class="tableblock">
+<table cellpadding="4" cellspacing="0" frame="border" rules="all" width="100%">
+<col width="10%"></col>
+<col width="40%"></col>
+<col width="50%"></col>
+<thead>
+<tr>
+<th align="left" valign="top">Variable                </th>
+<th align="left" valign="top">Example                    </th>
+<th align="left" valign="top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left" valign="top"><p class="table"><tt>${ip_remote}</tt></p></td>
+<td align="left" valign="top"><p class="table">74.125.67.100</p></td>
+<td align="left" valign="top"><p class="table">Remote IP-address</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table"><tt>${ip_local}</tt></p></td>
+<td align="left" valign="top"><p class="table">10.0.0.1</p></td>
+<td align="left" valign="top"><p class="table">Local IP-address</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table"><tt>${port_server}</tt></p></td>
+<td align="left" valign="top"><p class="table">80</p></td>
+<td align="left" valign="top"><p class="table">Port of the server serving the request</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table"><tt>${protocol}</tt></p></td>
+<td align="left" valign="top"><p class="table">http</p></td>
+<td align="left" valign="top"><p class="table">Request Protocol</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table"><tt>${query_string}</tt></p></td>
+<td align="left" valign="top"><p class="table">?bar=foo</p></td>
+<td align="left" valign="top"><p class="table">The query string, if exists</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table"><tt>${request}</tt></p></td>
+<td align="left" valign="top"><p class="table">/file.txt</p></td>
+<td align="left" valign="top"><p class="table">URL path requested</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table"><tt>${request_first_line}</tt></p></td>
+<td align="left" valign="top"><p class="table">GET / HTTP/1.0</p></td>
+<td align="left" valign="top"><p class="table">First line of HTTP request</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table"><tt>${request_original}</tt></p></td>
+<td align="left" valign="top"><p class="table">/file.txt</p></td>
+<td align="left" valign="top"><p class="table">URL path requested before any rewrite</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table"><tt>${response_size}</tt></p></td>
+<td align="left" valign="top"><p class="table">1234</p></td>
+<td align="left" valign="top"><p class="table">Size of the response in bytes</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table"><tt>${status}</tt></p></td>
+<td align="left" valign="top"><p class="table">200</p></td>
+<td align="left" valign="top"><p class="table">Response status code</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table"><tt>${now}</tt></p></td>
+<td align="left" valign="top"><p class="table">08/Apr/2009:12:02:11 +0200</p></td>
+<td align="left" valign="top"><p class="table">Time: in common log format time format</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table"><tt>${time_secs}</tt></p></td>
+<td align="left" valign="top"><p class="table">1239185281</p></td>
+<td align="left" valign="top"><p class="table">Time: seconds since Epoch</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table"><tt>${time_msecs}</tt></p></td>
+<td align="left" valign="top"><p class="table">18446744071655350332</p></td>
+<td align="left" valign="top"><p class="table">Time: milliseconds since Epoch</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table"><tt>${transport}</tt></p></td>
+<td align="left" valign="top"><p class="table">https</p></td>
+<td align="left" valign="top"><p class="table">Transport type: <tt>http</tt> or <tt>https</tt></p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table"><tt>${user_remote}</tt></p></td>
+<td align="left" valign="top"><p class="table">guest</p></td>
+<td align="left" valign="top"><p class="table">Remote user (authentication)</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table"><tt>${vserver_name}</tt></p></td>
+<td align="left" valign="top"><p class="table">default</p></td>
+<td align="left" valign="top"><p class="table">Virtual Server nick name</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table"><tt>${vserver_name_req}</tt></p></td>
+<td align="left" valign="top"><p class="table">example.com</p></td>
+<td align="left" valign="top"><p class="table">Requested host (Host: header), or vserver nickname if absent</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table"><tt>${http_host}</tt></p></td>
+<td align="left" valign="top"><p class="table">example.com</p></td>
+<td align="left" valign="top"><p class="table">"Host:" header of the request</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table"><tt>${http_referrer}</tt></p></td>
+<td align="left" valign="top"><p class="table">example.com/page</p></td>
+<td align="left" valign="top"><p class="table">"Referrer:" header of the request</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table"><tt>${http_user_agent}</tt></p></td>
+<td align="left" valign="top"><p class="table">Mozilla/1.0.0</p></td>
+<td align="left" valign="top"><p class="table">"User-Agent:" header of the request</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table"><tt>${http_cokkie}</tt></p></td>
+<td align="left" valign="top"><p class="table">key=val</p></td>
+<td align="left" valign="top"><p class="table">"Cookie:" header of the request</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="paragraph"><p>The templating subsystem provides slicing support in pretty much the
+same way that the Python strings do, allowing to use specific portions
+of any of these substitution macros. You can read more about this on
+the <a href="other_goodies.html#templating">Template Subsystem</a> section of
+the documentation.</p></div>
+<h3 id="examples">Example</h3><div style="clear:left"></div>
+<div class="paragraph"><p>For instance, the following format string:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>[${now}] ${ip_remote}: ${request} (${status})</tt></pre>
+</div></div>
+<div class="paragraph"><p>would generate this entry in the log:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>[08/Apr/2009:12:02:11 +0200] 74.125.67.100: /file.txt (200)</tt></pre>
+</div></div>
+<h3 id="_apache_8217_s_comined_format">Apache’s comined format</h3><div style="clear:left"></div>
+<div class="paragraph"><p>The following formats are all like Apache’s combined format, except the second field not being the client ident but the (way more interesting) HTTP host or vserver name.</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+Virtual server name
+</p>
+<div class="listingblock">
+<div class="content">
+<pre><tt>${ip_remote} ${vserver_name} ${user_remote} [${now}] "${request_first_line}" ${status} ${response_size} "${http_referrer}" "${http_user_agent}"</tt></pre>
+</div></div>
+</li>
+<li>
+<p>
+Host
+</p>
+<div class="listingblock">
+<div class="content">
+<pre><tt>${ip_remote} ${http_host} ${user_remote} [${now}] "${request_first_line}" ${status} ${response_size} "${http_referrer}" "${http_user_agent}"</tt></pre>
+</div></div>
+</li>
+<li>
+<p>
+Host if present, otherwise virtual serven name
+</p>
+<div class="listingblock">
+<div class="content">
+<pre><tt>${ip_remote} ${vserver_name_req} ${user_remote} [${now}] "${request_first_line}" ${status} ${response_size} "${http_referrer}" "${http_user_agent}"</tt></pre>
+</div></div>
+</li>
+</ul></div>
+</div>
+<div id="footer">
+<div id="footer-text">
+</div>
+</div>
+</div>

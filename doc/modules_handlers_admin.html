@@ -1,0 +1,49 @@
+---
+layout: documentation
+title: Handler  Remote Administration | Cherokee Documentation
+---
+<div id="main_area"><h1>Documentation</h1>
+
+<div class="sectionbody">
+</div>
+<h2 id="_handler_remote_administration">Handler: Remote Administration</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>This handler is used to create rules that can provide information
+about the running server useful for System Administration.
+When any such rule is matched, a
+<a href="other_bundle_cherokee-tweak.html">cherokee-tweak</a> instance will have
+full access to this data stream.</p></div>
+<div class="paragraph"><p>Note that providing real-real time information about the status of a
+web server in production is a double edged blade. It is both a very
+valuable tool for system administration <strong>and</strong> a severe security risk
+if no precautions are taken. You are strongly encouraged to both
+encrypt the channel and disable public access.</p></div>
+<div class="paragraph"><p>There are no parameters to be configured for this handle.</p></div>
+<div class="paragraph"><p>The information provided covers a wide spectrum: ports (secured and
+non-secured), TX/RX status, connections, threads, backup mode and
+selectable system traces such as the ones provided by CHEROKEE_TRACE.</p></div>
+<div class="paragraph"><p>Check the <a href="dev_debug.html">Debugging</a> section for more details on
+this, and the section about
+<a href="other_bundle_cherokee-tweak.html">cherokee-tweak</a> for specific usage
+information.</p></div>
+<div class="paragraph"><p>Also, you should think of this handler as a web-service. In fact,
+cherokee-tweak is just a client application using consuming
+it. Writing custom client-apps that make use of this handler is almost
+trivial, since commands can be issued from the command line using
+<tt>curl</tt>.</p></div>
+<div class="listingblock">
+<div class="title">Command line examples:</div>
+<div class="content">
+<pre><tt>echo 'set server.trace time,thread,all' | curl -v http://localhost/admin/ -u myuser:mypassword --data-binary @-
+echo 'set server.trace none'            | curl -v http://localhost/admin/ -u myuser:mypassword --data-binary @-
+echo 'get server.connections'           | curl -v http://localhost/admin/ -u myuser:mypassword --data-binary @-
+echo 'close server.connection 100'      | curl -v http://localhost/admin/ -u myuser:mypassword --data-binary @-
+echo 'get server.sources'               | curl -v http://localhost/admin/ -u myuser:mypassword --data-binary @-
+echo 'kill server.source 3'             | curl -v http://localhost/admin/ -u myuser:mypassword --data-binary @-</tt></pre>
+</div></div>
+</div>
+<div id="footer">
+<div id="footer-text">
+</div>
+</div>
+</div>

@@ -1,0 +1,198 @@
+---
+layout: documentation
+title: Cookbook  Setting up SugarCRM | Cherokee Documentation
+---
+<div id="main_area"><h1>Documentation</h1>
+
+<div class="sectionbody">
+</div>
+<h2 id="_cookbook_setting_up_sugarcrm">Cookbook: Setting up SugarCRM</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>For this recipe we will be using
+<a href="http://www.sugarcrm.com/crm/download/sugar-suite.html">Sugar
+Community Edition 5.5</a>, which is the latest freely distributable
+edition available at the
+<a href="http://www.sugarcrm.com/crm/download/sugar-suite.html">download
+site</a> when this was written.</p></div>
+<div class="paragraph"><p>The <tt>Full installation package</tt> will be enough. No need to use the
+bulky complete stacks. We just need PHP support correctly configured
+in Cherokee, and PHP with the MySQL module installed. The default
+configuration already provides a valid PHP configuration for Cherokee
+if you have php-cgi installed, but you can follow the appropriate
+recipe about <a href="cookbook_php.html">setting up PHP</a> in case you don’t
+have it available for any reason.</p></div>
+<h3 id="cherokee">Adjusting Cherokee</h3><div style="clear:left"></div>
+<div class="paragraph"><p>You can either read through this whole section to install it manually,
+or you can follow the recommended method and use the provided
+installation Wizard.</p></div>
+<div class="paragraph"><p>To do this, you’ll have to locate the Wizard, available for
+installation under a subdirectory or using a new dedicated virtual
+server. In both cases you’ll find a Wizard option: For the former
+you’ll have to access the Wizard from the list of available ones
+within the <tt>Virtual Servers</tt> section of Cherokee-Admin, clicking on
+the <tt>Add</tt> button at the top of the panel. The latter is accessed
+through the same list of Wizards, this time using the <tt>Rule
+Management</tt> button within the <tt>Behavior</tt> tab of any given virtual
+server. Once the panel with the rules is listed, follow a similar
+procedure using the <tt>Add</tt> button located at the top.</p></div>
+<div class="paragraph"><p>Once the Wizard list is visible, simply go to the <tt>Misc</tt>
+section, click on <tt>Sugar</tt>, provide the basic information and you can
+skip the rest of this section and jump directly to
+<a href="cookbook_sugarcrm.html#installation">Package installation</a></p></div>
+<div class="paragraph"><p>If you choose not to follow the recommended method, you’ll just have
+to go through these steps:</p></div>
+<div class="paragraph"><p>First, create the directory that will be used when installing
+SugarCRM.</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt># mkdir /var/www/sugar</tt></pre>
+</div></div>
+<div class="paragraph"><p>Then launch Cherokee-Admin on your system, and set the created path as
+<tt>Document web root</tt> of your <tt>default</tt> virtual server. This is done
+through the <tt>Basics</tt> tab of the mentioned virtual server.</p></div>
+<div class="paragraph"><p>The only other thing to do with Cherokee is recreate the SugarCRM
+restrictions coded in the <tt>.htaccess</tt> file. Those are mere
+redirections put in place to avoid users from accessing certain
+files. If it is not yet populated, it will after the installation. You
+should check it out to account for cases not covered in the following
+rules.</p></div>
+<div class="paragraph"><p>We will have to create several rules in our virtual server to cover
+the whole list of banned files. This list is loosely based on the one
+provided by <tt>.htaccess</tt>.</p></div>
+<div class="tableblock">
+<table cellpadding="4" cellspacing="0" frame="border" rules="all" width="100%">
+<col width="33%"></col>
+<col width="33%"></col>
+<col width="33%"></col>
+<thead>
+<tr>
+<th align="left" valign="top">Type     </th>
+<th align="left" valign="top">Regular Expression                 </th>
+<th align="left" valign="top">Substitution</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left" valign="top"><p class="table">Internal</p></td>
+<td align="left" valign="top"><p class="table">^/(.*\.log.*|not_imported_.*txt)</p></td>
+<td align="left" valign="top"><p class="table">/log_file_restricted.html</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">External</p></td>
+<td align="left" valign="top"><p class="table">emailmandelivery.php</p></td>
+<td align="left" valign="top"><p class="table">/index.php</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">External</p></td>
+<td align="left" valign="top"><p class="table">^/.*/.*\.php</p></td>
+<td align="left" valign="top"><p class="table">/index.php</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="paragraph"><p>These need to be created as <tt>Regular Expression</tt> type rules matching
+the expressions of the list. The rules must be managed by the
+<tt>Redirection</tt> handler, and you will need to specify only the type and
+substitution to perform. The regular expression is inherited, so no
+need to re-type it.</p></div>
+<div class="paragraph"><p>Of course you can also add as many rewriting rules as you wish to
+beautify your URLs, but those will have to be analyzed on an
+individual base.</p></div>
+<h3 id="installation">Package installation</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Uncompress SugarCRM to your web document root and rename the directory
+to whatever you like. We will choose <tt>/var/www/sugar</tt> as installation
+directory for this recipe.</p></div>
+<div class="paragraph"><p>Then remember setting up file permissions. Some files and directories
+need to be writable by the user that runs Cherokee. Those are:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+cache
+</p>
+</li>
+<li>
+<p>
+custom
+</p>
+</li>
+<li>
+<p>
+data
+</p>
+</li>
+<li>
+<p>
+modules
+</p>
+</li>
+<li>
+<p>
+config.php
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>By simply accessing the configured virtual host, the installer will
+start. Since we have modified our <tt>default</tt> virtualhost, we can access
+visiting <tt>http://localhost</tt>.</p></div>
+<div class="imageblock">
+<div class="content">
+<img alt="media/images/cookbook_sugarcrm_install0.png" src="media/images/cookbook_sugarcrm_install0.png"/>
+</div>
+<div class="image-title">Commencing installation</div>
+</div>
+<div class="paragraph"><p>You’ll need to Accept the license agreement before you can go on, and
+once you’ve done this the installer will run the compatibility checks.</p></div>
+<div class="paragraph"><p>Select <tt>Typical</tt> installation, choose the MySQL database, fill in
+the required data and if everything went smoothly, the installer
+should create the database and go through with the whole process.</p></div>
+<div class="paragraph"><p>Here is where you will see which requirements are not met. Most
+probably you will have to make some minor adjustments.</p></div>
+<div class="paragraph"><p>In this case we had to modify some values in the <tt>php.ini</tt> file to
+provide higher memory limits and allow bigger files to be
+uploaded. Remember that it is likely you will have several of those in
+your system, each one for its own PHP: the CGI version, the CLI,
+etc. Cherokee uses PHP through FastCGI, so edit that one with your
+favorite editor.</p></div>
+<div class="listingblock">
+<div class="title">Editing the PHP configuration</div>
+<div class="content">
+<pre><tt># editor /etc/php5/cgi/php.ini</tt></pre>
+</div></div>
+<div class="sidebarblock">
+<div class="sidebar-content">
+<div class="sidebar-title">Required adjustments in this case</div>
+<div class="paragraph"><p>memory_limit = 40M</p></div>
+<div class="paragraph"><p>upload_max_filesize = 8M</p></div>
+</div></div>
+<div class="paragraph"><p>To see the changes reflected in the installer you would have to
+respawn the php instances. Simply kill them and Cherokee will do the
+rest.</p></div>
+<div class="paragraph"><p>If something is still not supported, it will prompt you so you can
+change it before you proceed.</p></div>
+<div class="imageblock">
+<div class="content">
+<img alt="media/images/cookbook_sugarcrm_install1.png" src="media/images/cookbook_sugarcrm_install1.png"/>
+</div>
+<div class="image-title">Warnings</div>
+</div>
+<div class="paragraph"><p>For this example we will not be needing <tt>IMAP</tt>, so we will disregard the
+warning. After proceeding with the process we should be presented with
+the login page.</p></div>
+<div class="imageblock">
+<div class="content">
+<img alt="media/images/cookbook_sugarcrm_running0.png" src="media/images/cookbook_sugarcrm_running0.png"/>
+</div>
+<div class="image-title">Login</div>
+</div>
+<div class="imageblock">
+<div class="content">
+<img alt="media/images/cookbook_sugarcrm_running1.png" src="media/images/cookbook_sugarcrm_running1.png"/>
+</div>
+<div class="image-title">Working</div>
+</div>
+</div>
+<div id="footer">
+<div id="footer-text">
+</div>
+</div>
+</div>

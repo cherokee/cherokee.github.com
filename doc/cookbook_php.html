@@ -1,0 +1,296 @@
+---
+layout: documentation
+title: Cookbook  Setting up PHP | Cherokee Documentation
+---
+<div id="main_area"><h1>Documentation</h1>
+
+<div class="sectionbody">
+</div>
+<h2 id="_cookbook_setting_up_php">Cookbook: Setting up PHP</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>There is not much to learn to configure PHP with Cherokee.
+Cherokee-admin ships a one-click wizard that will do everything for
+you. It will look for the PHP interpreter, it will check whether it
+support FastCGI, and then it’ll perform all the necessary operations
+to set it up on Cherokee. It is a piece of cake.</p></div>
+<div class="paragraph"><p>If PHP-fpm binaries are found, those will be prioritized over the
+regular binaries.</p></div>
+<div class="paragraph"><p>There is also a
+<a href="../screencasts.html#php">screencast</a>
+available at the
+<a href="../index.html">Cherokee-Project website</a> to
+demonstrate how easy it is to use the PHP wizard.</p></div>
+<div class="paragraph"><p><span class="image">
+<a class="image" href="../screencasts.html#php">
+<img alt="media/images/screencast.png" src="media/images/screencast.png"/>
+</a>
+</span></p></div>
+<div class="paragraph"><p>It requires a single operation to get PHP configured on a pre-existing
+Virtual Server: Choose the virtual server your want to configure, and
+click on the <tt>Behavior</tt> tab and trigger the <tt>Rule panel</tt> by clicking
+on the <tt>Rule Management</tt> button. Once in there, use the <tt>Add</tt> button
+at the top of the panel to see the available wizards.</p></div>
+<div class="imageblock">
+<div class="content">
+<img alt="media/images/admin_vserver_wizard.png" src="media/images/admin_vserver_wizard.png"/>
+</div>
+<div class="image-title">Wizards</div>
+</div>
+<div class="paragraph"><p>Now select <tt>Languages</tt> and run the PHP wizard. And, that’s it. If you
+had <tt>php-fpm</tt> or <tt>php-cgi</tt> installed in your system, PHP should be
+configured now.</p></div>
+<h3 id="php_fastcgi">PHP FastCGI support</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Note that only FastCGI-enabled binaries of PHP will work with the
+FastCGI handler. Many prepackaged versions already enable this by
+default. If yours does not, you will need to build a suitable
+binary. You can check this with the <tt>-v</tt> parameter:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>$ php-cgi -v
+PHP 5.2.10 (cgi-fcgi) (built: Jul 11 2009 15:33:11)
+Copyright (c) 1997-2009 The PHP Group
+Zend Engine v2.2.0, Copyright (c) 1998-2009 Zend Technologies</tt></pre>
+</div></div>
+<div class="paragraph"><p>You cannot proceed unless the <strong>"cgi-fcgi"</strong> string is present.</p></div>
+<h3 id="php_env">PHP process Environment Variables</h3><div style="clear:left"></div>
+<div class="paragraph"><p>To specify Environment Variables at the Information Source level
+be sure to uncheck <strong>Inherit Environment</strong>.  This will display the
+form to enter variables and values.</p></div>
+<div class="paragraph"><p>The <strong>PHP_FCGI_CHILDREN</strong> environment variable is mandatory for PHP
+FastCGI servers.  It defines how much children should serve the
+requests coming from the webserver.</p></div>
+<div class="paragraph"><p>If you define <strong>PHP_FCGI_MAX_REQUESTS</strong>, the value must be negative if
+you do not want the PHP process to ever be restarted. If you leave it
+unset, PHP will take the default value (500), after which it will be
+restarted. It is generally a good idea to let PHP be restarted to free
+up resources and possible memory leaks.</p></div>
+<h3 id="advanced">Advanced configuration</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Once PHP is configured, you are free to tweak the configuration to
+adapt it to your specific needs. You may want to change some of the
+php-cgi parameters, or even point Cherokee to use distributed PHP
+execution.</p></div>
+<div class="paragraph"><p>This example shows a typical usage of FastCGI. It only uses one
+<a href="config_info_sources.html">information source</a> nicknamed <tt>php</tt> in
+this case. This connects to a FastCGI server located in localhost in
+port 47990. If no server is running, the webserver will run the
+FastCGI server by issuing the command defined as the <strong>Interpreter</strong>
+sub-parameter of the information source that is being accessed.</p></div>
+<div class="imageblock">
+<div class="content">
+<img alt="media/images/admin_handler_fastcgi1.png" src="media/images/admin_handler_fastcgi1.png"/>
+</div>
+<div class="image-title">FastCGI rule sample</div>
+</div>
+<div class="tableblock">
+<table cellpadding="4" cellspacing="0" frame="border" rules="all" width="100%">
+<caption class="title">Common CGI options in FastCGI rule</caption>
+<col width="50%"></col>
+<col width="50%"></col>
+<thead>
+<tr>
+<th align="left" valign="top">Checkbox        </th>
+<th align="left" valign="top"> Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left" valign="top"><p class="table">Error Handler</p></td>
+<td align="left" valign="top"><p class="table">Checked</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">Check file</p></td>
+<td align="left" valign="top"><p class="table">Checked</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">Pass request</p></td>
+<td align="left" valign="top"><p class="table">Checked</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">Allow XSendfile</p></td>
+<td align="left" valign="top"><p class="table">Unchecked</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="paragraph"><p>This other example shows a typical usage of multiple FastCGI servers.
+It connects to FastCGI servers in several locations. If no server is
+running in the local computer, the webserver will run the FastCGI
+server by issuing the specified command. Note that for <strong>remote</strong>
+FastCGI servers, you are responsible for running the FastCGI services
+there manually.</p></div>
+<div class="imageblock">
+<div class="content">
+<img alt="media/images/admin_handler_fastcgi2.png" src="media/images/admin_handler_fastcgi2.png"/>
+</div>
+<div class="image-title">Load balancing among information sources</div>
+</div>
+<div class="tableblock">
+<table cellpadding="4" cellspacing="0" frame="border" rules="all" width="100%">
+<caption class="title">Load balancing among information sources</caption>
+<col width="50%"></col>
+<col width="50%"></col>
+<thead>
+<tr>
+<th align="left" valign="top">Nick              </th>
+<th align="left" valign="top"> Host</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left" valign="top"><p class="table">PHP interpreter</p></td>
+<td align="left" valign="top"><p class="table">localhost:47990</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">PHP interpreter 2</p></td>
+<td align="left" valign="top"><p class="table">php2.cluster:47990</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">PHP interpreter 3</p></td>
+<td align="left" valign="top"><p class="table">php3.cluster:47990</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<h3 id="multi-site">Multi-site support</h3><div style="clear:left"></div>
+<div class="paragraph"><p>An even more advanced scenario would be one that required custom PHP
+settings for each virtual host.</p></div>
+<div class="paragraph"><p>In such a scenario several information sources are required. Some
+settings can be set simply by providing ENV variables to customize the
+FastCGI behavior. Others can only be specified in the <tt>php.ini</tt>
+configuration file, which is read by <tt>php-cgi</tt> on start-up.</p></div>
+<div class="paragraph"><p>The location of this file is platform dependent, so you will need to
+refer to PHP’s documentation. It is the file located in
+<em>/etc/php5/cgi/php.ini</em> on Debian/Ubuntu systems,
+<em>/opt/local/etc/php5/php.ini</em> on MacPorts, etc.</p></div>
+<h4 id="_php_configuration_file">PHP configuration file</h4>
+<div class="paragraph"><p>You will have to customize and specify different <tt>php.ini</tt> files for
+each information source. A nifty trick to do this and provide custom
+environment variables is by wrapping the required parameters in a
+simple script such as this one:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>#!/bin/sh
+
+export PHP_FCGI_MAX_REQUESTS=250
+export PHP_FCGI_CHILDREN=4
+
+exec /usr/local/bin/php-cgi $@
+
+# EOF</tt></pre>
+</div></div>
+<div class="paragraph"><p>It just calls the real <tt>php-cgi</tt> with the ENV variables to customize the
+FastCGI behavior, passing the parameters along. The same wrapper can
+be used for every information source, providing a different <tt>-c
+path/php.ini</tt> for each one of them.</p></div>
+<div class="paragraph"><p>Bare in mind that every information source will need its own port to
+run.</p></div>
+<div class="paragraph"><p>Assuming that two customized information sources were required, simply
+specifying different interpreters for each one of them would suffice.</p></div>
+<div class="tableblock">
+<table cellpadding="4" cellspacing="0" frame="border" rules="all" width="100%">
+<col width="10%"></col>
+<col width="90%"></col>
+<thead>
+<tr>
+<th align="left" valign="top">VHost        </th>
+<th align="left" valign="top"> Interpreter</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left" valign="top"><p class="table">1</p></td>
+<td align="left" valign="top"><p class="table"><tt>/usr/local/bin/php-cgi -c /usr/local/etc/php/php-vhost1.ini -b 127.0.0.1:2998</tt></p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">2</p></td>
+<td align="left" valign="top"><p class="table"><tt>/usr/local/bin/php-cgi -c /usr/local/etc/php/php-vhost2.ini -b 127.0.0.1:2999</tt></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="paragraph"><p>This, in turn, would produce configuration entries similar to the
+following ones:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>source!1!nick = php-vhost1
+source!1!interpreter = /usr/local/bin/php-cgi -c /usr/local/etc/php/php-vhost1.ini -b 127.0.0.1:2998
+...
+source!2!nick = php-vhost2
+source!2!interpreter = /usr/local/bin/php-cgi -c /usr/local/etc/php/php-vhost2.ini -b 127.0.0.1:2999</tt></pre>
+</div></div>
+<h4 id="_php_configuration_variables">PHP configuration variables</h4>
+<div class="paragraph"><p>The variables specified in <tt>php.ini</tt> can also be overridden setting a
+custom environment variable on a per-virtual-server basis.</p></div>
+<div class="paragraph"><p>Just access the PHP rule of your virtual server, <tt>Extensions php</tt>, and
+select the <tt>Handler</tt> tab to be able to set a custom environment
+variable for the <tt>FastCGI</tt> handler.</p></div>
+<div class="paragraph"><p>You will need to provide the values in the following format:</p></div>
+<div class="tableblock">
+<table cellpadding="4" cellspacing="0" frame="border" rules="all" width="100%">
+<col width="50%"></col>
+<col width="50%"></col>
+<thead>
+<tr>
+<th align="left" valign="top">Name             </th>
+<th align="left" valign="top"> Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left" valign="top"><p class="table">PHP_ADMIN_VALUE</p></td>
+<td align="left" valign="top"><p class="table"><tt>memory_limit=128M</tt></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="paragraph"><p>This will set the memory limit for the virtual server only. Any
+<tt>php.ini</tt> variable can be set using this procedure.</p></div>
+<div class="paragraph"><p>Also, it is possible to manually specify every <tt>php.ini</tt> as a
+parameter of the interpreter thanks to the <tt>-d</tt> argument of
+PHP. Assuming you had to separate virtual servers, each with its own
+PHP information source, you could customize each of them directly
+editing the information source. This example would specify different
+memory limits for both information sources.</p></div>
+<div class="tableblock">
+<table cellpadding="4" cellspacing="0" frame="border" rules="all" width="100%">
+<col width="10%"></col>
+<col width="90%"></col>
+<thead>
+<tr>
+<th align="left" valign="top">VHost        </th>
+<th align="left" valign="top"> Interpreter</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left" valign="top"><p class="table">1</p></td>
+<td align="left" valign="top"><p class="table"><tt>/usr/local/bin/php-cgi -d memory_limit=256M -b 127.0.0.1:2998</tt></p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">2</p></td>
+<td align="left" valign="top"><p class="table"><tt>/usr/local/bin/php-cgi -d memory_limit=32M -b 127.0.0.1:2999</tt></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<h3 id="upload_limits">PHP upload limits</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Every now and then this issue pops up: an HTTP error 400 appears
+repeatedly when uploading files to a PHP back-end.</p></div>
+<div class="paragraph"><p>PHP has several limits in-place which can be configured through its
+<tt>php.ini</tt> configuration file.</p></div>
+<div class="paragraph"><p>Two entries are related to this issue. Tweak them according to your
+necessities. In this example, we are rising the limit to 200MB.</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>; Maximum size of POST data that PHP will accept.
+post_max_size = 200M
+
+; Maximum allowed size for uploaded files.
+upload_max_filesize = 200M</tt></pre>
+</div></div>
+</div>
+<div id="footer">
+<div id="footer-text">
+</div>
+</div>
+</div>

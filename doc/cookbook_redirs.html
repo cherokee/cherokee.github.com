@@ -1,0 +1,191 @@
+---
+layout: documentation
+title: Cookbook  Redirections | Cherokee Documentation
+---
+<div id="main_area"><h1>Documentation</h1>
+
+<div class="sectionbody">
+</div>
+<h2 id="_cookbook_redirections">Cookbook: Redirections</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Every now and then a redirection example is requested in the
+<a href="other_community.html">mailing list</a>. This recipe is meant to be a
+central archive of such examples. Remember there are some more generic
+examples both in the <a href="config_walkthrough.html">quickstart</a> and in
+the <a href="modules_handlers_redir.html">redirection</a> handler sections.</p></div>
+<div class="paragraph"><p>There is also a wizard to automatically assist you with
+redirections. It can be found in the <a href="config_wizards.html">Wizards</a>
+section of the <tt>Virtual Servers</tt> panel.</p></div>
+<div class="paragraph"><p>If you are not familiar with how a domain name can be matched, please
+read about <a href="cookbook_domain_matching.html">domain matching</a> in
+Cherokee before proceeding.</p></div>
+<div class="paragraph"><p>Redirections are essential on any modern web server, not only to
+display pretty URLs, but also to address usability and SEO issues.</p></div>
+<div class="paragraph"><p>A common scenario is that of a virtual server being accessible both
+with and without the <tt>www</tt> prefix. It is customary to have both, but
+it is also a good idea to have only one of them as main entry point to
+a website, so that the number of web hits isn’t incorrectly halved
+when anlaysing web traffic.</p></div>
+<div class="paragraph"><p>This can be done on a per-virtual-server basis, but it can be a
+cumbersome task if we’re dealing with a huge amount of virtual
+servers.</p></div>
+<div class="paragraph"><p>Of course, Cherokee alows a much more practical approach, and setting
+up only one rule to handle all redirects is painless and
+straightforward. Matches can be performed against the host name, the
+actual request, or both, so the mechanism is quite flexible. If this
+is what you want, you can jump to the <a href="cookbook_redirs.html#global_redirs">global
+redirection</a> steps later on this document.</p></div>
+<h3 id="simple-domain-redir">Redirecting www.example.net to example.net</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Sometimes a site will have several domains or subdomains pointing to
+the same official name. For whatever reasons (site statistics, for
+instance), having many subdomains redirected to a unique subdomain
+might be desirable. This can be accomplished fairly easily. The
+general recipe consists in defining a virtual host with the sole
+purpose of redirecting petitions to the official subdomain. In our
+example, this could manage <em>*.example.net</em> and the <em>.com</em> and
+<em>.org</em> variations.</p></div>
+<div class="tableblock">
+<table cellpadding="4" cellspacing="0" frame="border" rules="all" width="100%">
+<caption class="title">Host Match</caption>
+<col width="50%"></col>
+<col width="50%"></col>
+<tbody>
+<tr>
+<td align="left" valign="top"><p class="table">Host Match</p></td>
+<td align="left" valign="top"><p class="table"><tt>Wildcards</tt></p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">Domain pattern #1</p></td>
+<td align="left" valign="top"><p class="table">*.example.net</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">Domain pattern #2</p></td>
+<td align="left" valign="top"><p class="table">*.example.org</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">Domain pattern #3</p></td>
+<td align="left" valign="top"><p class="table">*.example.com</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="imageblock">
+<div class="content">
+<img alt="media/images/cookbook_redir_domains.png" src="media/images/cookbook_redir_domains.png"/>
+</div>
+<div class="image-title">Host Match interface</div>
+</div>
+<div class="paragraph"><p>The official name would then be managed by another virtual host
+(just for <em>example.net</em>). The <tt>redir</tt> virtual host will have a
+<tt>Default</tt> managed by the <tt>Redirection</tt> handler.</p></div>
+<div class="imageblock">
+<div class="content">
+<img alt="media/images/cookbook_redir_behavior.png" src="media/images/cookbook_redir_behavior.png"/>
+</div>
+<div class="image-title">Rule list</div>
+</div>
+<div class="paragraph"><p>This in turn would define an <em>external redirection</em> with a <em>Regular
+Expression</em> like <em>^/(.*)$</em> and the appropriate <em>Substitution</em>:
+<a href="http://example.net/$1">http://example.net/$1</a></p></div>
+<div class="imageblock">
+<div class="content">
+<img alt="media/images/cookbook_redir_handler.png" src="media/images/cookbook_redir_handler.png"/>
+</div>
+<div class="image-title">New Regular Expression</div>
+</div>
+<div class="paragraph"><p>Keep in mind the redirection has to be external in order for Cherokee
+to rewrite the the URL. If it wasn’t, the redirection would be applied
+but no change would be displayed to the users while browsing the site.</p></div>
+<h3 id="https-redir">Redirecting to HTTPS</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Now lets imagine a scenario where the name of the virtual server
+matched is of importance for the substitution.  For instance, supose
+you want all the traffic to the <tt>/secure_dir</tt> directory of a regular
+HTTP channel to be redirected to an HTTPS channel through a server
+whose name depends on that of the matching host.</p></div>
+<div class="paragraph"><p>In this case you need to resort to the macros supported by the
+handler. First you’ll have to create a <tt>Directory</tt> type rule managed
+by the <tt>Redirection</tt> handler.  And second, define an <em>external
+redirection</em> with a <em>Regular Expression</em> like <em>^/(.*)$</em> and the</p></div>
+<div class="imageblock">
+<div class="content">
+<img alt="media/images/cookbook_redir_https.png" src="media/images/cookbook_redir_https.png"/>
+</div>
+<div class="image-title">Handler interface</div>
+</div>
+<h3 id="global-redirs">Global redirections</h3><div style="clear:left"></div>
+<div class="paragraph"><p>It is fairly simple to configure a www redirect for every (sub)domain
+name, where requests of the form <a href="http://www.domain.name">http://www.domain.name</a> must be
+redirected to <a href="http://domain.name">http://domain.name</a>.</p></div>
+<div class="paragraph"><p>For this you’ll need to:</p></div>
+<div class="olist arabic"><ol class="arabic">
+<li>
+<p>
+Create a new virtual server that uses "Regular Expressions" in the "Host Match"
+</p>
+</li>
+<li>
+<p>
+Add a regular expression to match the host names: www\.(.+)$
+</p>
+</li>
+<li>
+<p>
+In the same virtual server, set a "Redirection" handler as the Default rule.
+</p>
+</li>
+<li>
+<p>
+In the handler, add a new RegEx entry defined as follows:
+</p>
+</li>
+</ol></div>
+<div class="tableblock">
+<table cellpadding="4" cellspacing="0" frame="border" rules="all" width="100%">
+<caption class="title">Options</caption>
+<col width="50%"></col>
+<col width="50%"></col>
+<thead>
+<tr>
+<th align="left" valign="top">Field        </th>
+<th align="left" valign="top">Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left" valign="top"><p class="table">Show</p></td>
+<td align="left" valign="top"><p class="table">External</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">Regular Expression</p></td>
+<td align="left" valign="top"><p class="table">/(.*)$</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">Substitution</p></td>
+<td align="left" valign="top"><p class="table"><a href="http://^1/$1">http://^1/$1</a></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="tableblock">
+<table cellpadding="4" cellspacing="0" frame="border" rules="all" width="100%">
+<caption class="title">Match parameters</caption>
+<col width="20%"></col>
+<col width="80%"></col>
+<tbody>
+<tr>
+<td align="left" valign="top"><p class="table"><tt>^1,^2,^3,..</tt></p></td>
+<td align="left" valign="top"><p class="table">These are substituted by the host name match.</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table"><tt>$1,$2,$3,..</tt></p></td>
+<td align="left" valign="top"><p class="table">These are substituted by either the handler match (if any) or its own match groups.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="footer">
+<div id="footer-text">
+</div>
+</div>
+</div>

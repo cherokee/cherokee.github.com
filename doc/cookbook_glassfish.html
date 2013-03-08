@@ -1,0 +1,233 @@
+---
+layout: documentation
+title: Cookbook  Setting up GlassFish | Cherokee Documentation
+---
+<div id="main_area"><h1>Documentation</h1>
+
+<div class="sectionbody">
+</div>
+<h2 id="_cookbook_setting_up_glassfish">Cookbook: Setting up GlassFish</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Supporting Java with Cherokee is almost trivial using
+<a href="https://glassfish.dev.java.net">GlassFish</a>, an enterprise class
+Java EE 5 application server.</p></div>
+<div class="paragraph"><p>For this recipe you will need Cherokee’s
+<a href="modules_handlers_proxy.html">HTTP reverse proxy</a> and a valid
+GlassFish installation, which in turn requires JDK 5 or JDK 6
+installed on your system. The configuration processing depends on Ant
+(1.6.5).</p></div>
+<div class="paragraph"><p>We will be using GlassFish v2 here since GlassFish v3 is still under
+development.</p></div>
+<h3 id="debian">Debian installation</h3><div style="clear:left"></div>
+<div class="paragraph"><p>If you are lucky enough to be using a Debian based Linux distribution,
+simply installing the <tt>glassfishv2</tt> package will be enough.</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt># apt-get install glassfishv2</tt></pre>
+</div></div>
+<div class="paragraph"><p>This will completely deploy the needed infrastructure and launch the
+application server.</p></div>
+<h3 id="generic">Generic installation</h3><div style="clear:left"></div>
+<div class="paragraph"><p>If you are using another OS or Linux distribution, there should be an
+alternative available. You can always download it and follow the
+installation instructions available at the
+<a href="https://glassfish.dev.java.net/public/downloadsindex.html">official
+site</a>.</p></div>
+<div class="paragraph"><p>The installation process is also simple. For example, for Linux you
+could do the following to retrieve the executable installer and run
+it:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>$ wget http://java.net/download/javaee5/v2ur2/promoted/Linux/glassfish-installer-v2ur2-b04-linux.jar
+$ java -Xmx256M -jar glassfish-installer-v2ur2-b04-linux.jar</tt></pre>
+</div></div>
+<div class="paragraph"><p>This will pop up a GUI, guide you through the process and unpack all
+the files for GlassFish into ./glassfish</p></div>
+<div class="paragraph"><p>There you will find the needed GlassFish setup script. The files
+setup.xml and setup-cluster.xml are both used for this. Use the one
+that suits you. The Debian version supports clustering, so we will use
+that to obtain a coherent output for both Debian and Generic
+installations.</p></div>
+<div class="paragraph"><p>Ant is also provided, and should be made executable if you didn’t
+already have it installed.</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>$ chmod a+x glassfish/lib/ant/bin/*</tt></pre>
+</div></div>
+<div class="paragraph"><p>It would be a good time to move the ./glassfish directory to the path
+where you will want it in production.</p></div>
+<div class="paragraph"><p>Now to run the setup:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>$ lib/ant/bin/ant -f setup-cluster.xml</tt></pre>
+</div></div>
+<h3 id="glassfish">Launching Glassfish</h3><div style="clear:left"></div>
+<div class="paragraph"><p>To launch the service you will have to start up the GlassFish
+server.</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>$ ./bin/asadmin start-domain</tt></pre>
+</div></div>
+<div class="paragraph"><p>Or if it is installed system wide:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>$ /usr/bin/asadmin start-domain</tt></pre>
+</div></div>
+<div class="paragraph"><p>Don’t forget to set up an automatic way of doing this at boot time.
+You should obtain an output similar to this:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>Starting Domain domain1, please wait.
+Log redirected to /var/lib/glassfishv2/domains/domain1/logs/server.log.
+Redirecting output to /var/lib/glassfishv2/domains/domain1/logs/server.log
+Domain domain1 started.
+Domain [domain1] is running [Sun Java System Application Server 9.1_01 (build local)] with its configuration and logs at: [/var/lib/glassfishv2/domains].
+Admin Console is available at [http://localhost:4848].
+Use the same port [4848] for "asadmin" commands.
+User web applications are available at these URLs:
+[http://localhost:8080 https://localhost:8181 ].
+Following web-contexts are available:
+[/web1  /__wstx-services ].
+Standard JMX Clients (like JConsole) can connect to JMXServiceURL:
+[service:jmx:rmi:///jndi/rmi://borg:8686/jmxrmi] for domain management purposes.
+Domain listens on at least following ports for connections:
+[8080 8181 4848 3700 3820 3920 8686 ].
+Domain supports application server clusters and other standalone instances.</tt></pre>
+</div></div>
+<div class="paragraph"><p>This means you have GlassFish up and running. Now you can:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+Access the web-based admin page at
+  <a href="http://localhost:4848">http://localhost:4848</a>, with the used
+  <tt>admin</tt> and password <tt>adminadmin</tt> by default (which you’ll be
+  changing right away form the "Application Server" menu). There
+  you’ll be making whatever configuration changes you need.
+</p>
+</li>
+<li>
+<p>
+Use GlassFish as is. It works fine as a standalone server. Just
+  deploy an application and test it.
+</p>
+</li>
+<li>
+<p>
+Get the real thing: we’ve come this long for a more sophisticated set
+  up, not just a stanadalone server configuration. We are now going to
+  proxy it through Cherokee. It is as simple as using the Reverse
+  Proxy handler to hit the GlassFish server at port 8080.
+</p>
+</li>
+</ul></div>
+<h3 id="cherokee">Configuring Cherokee</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Cherokee provides a wizard that will assist you on this task. You can
+either dedicate a new virtual server for this, or use a preexisting
+one. It is your choice, since the Wizard contemplates both scenarios.</p></div>
+<div class="paragraph"><p>For the former you’ll have to access the Wizard from the list of
+available ones within the <tt>Virtual Servers</tt> section of Cherokee-Admin,
+clicking on the <tt>Add</tt> button at the top of the panel. The latter is
+accessed through the same list of Wizards, this time using the <tt>Rule
+Management</tt> button within the <tt>Behavior</tt> tab of any given virtual
+server. Once the panel with the rules is listed, follow a similar
+procedure using the <tt>Add</tt> button located at the top.</p></div>
+<div class="paragraph"><p>The wizard will simply ask for the host to be proxied and will set it
+up for you to see. Should you need to add more machines to your
+cluster, you can add extra information sources to your Cherokee
+configuration and let it deal with all the load balancing.</p></div>
+<div class="paragraph"><p>No extra steps are necessary. You can skip directly to the
+<a href="cookbook_glassfish.html#deployment">deployment</a> section of this recipe. If for any reason
+the Wizard doesn’t work for you, you can always use the manual method
+described below.</p></div>
+<h4 id="_manual_method">Manual method</h4>
+<div class="paragraph"><p>You can either create a new virtual server with a matching rule (be it
+<tt>default</tt> or anything else) if you are sharing the proxy machine, or
+completely dedicate a machine to the Proxy Handler. This will be our
+choice, since typically you will be wanting to get the best possible
+performance from your proxy server.</p></div>
+<div class="paragraph"><p>Launch Cherokee-Admin on your proxy machine, delete every rule of your
+virtual server of choice, and redefine the <tt>Default</tt> rule to use the
+<tt>HTTP reverse proxy</tt> handler from within the <tt>Handler</tt> tab. Make sure
+to enable the <tt>Preserve Host</tt> checkbox.</p></div>
+<div class="paragraph"><p>You will need to assign it every information source that you have
+previously defined, which must be the list of Glassfish-enabled
+machines in your cluster.</p></div>
+<div class="paragraph"><p>These information sources are to be defined as external sources, like
+the following examples:</p></div>
+<div class="tableblock">
+<table cellpadding="4" cellspacing="0" frame="border" rules="all" width="100%">
+<col width="33%"></col>
+<col width="33%"></col>
+<col width="33%"></col>
+<thead>
+<tr>
+<th align="left" valign="top">Type        </th>
+<th align="left" valign="top">Nick       </th>
+<th align="left" valign="top">Connection</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left" valign="top"><p class="table">Remote host</p></td>
+<td align="left" valign="top"><p class="table">GlassFish1</p></td>
+<td align="left" valign="top"><p class="table">192.168.1.101</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">Remote host</p></td>
+<td align="left" valign="top"><p class="table">GlassFish2</p></td>
+<td align="left" valign="top"><p class="table">192.168.1.102</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">Remote host</p></td>
+<td align="left" valign="top"><p class="table">GlassFish3</p></td>
+<td align="left" valign="top"><p class="table">192.168.1.103</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="paragraph"><p>Refer to the <a href="modules_handlers_proxy.html">HTTP reverse proxy</a>
+documentation if you need any further help with this.</p></div>
+<h3 id="deployment">Deploy application</h3><div style="clear:left"></div>
+<div class="paragraph"><p>We will deploy the <tt>quickstart</tt> sample provided by the package using
+the administration interface. You can actually skip the web interface
+and deploy from the command line, which is a lot faster to replicate
+the process among a series of servers. The example is done with one
+server, 192.168.1.101, but you can repeat the process for each one of
+them.</p></div>
+<div class="olist arabic"><ol class="arabic">
+<li>
+<p>
+To do so, open the admin page mentioned above to access the Server
+Admin console.
+</p>
+</li>
+<li>
+<p>
+Choose Applications → Web Applications, and insert
+<tt>/usr/share/glassfishv2/samples/quickstart/hello.war</tt> into the field
+<tt>Local packaged file or directory that is accessible from the
+Application Server</tt>.
+</p>
+</li>
+<li>
+<p>
+After you press <tt>OK</tt>, you will be able to launch it and it will be
+available at, for the case of GlassFish1, the URL
+<a href="http://192.168.1.101:8080/hello">http://192.168.1.101:8080/hello</a>
+</p>
+</li>
+</ol></div>
+<div class="imageblock">
+<div class="content">
+<img alt="media/images/cookbook_glassfish.png" src="media/images/cookbook_glassfish.png"/>
+</div>
+</div>
+<div class="paragraph"><p>And we are done. The same application is now available through your
+proxy. Every request it receives will be dispatched through the list
+of its information sources.</p></div>
+</div>
+<div id="footer">
+<div id="footer-text">
+</div>
+</div>
+</div>

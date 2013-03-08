@@ -1,0 +1,144 @@
+---
+layout: documentation
+title: Rule Types | Cherokee Documentation
+---
+<div id="main_area"><h1>Documentation</h1>
+
+<div class="sectionbody">
+</div>
+<h2 id="_rule_types">Rule Types</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>There are many types of rules available on Cherokee, and each one
+allows you to define specific ways of matching HTTP requests. Further
+more, the behavior can be combined by defining complex rules that
+apply boolean operations to the basic rule types, so the possibilities
+are endless. Some times a specific behavior can be achieved following
+completely different paths: for instance, you can match the requests
+for a specific file type either by using the <tt>Extensions</tt> rule type or
+the <tt>Regular Expressions</tt> type. Be advised that some rule types are
+inherently more efficient than others, so you should stick to the
+simplest and fastest approach.</p></div>
+<div class="paragraph"><p>This is the list of available rule types:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+<strong>Directory</strong>: The entry Directory encloses a group of directives which will
+    apply only to the named directory and sub-directories of that directory.
+</p>
+</li>
+<li>
+<p>
+<strong>Extensions</strong>: The entry Extensions doesn’t care about directories, it will
+    just look for the extension of the object requested.
+</p>
+</li>
+<li>
+<p>
+<strong>Regular Expressions</strong>: The Request entry provides a powerful way to apply
+    custom options to requests. It is a complement for the Directory and Extension
+    entries. Basically, there are two differences between them:
+</p>
+<div class="ulist"><ul>
+<li>
+<p>
+It uses regular expressions to define the requests in which the configuration
+      will be applied.
+</p>
+</li>
+<li>
+<p>
+These entries are able to use the connection parameters (both pathinfo
+      and query string). In this way it is possible to set rules based on
+      parameter values.
+</p>
+</li>
+</ul></div>
+</li>
+<li>
+<p>
+<strong>Header</strong>: This type of rule is used to modify the behavior in
+      response to the contents of HTTP headers. A regular expression
+      is needed to match against. This kind of rule can be used to
+      provide alternative contents to a specific type of users. For
+      example, it can check if the HTTP referer header refferences
+      specific domains to allow or deny the delivery of the requested
+      information.
+</p>
+</li>
+<li>
+<p>
+<strong>File Exists</strong>: This type of rule will only be applied if a
+      certain file (or a file among a list of provided file names) is
+      present. An I/O cache specific setting for the rule can be
+      configured in the <tt>Rule</tt> tab. If enabled, it will speed up the
+      file detection during the rule evaluation. This improves
+      performance but is not recommended when the directory contents
+      change dynamically. This type of rule can also be used to match
+      any file. For example, it can be configured to serve static
+      files and fall through to another rule if the HTTP request is
+      for a resource of dynamic nature.
+</p>
+</li>
+<li>
+<p>
+<strong>HTTP method</strong>: These rules are applied whenever the selected HTTP
+      method is used. You can configure these to respond to a request
+      of type GET, POST, HEAD, PUT, OPTIONS, DELETE, TRACE, CONNECT,
+      COPY, LOCK, MKCOL, MOVE, NOTIFY, POLL, PROPFIND, PROPPATCH,
+      SEARCH, SUBSCRIBE, UNLOCK or UNSUBSCRIBE.
+</p>
+</li>
+<li>
+<p>
+<strong>Incoming IP/Port</strong>: If the server is running on several ports,
+      this rule type will let you specify to which port’s pettitions
+      will it apply.
+</p>
+</li>
+<li>
+<p>
+<strong>SSL / TLS</strong>: This rule type is applied to incomming HTTPS
+      connections.
+</p>
+</li>
+<li>
+<p>
+<strong>Full Path</strong>: Full path request to which content the
+      configuration will be applied. This means you can pinpoint a
+      list of files that will be specifically targeted by this rule
+      type.
+</p>
+</li>
+<li>
+<p>
+<strong>Connected from</strong>: will let you discriminate connections based on
+      the IP or SubNet from which these are originated.
+</p>
+</li>
+<li>
+<p>
+<strong>URL Argument</strong>: will allow you to match a Regular Expressions to
+      the URL arguments, be it a specific one or any of the possible
+      arguments.
+</p>
+</li>
+<li>
+<p>
+<strong>GeoIP</strong>: If GeoIP support is present, this type of rules can be
+      added. The GeoIP library has to be present at build time for
+      this to happen. If enabled, specific behavior can be offered
+      depending on the country of origin of the requests to the web
+      server. Note that the country is determined by matching the IPs
+      to the actual list of countries handled by the library, so the
+      usage of proxies on the user side will render this resolution
+      mechanism inaccurate. An initial country must be added to the
+      rule, and more selections can be added in further steps.
+</p>
+</li>
+</ul></div>
+</div>
+<div id="footer">
+<div id="footer-text">
+</div>
+</div>
+</div>

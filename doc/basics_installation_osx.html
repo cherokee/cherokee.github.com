@@ -1,0 +1,80 @@
+---
+layout: documentation
+title: Installation on MacOS X | Cherokee Documentation
+---
+<div id="main_area"><h1>Documentation</h1>
+
+<div class="sectionbody">
+</div>
+<h2 id="_installation_on_macos_x">Installation on MacOS X</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Installation on MacOS X is pretty much the same as in any other Unix
+platform. If you do not find a prepackaged version that suits your
+needs, you can always download and compile your own.</p></div>
+<h3 id="quickstart">Quickstart</h3><div style="clear:left"></div>
+<div class="olist arabic"><ol class="arabic">
+<li>
+<p>
+<a href="basics_download.html">Download</a> a fresh copy of Cherokee
+</p>
+</li>
+<li>
+<p>
+Configure the package for your system:
+</p>
+<div class="listingblock">
+<div class="content">
+<pre><tt>./configure --prefix=/usr/local  \
+            --with-wwwuser=www   \
+            --with-wwwgroup=www</tt></pre>
+</div></div>
+</li>
+<li>
+<p>
+Compile the package:
+</p>
+<div class="listingblock">
+<div class="content">
+<pre><tt>make -j4</tt></pre>
+</div></div>
+</li>
+<li>
+<p>
+Install the programs and any data files:
+</p>
+<div class="listingblock">
+<div class="content">
+<pre><tt>sudo make install</tt></pre>
+</div></div>
+</li>
+<li>
+<p>
+Start <a href="other_bundle_cherokee-admin.html">cherokee-admin</a>
+</p>
+<div class="paragraph"><p>Additionally, you can follow the <a href="basics_installation_osx.html#autostart">Autostart</a>
+instructions to load the web server at boot time.</p></div>
+</li>
+</ol></div>
+<h3 id="autostart">Autostart</h3><div style="clear:left"></div>
+<div class="paragraph"><p>If you need the cherokee webserver to start at boot time, you will
+have to use the provided Launchd init script. It will be built with
+the rest of Cherokee at the root of your build directory. Simply copy
+it to the apropriate location and make <tt>launchd</tt> aware of it with the
+following commands.</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>sudo cp org.cherokee.webserver.plist /System/Library/LaunchDaemons/
+sudo launchctl load -w /System/Library/LaunchDaemons/org.cherokee.webserver.plist</tt></pre>
+</div></div>
+<h3 id="advanced">Advanced parameters</h3><div style="clear:left"></div>
+<div class="paragraph"><p>If you want to learn more about <em>configure</em> you can run <tt>./configure
+--help</tt>. The list of parameter is extensive, so you might want to take
+a look at it, particularly if you are a developer. Some of the most
+used parameters are listed on the
+link_basics_installation_unix.html[Unix instructions].</p></div>
+</div>
+<div id="footer">
+<div id="footer-text">
+</div>
+</div>
+</div>

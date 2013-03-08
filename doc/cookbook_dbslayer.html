@@ -1,0 +1,363 @@
+---
+layout: documentation
+title: Cookbook  How to set up DBSlayer MySQL balancing | Cherokee Documentation
+---
+<div id="main_area"><h1>Documentation</h1>
+
+<div class="sectionbody">
+</div>
+<h2 id="_cookbook_how_to_set_up_dbslayer_mysql_balancing">Cookbook: How to set up DBSlayer MySQL balancing</h2>
+<div class="sectionbody">
+<h3 id="introduction">Introduction:</h3><div style="clear:left"></div>
+<div class="paragraph"><p>This recipe is meant to help in the task of setting up and
+understanding DBSlayer. This is a handler used to balance the load
+among several MySQL databases acting as a convenient front end that
+simultaneously offers great scalability advantages. Refer to the
+<a href="modules_handlers_dbslayer.html">MySQL Bridge handler</a>
+documentation for the basic information about this subject.</p></div>
+<div class="paragraph"><p>After reading this document you should be able to properly configure
+and understand this handler. It acts as a proxy for a back end MySQL
+server (or cluster of server). This proxy can then be queried via JSON
+over HTTP, and the responses can be given in either one of the
+following supported consuming languages: JSON, Ruby, PHP and Python,
+which makes processing the database results almost trivial.</p></div>
+<div class="paragraph"><p>As more than one SQL request can be issued at once -a transaction, for
+instance-, the responses are returned as a list of results.</p></div>
+<h3 id="independence">Independence:</h3><div style="clear:left"></div>
+<div class="paragraph"><p>It is generally a good idea to separate the database balancer from
+your production web server, both for efficiency and security reasons.
+The DBSlayer handler can be configured to run under a directory in
+your current web server, but concentrating the work load on the same
+box is not recommended. Setting up an independent Cherokee server on
+another box or port using only the dbslayer handler in its Default
+rule is a good idea. This will allow having your database balancer
+fully isolated, which is by far much more secure and easy to monitor
+and manage.</p></div>
+<div class="paragraph"><p>Keep in mind that each DBSlayer handler can manage a single database
+(or a set of replicated slaves to balance among). Thus you will have
+to set up multiple rules in Cherokee, or even multiple instances in
+different ports, in case you need to use several databases.</p></div>
+<div class="paragraph"><p>The handler can be used to perform both read and write operations,
+although the balancing part only makes sense for SELECT
+operations. When performing INSERT operations, keep in mind that DB
+synchronization must be managed elsewhere. When you perform an
+INSERT, the Cherokee DB balancer will return a tuple indicating
+whether it succeeded or not, the number of rows affected, a rollback
+flag, etc. It will not, however, replicate the operation among each
+one of you MySQL servers. These arrangements must be made
+independently using mechanisms suitable for the task.</p></div>
+<div class="paragraph"><p>Remember that balancing database operations is a powerful scaling
+advantage, but requires some precautions. You must assume the system
+is stateless. It is not much of a limitation, and it enables the
+handler to do connection pooling and database access
+dispatching. MySQL is mostly stateless for the bulk of your queries
+(SELECT / UPDATE / INSERT / DELETE, etc.), but some commands are meant
+to affect future commands in the session or may only affect the server
+currently receiving the command in the balancing scheme. Most notably,
+these are setting global or session variables, configuring database
+access privileges and modifying the table structure on a master
+without replication.</p></div>
+<div class="paragraph"><p>Also, due to the balancing scheme in place, you should be very careful
+when locking tables or performing transactions. In these cases you
+<strong>MUST</strong> perform all the related operations contained within a single
+query, either using semicolon separators or within a stored
+procedure. Never dispatch them as separate queries, since your
+databases will rapidly become unstable.</p></div>
+<h3 id="security">Security:</h3><div style="clear:left"></div>
+<div class="paragraph"><p>As for security concerns, you must keep in mind that the handler is
+designed for internal secure networks. If you have concerns about
+exposing your database to the public you will have to properly secure
+your internal network by using firewalling, binding the running
+Cherokee instance to a particular interface, tunnelizing your
+connections and so forth.</p></div>
+<div class="paragraph"><p>We strongly recommend never exposing the MySQL bridge to the outside
+world. It is also encouraged to forbid the account used by the handler
+to access the MySQL database from executing dangerous operations like
+dropping tables or deleting rows. Ideally, the account would only be
+allowed to run selects and/or some stored procedures. This is totally
+unrelated to Cherokee and the Database Bridge handler. Using the
+mechanisms provided by MySQL to enforce the integrity of the database
+makes sense.</p></div>
+<h3 id="modularity">Modularity:</h3><div style="clear:left"></div>
+<div class="paragraph"><p>The  MySQL bridge does not work alone. It is an integral part of the
+Cherokee web server infrastructure and, like any Cherokee module, it
+can make use of the rest of the features provided by the web server.</p></div>
+<div class="paragraph"><p>Thus, you can use the normal loggers to log database access, you can
+encode the contents served to save bandwidth, you can configure the
+bridge to use any balancing mechanism provided by Cherokee, etc.</p></div>
+<div class="paragraph"><p>This handler effectively proxies the connections to the databases, and
+thus Keep-Alive should always remain enabled in the Cherokee instance
+running the MySQL bridge. Persistence will be correctly handled, and
+the performance will be optimal.</p></div>
+<h3 id="replication">Replication:</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Odds are you want to use a M-M set-up, although that’s entirely
+related to your database architecture and is something you’ll have to
+study carefully.</p></div>
+<div class="paragraph"><p>Remember what was said before: The MySQL bridge handler will not
+manage the replication among each one of you MySQL servers. These
+arrangements must be made independently using mechanisms suitable for
+the task.</p></div>
+<h3 id="configuration">Configuration:</h3><div style="clear:left"></div>
+<div class="paragraph"><p>We will configure a simple setup and show a very basic usage example
+so that you can go on from there.  This example will use a dedicated
+box running the Cherokee server with the MySQL bridge handler, and
+will be balancing the load among a couple of independent MySQL servers
+that are replicating the database in a master-master scheme. You could
+use only one machine to do all the tasks, run the database and
+Cherokee managing web pages and the MySQL bridge, but keep in mind
+what was said above about isolating the boxes and the security
+measures that you should take into account when migrating to a
+production environment. Isolation is generally a good idea.</p></div>
+<div class="paragraph"><p>First, we edit the <tt>default</tt> virtual server. Since we will only be
+using it for database balancing, we can safely point it to an empty
+<tt>Document Root</tt>, in this case <tt>/dev/null</tt>.</p></div>
+<div class="imageblock">
+<div class="content">
+<img alt="media/images/cookbook_dbslayer1.png" src="media/images/cookbook_dbslayer1.png"/>
+</div>
+</div>
+<div class="paragraph"><p>The next step will be setting up the sources of the MySQL information.
+This means we will have to configure as many MySQL hosts as we like,
+and the handler will balance the load among them.  In this case we
+will be providing a couple of hosts, each one located in our secure
+intranet.</p></div>
+<div class="paragraph"><p>Refer to the <a href="config_info_sources.html">information sources</a>
+section for details on how to do this. In this case, the MySQL servers
+are running on port 3306 of the hosts 10.0.0.100 and 10.0.0.101, so
+that is what we will use.</p></div>
+<div class="imageblock">
+<div class="content">
+<img alt="media/images/cookbook_dbslayer2.png" src="media/images/cookbook_dbslayer2.png"/>
+</div>
+</div>
+<div class="tableblock">
+<table cellpadding="4" cellspacing="0" frame="border" rules="all" width="100%">
+<caption class="title">Source #1</caption>
+<col width="50%"></col>
+<col width="50%"></col>
+<tbody>
+<tr>
+<td align="left" valign="top"><p class="table">Type</p></td>
+<td align="left" valign="top"><p class="table">Remote source</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">Nick</p></td>
+<td align="left" valign="top"><p class="table">mysql_0</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">Connection</p></td>
+<td align="left" valign="top"><p class="table">10.0.0.100:3306</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="tableblock">
+<table cellpadding="4" cellspacing="0" frame="border" rules="all" width="100%">
+<caption class="title">Source #2</caption>
+<col width="50%"></col>
+<col width="50%"></col>
+<tbody>
+<tr>
+<td align="left" valign="top"><p class="table">Type</p></td>
+<td align="left" valign="top"><p class="table">Remote source</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">Nick</p></td>
+<td align="left" valign="top"><p class="table">mysql_1</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">Connection</p></td>
+<td align="left" valign="top"><p class="table">10.0.0.101:3306</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="paragraph"><p>Next is removing every possible rule and configuring the default one
+to use the MySQL bridge handler. This is not required, but obeys the
+recommendations stated above.</p></div>
+<div class="imageblock">
+<div class="content">
+<img alt="media/images/cookbook_dbslayer3.png" src="media/images/cookbook_dbslayer3.png"/>
+</div>
+</div>
+<div class="paragraph"><p>To do so, simply click on the rule in the <tt>Behavior</tt> tab and proceed
+to the <tt>Handler</tt> section, where you can adjust all the settings.</p></div>
+<div class="paragraph"><p>After adding the information sources to be balanced, and setting up
+the information required to access an existing database, only the
+matter of selecting a language will remain. In this example we will be
+using Python because that is what the testing script will be written
+in. If your favorite language of choice is not available you can
+simply select JSON, which is widely supported in most programming
+languages. Using Python in this case will simply allow us to directly
+evaluate the results offered by the database, creating a native object
+that can be managed more comfortably.</p></div>
+<div class="tableblock">
+<table cellpadding="4" cellspacing="0" frame="border" rules="all" width="100%">
+<caption class="title">Sample configuration values</caption>
+<col width="50%"></col>
+<col width="50%"></col>
+<tbody>
+<tr>
+<td align="left" valign="top"><p class="table">Handler</p></td>
+<td align="left" valign="top"><p class="table"><tt>MySQL Bridge</tt></p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">Language</p></td>
+<td align="left" valign="top"><p class="table"><tt>Python</tt></p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">DB User</p></td>
+<td align="left" valign="top"><p class="table">my_user</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">DB Password</p></td>
+<td align="left" valign="top"><p class="table">my_password</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">Database</p></td>
+<td align="left" valign="top"><p class="table">my_database</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">Balancer</p></td>
+<td align="left" valign="top"><p class="table"><tt>Round Robin</tt></p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">Information Sources</p></td>
+<td align="left" valign="top"><p class="table">mysql_0, mysql_1</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="imageblock">
+<div class="content">
+<img alt="media/images/cookbook_dbslayer4.png" src="media/images/cookbook_dbslayer4.png"/>
+</div>
+</div>
+<div class="paragraph"><p>And these were all the steps required. You are ready to go!</p></div>
+<h3 id="example_python">Example Python script:</h3><div style="clear:left"></div>
+<div class="paragraph"><p>The following script is provided to show how you can use the database
+balancing. It is as simple as it gets. You will only have to change
+the server name and prepare a database accessible with the parameters
+detailed above (database name, user parameters and so on).</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>#!/usr/bin/env python
+import urllib
+
+sql="SELECT * FROM my_table;"
+query = urllib.quote(sql)
+
+print 'Original:', sql
+print 'Encoded:',  query
+
+url      = 'http://localhost/%s'%(query)
+response = urllib.urlopen(url)
+
+print 'RESPONSE:', response
+print 'URL     :', response.geturl()
+
+headers = response.info()
+print 'DATE    :', headers['date']
+print 'HEADERS :'
+print '---------'
+print headers
+
+data = response.read()
+print 'LENGTH  :', len(data)
+print 'DATA    :'
+print '---------'
+
+obj  = eval(data)
+print obj</tt></pre>
+</div></div>
+<h3 id="example_php">Example PHP script:</h3><div style="clear:left"></div>
+<div class="paragraph"><p>This is a simple fetch using cURL:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>&lt;?php
+  $query = "SELECT * FROM my_table;";
+  $host  = "http://localhost";
+  $url   = $host ."/". rawurlencode($query);
+
+  $curl = curl_init();
+  curl_setopt ($curl, CURLOPT_URL, $url);
+  curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+  $result = curl_exec ($curl);
+  curl_close ($curl);
+
+  eval("\$obj = $result;");
+  var_dump($obj);
+?&gt;</tt></pre>
+</div></div>
+<div class="paragraph"><p>Please note the variable must be set in the evaluation string, and
+that a semicolon is needed in order for the string to be correctly
+converted. This behavior -not adding the semicolon in the generated
+string automatically- is a design decision taken to make the
+underlying infrastructure more flexible.</p></div>
+</div>
+<h2 id="_mysql_wrapper_for_php">MySQL Wrapper for PHP</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>To facilitate the use of the MySQL Database Bridge, the PHP-MySQL API
+has been replicated in a wrapper that can be found under
+<tt>dbslayer/mysql_wrap.php</tt> in Cherokee’s source tree. It should provide
+an easy to use method of benefiting from the advantages offered by
+Cherokee without having to modify your applications.</p></div>
+<div class="paragraph"><p>You can use it in any of two ways:</p></div>
+<div class="olist arabic"><ol class="arabic">
+<li>
+<p>
+By directly overriding every <tt>mysql_*</tt> function call.
+</p>
+</li>
+<li>
+<p>
+By prepending <tt>cherokee_</tt> to every <tt>mysql_*</tt> function.
+</p>
+</li>
+</ol></div>
+<div class="paragraph"><p>This is controlled when you run the initialization function. By
+default it tries to override the built-in MySQL functions. If you
+cannot provide a suitable environment or it simply fails, try passing
+a <tt>FALSE</tt> value as the optional second parameter.</p></div>
+<div class="paragraph"><p>The requirements for the wrapper are basically the
+<a href="http://php.net/manual/en/book.curl.php">cURL library</a>.</p></div>
+<div class="paragraph"><p>To override the built-in function, you need to have
+<a href="http://php.net/manual/en/book.apd.php">APD</a> installed.</p></div>
+<div class="paragraph"><p>If you don not, it is as simple as providing the <tt>phpize</tt> program
+(bundled with package <tt>php5-dev</tt> on Debian based Linux distribution)
+and issuing:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>pecl install apd</tt></pre>
+</div></div>
+<div class="paragraph"><p>To use the wrapper you simply have to include the file in your code
+and initialize it with the appropriate host:port of a running Cherokee
+MySQL Bridge instance.</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>&lt;?php
+
+$host="http://localhost:8888";
+cherokee_init($host);
+
+/* Add a second parameter if you don't want to override the built-in functions.
+
+cherokee_init($host, FALSE);
+
+*/
+
+?&gt;</tt></pre>
+</div></div>
+<div class="paragraph"><p>From there on the built-in functions should be extended to support
+Cherokee Bridged MySQL resources as well as the regular MySQL ones.</p></div>
+<div class="paragraph"><p>If you don’t care about mixing regular MySQL resources and Bridged
+ones, as will be the case in most occasions, you could even skip the
+manual initialization and simply modify the <tt>cherokee_mysql_connect()</tt>
+and <tt>cherokee_mysql_pconnect()</tt> functions to do the task for you on
+invocation.</p></div>
+</div>
+<div id="footer">
+<div id="footer-text">
+</div>
+</div>
+</div>

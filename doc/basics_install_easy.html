@@ -1,0 +1,78 @@
+---
+layout: documentation
+title: Easy Installation | Installing Cherokee | Cherokee Documentation
+---
+
+<div id="main_area">
+	<h1>Cherokee Basics</h1>
+	<h2 id="_a_href_index_html_index_a_8594_a_href_basics_html_getting_started_a_8594_a_href_basics_installation_html_installation_a"><a href="index.html">Index</a> → <a href="basics.html">Getting started</a> → <a href="basics_installation.html">Installation</a></h2>
+	<div class="sectionbody"></div>
+	<h2 id="_easy_installation">Installing Cherokee: Easy installation</h2>
+	<div class="sectionbody">
+		<div class="paragraph">
+			<p>The easiest way to install Cherokee is by using the script provided
+				for easy installations. It compiles and installs the latest version of
+				the server with a single command:
+			</p>
+		</div>
+		<div class="listingblock">
+			<div class="content">
+				<pre><tt>wget http://cherokee-project.com/install &amp;&amp; python install</tt></pre>
+			</div>
+		</div>
+		<div class="paragraph">
+			<p>or</p>
+		</div>
+		<div class="listingblock">
+			<div class="content">
+				<pre><tt>curl -LO http://cherokee-project.com/install &amp;&amp; python install</tt></pre>
+			</div>
+		</div>
+		<div class="paragraph">
+			<p>The easy installation script is the express way to make a Cherokee
+				installation as seamless and hassle-free as possible.  It will build
+				and install everything under <tt>/opt/cherokee</tt>, and by deleting that
+				directory you could totally purge Cherokee from your system.
+			</p>
+		</div>
+		<div class="paragraph">
+			<p>If you require further customization, this script is not for you. The
+				other -more elaborate- <a href="basics_install.html">installation
+				methods</a> will fulfill your needs. Particularly when there is a
+				prepackaged version of Cherokee available for your architecture you
+				should follow that route. That will provide you with automatic bootup
+				scripts, consistency and dependency checks, and an easy upgrade path
+				tailored to your system whenever a new package is available.
+			</p>
+		</div>
+		<h3 id="_development_mode">Development mode</h3>
+		<div style="clear:left"></div>
+		<div class="paragraph">
+			<p>The easy installation script supports several parameters. To see a
+				full list of parameters, just add the <tt>--help</tt> parameter:
+			</p>
+		</div>
+		<div class="listingblock">
+			<div class="content">
+				<pre><tt>wget http://cherokee-project.com/install &amp;&amp; python install --help</tt></pre>
+			</div>
+		</div>
+		<div class="paragraph">
+			<p>The only one really worth mentioning is the one to trigger the
+				<tt>development mode</tt>:
+			</p>
+		</div>
+		<div class="listingblock">
+			<div class="content">
+				<pre><tt>wget http://cherokee-project.com/install &amp;&amp; python install --devel</tt></pre>
+			</div>
+		</div>
+		<div class="paragraph">
+			<p>This will build a bleeding edge release, taking the sources from the
+				latest development snapshot, enabling traces, and making the
+				installation under <tt>/opt/cherokee-dev</tt>, so that it can coexist with a
+				regular installation.
+			</p>
+		</div>
+	</div>
+</div>

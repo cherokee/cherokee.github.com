@@ -1,0 +1,64 @@
+---
+layout: documentation
+title: Modules  Loggers | Cherokee Documentation
+---
+<div id="main_area"><h1>Documentation</h1>
+
+<div class="sectionbody">
+</div>
+<h2 id="_modules_loggers">Modules: Loggers</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Loggers are a type of Cherokee modules unsurprisingly used to log
+events. They can be configured on a per virtual server basis through
+each virtual server’s <tt>Logging</tt> section.</p></div>
+<div class="paragraph"><p>Every <tt>logger</tt> registers information about two types of events, <strong>Accesses</strong>
+and <strong>Errors</strong>, in a different format depending on the used <tt>logger</tt>.</p></div>
+<div class="paragraph"><p>The information can be registered by any of the following mechanisms:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+File: write to disk.
+</p>
+</li>
+<li>
+<p>
+System logger: use the syslog standard.
+</p>
+</li>
+<li>
+<p>
+Standard Error: write to stderr.
+</p>
+</li>
+<li>
+<p>
+Execute program: send the log entry to the specified program.
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>The format of the output and fields that actually are logged are
+solely determined by the logger chosen. Cherokee currently supports
+the following loggers:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+<a href="modules_loggers_combined.html">Combined</a>: Apache compatible. <strong>Recommended</strong>.
+</p>
+</li>
+<li>
+<p>
+<a href="modules_loggers_custom.html">Custom</a>: Customizable format.
+</p>
+</li>
+<li>
+<p>
+<a href="modules_loggers_ncsa.html">NCSA</a>: NCSA style.
+</p>
+</li>
+</ul></div>
+</div>
+<div id="footer">
+<div id="footer-text">
+</div>
+</div>
+</div>

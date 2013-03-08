@@ -1,0 +1,55 @@
+---
+layout: documentation
+title: Development  Quickstart | Cherokee Documentation
+---
+<div id="main_area"><h1>Documentation</h1>
+
+<div class="sectionbody">
+</div>
+<h2 id="_development_quickstart">Development: Quickstart</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>So, you have found things in Cherokee worth improving and feel the
+urge to contribute to the project. But where to start?</p></div>
+<div class="paragraph"><p>The first thing, of course, is setting up a development/testing
+environming for Cherokee.</p></div>
+<div class="paragraph"><p>The relevant documents would be those about
+<a href="basics_requirements.html">software requirements</a>,
+<a href="basics_download.html">downloading the SVN repository</a>, and the
+<a href="basics_installation_unix.html">quickstart installation notes</a>.</p></div>
+<div class="paragraph"><p>In principle, provided you have the required tools in your system, it
+should be as easy as:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>    svn co svn://svn.cherokee-project.com/cherokee/trunk ~/cherokee_dev
+    cd ~/cherokee_dev
+    ./autogen.sh --enable-beta --enable-trace
+    make</tt></pre>
+</div></div>
+<div class="paragraph"><p>You should probably read all the <a href="dev.html">development info</a>
+section of the documentation, and go through the
+<a href="http://bugs.cherokee-project.com/">Cherokee Project Bugtracker</a> to
+make sure you are not wasting your effort working on something already
+solved.</p></div>
+<div class="paragraph"><p>Joining the
+<a href="http://lists.octality.com/listinfo/cherokee-dev">development list</a>
+and hanging out at the <a href="irc://irc.freenode.net/cherokee">#cherokee
+IRC channel</a> are also good ideas.</p></div>
+<h3 id="_quick_tips">Quick Tips</h3><div style="clear:left"></div>
+<div class="paragraph"><p>If you are modifiying the core of Cherokee, don’t forget to run the
+whole <a href="dev_qa.html">QA</a> bench to ensure no regressions are being
+introduced by your changes.</p></div>
+<div class="paragraph"><p>Additionally, if you are modifying cherokee-admin, don’t forget to run
+the modified instance instead of the one in the system, which can be
+specified with the -d (--appdir) parameter:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>    cherokee-admin -d ~/cherokee_dev/admin</tt></pre>
+</div></div>
+<div class="paragraph"><p>And that’s about it. You should be able to get your hands dirty from
+here. Happy hacking!</p></div>
+</div>
+<div id="footer">
+<div id="footer-text">
+</div>
+</div>
+</div>

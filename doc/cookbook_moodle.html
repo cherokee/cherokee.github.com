@@ -1,0 +1,123 @@
+---
+layout: documentation
+title: Cookbook  Setting up Moodle | Cherokee Documentation
+---
+<div id="main_area"><h1>Documentation</h1>
+
+<div class="sectionbody">
+</div>
+<h2 id="_cookbook_setting_up_moodle">Cookbook: Setting up Moodle</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Running <a href="http://moodle.org/">Moodle</a> on Cherokee is easy to
+do. Since Moodle has relatively high requirements (1GB RAM is
+recommended), it is actually a very good idea to run a high
+performance web server and see how things simply start flying.</p></div>
+<div class="paragraph"><p>The only software requirements are a web server, MySQL and PHP with
+several extensions. You can see the complete list of
+<a href="http://docs.moodle.org/en/Installing_Moodle#Software">software
+requirements</a> at Moodle’s site. Don’t worry about this point. The
+installer will detail exactly what are the missing modules, soy you
+can install whatever you need during that part of the process.</p></div>
+<div class="paragraph"><p>Cherokee can be configured in a breeze thanks to the Cherokee
+Market. After deploying it automatically you can feel free to manually
+tune whatever parameters you see fit, but no more intervention is
+really needed.</p></div>
+<h3 id="manual_configuration">Setting up Moodle manually</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Using the Market is the recommended option to set up Moodle on
+Cherokee. However, should you wish to do it manually you will just
+need PHP support correctly configured in Cherokee. Please refer to the
+PHP Wizard or to the pertaining documentation section about
+<a href="cookbook_php.html">setting up PHP</a> in case you don’t have it
+available for some reason.</p></div>
+<div class="paragraph"><p>Besides the PHP requirement, nothing else is needed on Cherokee’s
+part.</p></div>
+<div class="paragraph"><p>Simply set the <tt>Document root</tt> to <tt>/var/www/moodle</tt> and you are ready
+to go. This is done within the <tt>Basics</tt> tab of the chosen <tt>Virtual
+Server</tt>.</p></div>
+<div class="imageblock">
+<div class="content">
+<img alt="media/images/cookbook_moodle_document_root.png" src="media/images/cookbook_moodle_document_root.png"/>
+</div>
+<div class="image-title">Custom document root</div>
+</div>
+<h3 id="moodle">Moodle manula steps</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Of course, you will need to download Moodle from the
+<a href="http://download.moodle.org/">download site</a> if you don’t already
+have a copy.</p></div>
+<div class="paragraph"><p>For this example we will be using
+<a href="http://download.moodle.org/download.php/stable19/moodle-weekly-19.tgz">moodle-weekly-19</a>,
+which is the recommended option at the time of writing.</p></div>
+<div class="paragraph"><p>Uncompress it to a directory of your choice, like <tt>/var/www/moodle</tt>,
+and remember changing ownership to that of the user under which
+Cherokee will be running.</p></div>
+<div class="paragraph"><p>First download and uncompress the distributed Moodle release into
+<tt>/var/www/moodle</tt>, and create a database suitable for the installation.</p></div>
+<div class="paragraph"><p>Log in to MySQL:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>mysql -u root -p</tt></pre>
+</div></div>
+<div class="paragraph"><p>And create the database for Moodle. We will be using the name
+<em>moodle</em>, the user <em>moodleuser</em> and the password <em>moodlepassword</em>, but
+you should set up your own.</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>CREATE DATABASE moodle DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci;
+GRANT ALL PRIVILEGES ON moodle.* TO moodleuser@localhost IDENTIFIED BY 'moodlepassword';
+GRANT ALL PRIVILEGES ON moodle.* TO moodleuser@localhost.localdomain IDENTIFIED BY 'moodlepassword';
+FLUSH PRIVILEGES;
+quit;</tt></pre>
+</div></div>
+<div class="paragraph"><p>You will also have to create a directory for Moodle to save data in
+it. It must be outside the web document tree.</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>mkdir /var/www/moodledata
+chmod 0770 moodledata
+chown www-data:www-data moodledata</tt></pre>
+</div></div>
+<div class="paragraph"><p>Then point your web browser to <tt>http://localhost</tt> and follow the
+instructions provided by the installer. You will only need to provide
+the above mentioned database information and very little else.</p></div>
+<div class="imageblock">
+<div class="content">
+<img alt="media/images/cookbook_moodle_paths.png" src="media/images/cookbook_moodle_paths.png"/>
+</div>
+<div class="image-title">Installation paths</div>
+</div>
+<div class="imageblock">
+<div class="content">
+<img alt="media/images/cookbook_moodle_db.png" src="media/images/cookbook_moodle_db.png"/>
+</div>
+<div class="image-title">Database settings</div>
+</div>
+<div class="paragraph"><p>As mentioned before, checks will be performed to see if the needed PHP
+modules are available. Make sure to have the ones you’ll be needing.</p></div>
+<div class="imageblock">
+<div class="content">
+<img alt="media/images/cookbook_moodle_modules.png" src="media/images/cookbook_moodle_modules.png"/>
+</div>
+<div class="image-title">PHP requirements</div>
+</div>
+<div class="paragraph"><p>This will get you through the whole installation process in around 20
+little extra steps give or take. Just click on <tt>continue</tt> and you
+should be fine. It will populate your database and get you through the
+whole installation process.</p></div>
+<div class="imageblock">
+<div class="content">
+<img alt="media/images/cookbook_moodle.png" src="media/images/cookbook_moodle.png"/>
+</div>
+<div class="image-title">Moodle in action</div>
+</div>
+<div class="paragraph"><p>Once you are done, don’t forget to set up your
+<a href="http://docs.moodle.org/en/Cron">cron tasks</a> and configure the
+<a href="http://docs.moodle.org/en/Backup_settings">backup settings</a>. You
+can find all the information to create new courses and everything else
+there is to know in <a href="http://docs.moodle.org/">Moodle’s
+documentation</a>.</p></div>
+</div>
+<div id="footer">
+<div id="footer-text">
+</div>
+</div>
+</div>

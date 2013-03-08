@@ -1,0 +1,86 @@
+---
+layout: documentation
+title: Cookbook  Setting up Concrete5 | Cherokee Documentation
+---
+<div id="main_area"><h1>Documentation</h1>
+
+<div class="sectionbody">
+</div>
+<h2 id="_cookbook_setting_up_concrete5">Cookbook: Setting up Concrete5</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Setting up <a href="http://www.concrete5.org/">Concrete5</a> with Cherokee is really
+easy. A configuration wizard is provided that can either be used to
+install Concrete5 as a new dedicated Virtual Server, or to set it up
+inside a Directory.</p></div>
+<div class="paragraph"><p>This recipe contains three sections detailing how to:
+. Configure Cherokee for either installation mode using the Wizard.
+. Install Concrete5 v3.3.1 which is the last one available at the time
+of writing.
+. Configure Cherokee manually.</p></div>
+<h3 id="wizard_configuration">Configure Cherokee using the Wizard</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Two common scenarios are contemplated: installation on a dedicated
+virtual server (<a href="http://concrete5.example.net/">http://concrete5.example.net/</a>, for instance) or under a
+subdirectory on an existing virtual server (as could be
+<a href="http://example.net/concrete5/">http://example.net/concrete5/</a>).</p></div>
+<h4 id="cherokee_vserver">Setting up Concrete5 as a new Virtual Server</h4>
+<div class="paragraph"><p>The first step would be to go to the virtual server list page. Once in
+there, click on the <tt>Add</tt> button at the top of the panel to show the
+list of available wizards.</p></div>
+<div class="imageblock">
+<div class="content">
+<img alt="media/images/admin_vservers_wizard.png" src="media/images/admin_vservers_wizard.png"/>
+</div>
+</div>
+<div class="paragraph"><p>Now, you will have to select the <tt>CMS</tt> category, and run the Concrete5
+wizard.  At this stage the Concrete5 wizard will ask you for some basic
+parameters about the installation. It will try to auto-fill as many
+entries of the form as possible.  For instance, if it finds Concrete5
+installed in a standard location it will use that path as the default
+directory.</p></div>
+<div class="paragraph"><p>The new virtual server will be created after this form is submitted.
+The virtual server configuration will cover the vast majority of the
+cases. Most probably it will cover your needs, although you are free
+to modify it as you will.</p></div>
+<h4 id="cherokee_dir">Setting up Concrete5 inside a Directory</h4>
+<div class="paragraph"><p>Concrete5 can also be configured inside a directory. Let’s suppose we
+want to set up Concrete5 inside the <tt>/blog</tt> directory of one of our
+virtual servers.</p></div>
+<div class="paragraph"><p>In this case, the first thing you will have to do is to enter the
+virtual server configuration you’d like to configure Concrete5
+in. Visit the <tt>Behavior</tt> tab, use the <tt>Rule Management</tt> button and
+click on the <tt>Add</tt> button at the top of the panel.</p></div>
+<div class="imageblock">
+<div class="content">
+<img alt="media/images/admin_vserver_wizard.png" src="media/images/admin_vserver_wizard.png"/>
+</div>
+</div>
+<div class="paragraph"><p>As in the previous case, this wizard will ask some very basic
+information, including the public web directory where Concrete5 will be
+set up and the local Concrete5 source directory.</p></div>
+<h3 id="package_installation">Installing Concrete5</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Once Cherokee is ready, only the database issue remains to be able to
+install Concrete5. Log in to MySQL: <tt>mysql -u root -p</tt></p></div>
+<div class="paragraph"><p>And create the database for Concrete5. We will be using the name
+<em>concrete5</em>, the user <em>concrete5user</em> and the password <em>concrete5password</em>, but
+you should set up your own.</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>CREATE DATABASE concrete5;
+GRANT ALL PRIVILEGES ON concrete5.* TO concrete5user@localhost IDENTIFIED BY 'concrete5password';
+GRANT ALL PRIVILEGES ON concrete5.* TO concrete5user@localhost.localdomain IDENTIFIED BY 'concrete5password';
+FLUSH PRIVILEGES;
+quit;</tt></pre>
+</div></div>
+<div class="paragraph"><p>Then point your web browser to the point specified when you ran the
+wizard (i.e. <tt>http://localhost/concrete5</tt>, <tt>http://example.com/</tt>, etc)
+and follow the instructions provided by the Concrete5 installer.</p></div>
+<div class="paragraph"><p>There is not much else you must do for Cherokee to work with
+Concrete5. If you follow the Concrete5 installer’s instructions -providing
+valid database information in most cases will suffice-, you will be
+done in an instant.</p></div>
+</div>
+<div id="footer">
+<div id="footer-text">
+</div>
+</div>
+</div>

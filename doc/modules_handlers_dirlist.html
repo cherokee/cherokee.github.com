@@ -1,0 +1,194 @@
+---
+layout: documentation
+title: Handler  Directory Listing | Cherokee Documentation
+---
+<div id="main_area"><h1>Documentation</h1>
+
+<div class="sectionbody">
+</div>
+<h2 id="_handler_directory_listing">Handler: Directory Listing</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>The <strong>Only Listing</strong> handler builds a list of directories and files
+within the requested directory, but <strong>does not allow you to download
+its contents</strong>. Refer to <a href="modules_handlers_common.html">List &amp;
+Send</a> for the opposite behavior.</p></div>
+<h3 id="listing">Parameters: Listing</h3><div style="clear:left"></div>
+<div class="tableblock">
+<table cellpadding="4" cellspacing="0" frame="border" rules="all" width="100%">
+<col width="20%"></col>
+<col width="20%"></col>
+<col width="60%"></col>
+<thead>
+<tr>
+<th align="left" valign="top">Parameters </th>
+<th align="left" valign="top">Type    </th>
+<th align="left" valign="top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left" valign="top"><p class="table"><tt>size</tt></p></td>
+<td align="left" valign="top"><p class="table">boolean</p></td>
+<td align="left" valign="top"><p class="table">Optional. Display the size of files in the
+                      listings. Default: <tt>Enabled</tt>.</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table"><tt>date</tt></p></td>
+<td align="left" valign="top"><p class="table">boolean</p></td>
+<td align="left" valign="top"><p class="table">Optional. Display the last modification date of
+                      the files and directories in the listings.
+                      Default: <tt>Enabled</tt>.</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table"><tt>user</tt></p></td>
+<td align="left" valign="top"><p class="table">boolean</p></td>
+<td align="left" valign="top"><p class="table">Optional. Display the owner of the files and
+                      directories in the listings.
+                      Default: <tt>Disabled</tt>.</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table"><tt>group</tt></p></td>
+<td align="left" valign="top"><p class="table">boolean</p></td>
+<td align="left" valign="top"><p class="table">Optional. Display the group ownership of the
+                      files and directories in the listings.
+                      Default <tt>Disabled</tt>.</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table"><tt>symlinks</tt></p></td>
+<td align="left" valign="top"><p class="table">boolean</p></td>
+<td align="left" valign="top"><p class="table">Optional. Display symbolic links.
+                      Default <tt>Enabled</tt>.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<h3 id="theming">Parameters: Theming</h3><div style="clear:left"></div>
+<div class="tableblock">
+<table cellpadding="4" cellspacing="0" frame="border" rules="all" width="100%">
+<col width="20%"></col>
+<col width="20%"></col>
+<col width="60%"></col>
+<thead>
+<tr>
+<th align="left" valign="top">Parameters     </th>
+<th align="left" valign="top">Type    </th>
+<th align="left" valign="top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left" valign="top"><p class="table"><tt>theme</tt></p></td>
+<td align="left" valign="top"><p class="table">string</p></td>
+<td align="left" valign="top"><p class="table">Optional. The theme to use when displaying
+                          the directory listings.
+                          Default: <tt>default</tt>.</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table"><tt>icon_dir</tt></p></td>
+<td align="left" valign="top"><p class="table">string</p></td>
+<td align="left" valign="top"><p class="table">Optional: Alternative path to a new icon
+                          set.</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table"><tt>notice_files</tt></p></td>
+<td align="left" valign="top"><p class="table">string</p></td>
+<td align="left" valign="top"><p class="table">Optional: List of notice files to be
+                          inserted.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="paragraph"><p>It is possible to change the default theme used when displaying the directory
+listings.</p></div>
+<div class="dlist"><dl>
+<dt class="hdlist1">
+It is also possible to create a new one
+</dt>
+<dd>
+<div class="listingblock">
+<div class="content">
+<pre><tt>   $ ls /usr/share/cherokee/themes/firefox3/
+   entry.html  footer.html  header.html  theme.css</tt></pre>
+</div></div>
+<div class="paragraph"><p>Simply create a new directory in the above mentioned path containing
+the listed files and  you’ll be able to select it in <tt>cherokee-admin</tt>.</p></div>
+</dd>
+</dl></div>
+<h3 id="examples">Examples</h3><div style="clear:left"></div>
+<div class="paragraph"><p>This is just one of many possible configurations.</p></div>
+<div class="tableblock">
+<table cellpadding="4" cellspacing="0" frame="border" rules="all" width="100%">
+<caption class="title">Sample configuration</caption>
+<col width="50%"></col>
+<col width="50%"></col>
+<tbody>
+<tr>
+<td align="left" valign="top"><p class="table">Field</p></td>
+<td align="left" valign="top"><p class="table">Value</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">Handler</p></td>
+<td align="left" valign="top"><p class="table"><tt>Only listing</tt></p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">Document Root</p></td>
+<td align="left" valign="top"><p class="table">None</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">Show Size</p></td>
+<td align="left" valign="top"><p class="table">Enabled</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">Show Date</p></td>
+<td align="left" valign="top"><p class="table">Enabled</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">Show User</p></td>
+<td align="left" valign="top"><p class="table">Disabled</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">Show Group</p></td>
+<td align="left" valign="top"><p class="table">Disabled</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">Show Backup files</p></td>
+<td align="left" valign="top"><p class="table">Disabled</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">Show Hidden files</p></td>
+<td align="left" valign="top"><p class="table">Disabled</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">Allow symbolic links</p></td>
+<td align="left" valign="top"><p class="table">Enabled</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">Redirect symbolic links</p></td>
+<td align="left" valign="top"><p class="table">Disabled</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">Theme</p></td>
+<td align="left" valign="top"><p class="table"><tt>default</tt></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="imageblock">
+<div class="content">
+<img alt="media/images/admin_handler_onlylisting.png" src="media/images/admin_handler_onlylisting.png"/>
+</div>
+<div class="image-title">Sample configuration screenshot</div>
+</div>
+<div class="paragraph"><p>The output given by such configuration is a simple directory listing
+that can be sorted by any of its columns.</p></div>
+<div class="imageblock">
+<div class="content">
+<img alt="media/images/admin_handler_onlylisting_ex.png" src="media/images/admin_handler_onlylisting_ex.png"/>
+</div>
+</div>
+</div>
+<div id="footer">
+<div id="footer-text">
+</div>
+</div>
+</div>

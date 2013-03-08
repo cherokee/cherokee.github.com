@@ -1,0 +1,99 @@
+---
+layout: documentation
+title: Handler  Audio/Video Streaming | Cherokee Documentation
+---
+<div id="main_area"><h1>Documentation</h1>
+
+<div class="sectionbody">
+</div>
+<h2 id="_handler_audio_video_streaming">Handler: Audio/Video Streaming</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>This handler is used to stream media files. Both audio and video files
+are supported.</p></div>
+<div class="paragraph"><p>The two main features of this module are:</p></div>
+<div class="olist arabic"><ol class="arabic">
+<li>
+<p>
+<tt>Automatic Traffic Shaping</tt>: All the media files handled by this
+    module will be analyzed, so it figures the media bitrate. Once the
+    module knows it, it will limit the speed to that bitrate, so
+    server bandwidth is not wasted in the case the client stops
+    watching or listening to the file before it has finished. This
+    feature also helps the server to handle a higher user concurrency
+    before the bandwidth limit is reached.
+</p>
+</li>
+<li>
+<p>
+<tt>Seeking support</tt>: There are some web media players that support
+    media seeking by using a ?<em>start</em>= parameter. So far, this method
+    is supported for FLV files, and it will be eventually supported
+    for H264 videos as well.
+</p>
+</li>
+</ol></div>
+<div class="paragraph"><p>If the <em>Automatic Traffic Shaping</em> is enabled, all the media formats
+will be streamed, independently on whether or not seeking is supported
+for that format.  For instance, even though <em>seeking</em> wouldn’t work,
+any MP3, OGG, AVI or Matroska file would be streamed according to
+their bitrate.</p></div>
+<h3 id="_parameters_listing">Parameters: Listing</h3><div style="clear:left"></div>
+<div class="tableblock">
+<table cellpadding="4" cellspacing="0" frame="border" rules="all" width="100%">
+<col width="20%"></col>
+<col width="10%"></col>
+<col width="70%"></col>
+<thead>
+<tr>
+<th align="left" valign="top">Parameters       </th>
+<th align="left" valign="top">Type    </th>
+<th align="left" valign="top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left" valign="top"><p class="table"><tt>Auto Rate</tt></p></td>
+<td align="left" valign="top"><p class="table">boolean</p></td>
+<td align="left" valign="top"><p class="table">Whether to enable the bitrate based
+                            bandwidth limit.</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table"><tt>Speedup Factor</tt></p></td>
+<td align="left" valign="top"><p class="table">float</p></td>
+<td align="left" valign="top"><p class="table">Optional. It is the factor by which the
+                            bandwidth limit would be multiplied.
+                            Default: 0.1.</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table"><tt>Initial Boost</tt></p></td>
+<td align="left" valign="top"><p class="table">number</p></td>
+<td align="left" valign="top"><p class="table">Optional. Seconds of media that should be
+                            sent before setting the bandwidth limit.
+                            This allows the client to buffer some
+                            media. Default: 5 (seconds).</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<h3 id="_notes_on_flv_streaming">Notes on FLV streaming</h3><div style="clear:left"></div>
+<div class="paragraph"><p>It is important to remember that FLV videos must be indexed. It is
+only possible to seek along the media file if it has some meta data
+tags. Without these tags, seeking just would not work.</p></div>
+<div class="paragraph"><p>There are tools like <a href="http://inlet-media.de/flvtool2">FLVTool2</a>,
+<a href="http://www.buraks.com/flvmdi/">FLVMDI</a> or
+<a href="http://yamdi.sourceforge.net/">Yamdi</a> that can be used to insert
+these tags.</p></div>
+<h3 id="_notes_on_h264_mp4_streaming">Notes on H264 (mp4) streaming</h3><div style="clear:left"></div>
+<div class="paragraph"><p>H264 files must be written in a special way so the server can stream
+them. If a H264 file is ready for progressive streaming, Flash 9 (and
+higher) will be able to play it while it’s being downloaded.</p></div>
+<div class="paragraph"><p>From a technical point of view, the server needs the H264 file to have
+its moov atoms (or boxes) in front of the data. The <tt>qt-faststart.c</tt>
+program - shipped with FFMpeg - rewrites H264 files so their atoms are
+placed in the required order.</p></div>
+</div>
+<div id="footer">
+<div id="footer-text">
+</div>
+</div>
+</div>

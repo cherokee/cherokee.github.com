@@ -1,0 +1,55 @@
+---
+layout: documentation
+title: 920834752MANUAL EDITING REQUIRED | Cherokee Documentation
+---
+<div id="main_area"><h1>Documentation</h1>
+
+<div class="sectionbody">
+<h3 id="_logger_combined">Logger: Combined</h3><div style="clear:left"></div>
+<div class="paragraph"><p>This logger produces logfiles that conform to the <em>Combined Log
+Format</em>. It is commonly used by many programs, being the standard
+format used by Apache. This is a <strong>de facto standard</strong> and is the most
+widely used. As such, you are encouraged to use it.</p></div>
+<div class="paragraph"><p>This format is exactly the same as the
+<a href="modules_loggers_ncsa.html">Common Log Format</a>, with two extra
+fields.</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>host rfc931 username date:time request statuscode bytes referer user_agent</tt></pre>
+</div></div>
+<div class="paragraph"><p>Here is an example:</p></div>
+<div class="sidebarblock">
+<div class="sidebar-content">
+<div class="paragraph"><p>::ffff:127.0.0.1 - - [11/Aug/2008:16:17:58 +0000] "GET /index.html HTTP/1.1" 200 2633 "-" "Mozilla/5.0 (X11; U; Linux i686; es-ES; rv:1.9.0.1) Gecko/2008072820 Firefox/3.0.1"</p></div>
+</div></div>
+<div class="paragraph"><p>The description of the additional fields follows.
+Refer to the <a href="modules_loggers_ncsa.html">Common Log
+Format</a> documentation for information about the rest of the fields.</p></div>
+<div class="dlist"><dl>
+<dt class="hdlist1">
+<strong>referer</strong> ("-") 
+</dt>
+<dd>
+<p>
+This is the "Referer" HTTP request header. This indicates the URL
+which linked the user to your site (as reported by the client). In
+this case it is empty because no Referer exists (i.e. it is a direct
+hit).
+</p>
+</dd>
+<dt class="hdlist1">
+<strong>user_agent</strong> ("Mozilla/5.0 (X11; U; Linux i686; es-ES; rv:1.9.0.1) Gecko/2008072820 Firefox/3.0.1") 
+</dt>
+<dd>
+<p>
+The User-Agent HTTP request header. This is the information reported
+by the client about itself.
+</p>
+</dd>
+</dl></div>
+</div>
+<div id="footer">
+<div id="footer-text">
+</div>
+</div>
+</div>

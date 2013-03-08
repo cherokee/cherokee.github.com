@@ -1,0 +1,219 @@
+---
+layout: documentation
+title: Cookbook  Setting up Nagios | Cherokee Documentation
+---
+<div id="main_area"><h1>Documentation</h1>
+
+<div class="sectionbody">
+</div>
+<h2 id="_cookbook_setting_up_nagios">Cookbook: Setting up Nagios</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Nagios is a host, service and network monitoring program. It is very
+extended and can be up and running in 15 minutes just by following the
+<a href="http://nagios.sourceforge.net/docs/3_0/quickstart.html">Quickstart
+Guide</a>. Though it is well documented and is easy to follow, it is
+intended for an Apache audience.</p></div>
+<div class="paragraph"><p>After following the quickstart instructions, getting Nagios it to work
+with Cherokee is really simple.</p></div>
+<h3 id="trivial">Trivial set up: Cherokee as proxy</h3><div style="clear:left"></div>
+<div class="paragraph"><p>The most elemental set up is one that assumes that a Nagios
+installation runs on another box and that Cherokee simply sits as a
+reverse proxy between the Nagios-instance and the world.</p></div>
+<div class="paragraph"><p>In such a set up, we would have Nagios running in its own box with
+Apache2, as detailed by their quick installation guide. The only
+relevant parts of the apache-configuration are the ones defining the
+actual paths. In our case:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>ScriptAlias /cgi-bin/nagios3 /usr/lib/cgi-bin/nagios3
+ScriptAlias /nagios3/cgi-bin /usr/lib/cgi-bin/nagios3
+Alias /nagios3 /usr/share/nagios3/htdocs</tt></pre>
+</div></div>
+<div class="paragraph"><p>The only needed configuration on the box running Cherokee would be
+setting up a rule that matched the above listed paths, and proxied the
+request to the server running Nagios.</p></div>
+<div class="paragraph"><p>As you can see, this is trivial to do. Assuming the Cherokee server
+was 10.0.0.10 and the Nagios box was 10.0.0.11, we would have to
+follow these steps:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+First, define an information source with the parameters of
+  the Nagios box.
+</p>
+<div class="tableblock">
+<table cellpadding="4" cellspacing="0" frame="border" rules="all" width="100%">
+<col width="33%"></col>
+<col width="33%"></col>
+<col width="33%"></col>
+<thead>
+<tr>
+<th align="left" valign="top">Nick   </th>
+<th align="left" valign="top">Type     </th>
+<th align="left" valign="top">Host</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left" valign="top"><p class="table">Nagios</p></td>
+<td align="left" valign="top"><p class="table">External</p></td>
+<td align="left" valign="top"><p class="table">10.0.0.11:80</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</li>
+<li>
+<p>
+Then, create the set of rules that match the following list of
+  paths:
+</p>
+<div class="olist arabic"><ol class="arabic">
+<li>
+<p>
+/cgi-bin/nagios3
+</p>
+</li>
+<li>
+<p>
+/nagios3/cgi-bin
+</p>
+</li>
+<li>
+<p>
+/nagios3
+</p>
+</li>
+</ol></div>
+</li>
+</ul></div>
+<div class="paragraph"><p>This, in turn, can be done easily. For compactness sake, we will just
+use one but you could define a separate one if you need more precise
+matching. The mechanism is exactly the same:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+Within the <tt>Behavior</tt> tab of your virtual server, choose "Regular
+Expression" as type of the new rule, and use the expression
+<tt>.*nagios3.*</tt> for it.
+</p>
+</li>
+<li>
+<p>
+In the <tt>Handler</tt> section, select the <tt>HTTP reverse proxy</tt> and assign
+  the information source previously defined.
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>Now, whenever a request to 10.0.0.10 contains the <tt>nagios3</tt> substring,
+it will be proxied to 10.0.0.11.</p></div>
+<h3 id="advanced">Advanced set up: Cherokee as host</h3><div style="clear:left"></div>
+<div class="paragraph"><p>This is and advanced method only namely. In reality, it is exactly as
+simple.</p></div>
+<div class="paragraph"><p>In this case, the relevant information from the configuration
+file is limited to a couple of snippets:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>ScriptAlias /nagios/cgi-bin "/usr/local/nagios/sbin"
+AuthUserFile /usr/local/nagios/etc/htpasswd.users</tt></pre>
+</div></div>
+<div class="paragraph"><p>and</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>Alias /nagios "/usr/local/nagios/share"
+AuthUserFile /usr/local/nagios/etc/htpasswd.users</tt></pre>
+</div></div>
+<div class="paragraph"><p>Please note the above paths are the ones used in the
+<a href="http://nagios.sourceforge.net/docs/3_0/quickstart.html">Nagios
+Quickstart guide</a>. The paths are bound to change if you used any
+prepackaged release.</p></div>
+<div class="paragraph"><p>We will translate these directly into a pair of directory-type rules.</p></div>
+<div class="paragraph"><p>The first one will match the <tt>/nagios/cgi-bin</tt> directory, and will be
+handled by the <tt>CGI</tt> handler. We will map the <tt>/usr/local/nagios/sbin</tt>
+as the <tt>Web Directory</tt> for the rule, in the <tt>Rule</tt> tab.</p></div>
+<div class="imageblock">
+<div class="content">
+<img alt="media/images/cookbook_nagios1.png" src="media/images/cookbook_nagios1.png"/>
+</div>
+<div class="image-title">First rule</div>
+</div>
+<div class="tableblock">
+<table cellpadding="4" cellspacing="0" frame="border" rules="all" width="100%">
+<caption class="title">First rule</caption>
+<col width="50%"></col>
+<col width="50%"></col>
+<thead>
+<tr>
+<th align="left" valign="top">Field           </th>
+<th align="left" valign="top"> Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left" valign="top"><p class="table">Handler</p></td>
+<td align="left" valign="top"><p class="table">CGI</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">Document root</p></td>
+<td align="left" valign="top"><p class="table">/usr/local/nagios/sbin</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="paragraph"><p>The second one will do something similar, only mapping <tt>/nagios</tt> to
+<tt>/usr/local/nagios/share</tt>.</p></div>
+<div class="imageblock">
+<div class="content">
+<img alt="media/images/cookbook_nagios2.png" src="media/images/cookbook_nagios2.png"/>
+</div>
+<div class="image-title">Second rule</div>
+</div>
+<div class="tableblock">
+<table cellpadding="4" cellspacing="0" frame="border" rules="all" width="100%">
+<caption class="title">Second rule</caption>
+<col width="50%"></col>
+<col width="50%"></col>
+<thead>
+<tr>
+<th align="left" valign="top">Field           </th>
+<th align="left" valign="top"> Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left" valign="top"><p class="table">Handler</p></td>
+<td align="left" valign="top"><p class="table">List &amp; Send</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">Document root</p></td>
+<td align="left" valign="top"><p class="table">/usr/local/nagios/share</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="paragraph"><p>Finally, you can set up the authentication mechanism on both rules by
+configuring the ‘Security` tab. Choose the <tt>Htpasswd file</tt> validation
+mechanism, write the correct Password File (the one you should have
+created during Nagios’ installation), and input the mandatory realm
+string, <tt>Nagios</tt> for instance. Note that this step is optional, since
+you can secure your application with any other validation mechanism
+provided by Cherokee.</p></div>
+<div class="imageblock">
+<div class="content">
+<img alt="media/images/cookbook_nagios3.png" src="media/images/cookbook_nagios3.png"/>
+</div>
+<div class="image-title">Security configuration</div>
+</div>
+<div class="paragraph"><p>And that was all for today.</p></div>
+<div class="imageblock">
+<div class="content">
+<img alt="media/images/cookbook_nagios4.png" src="media/images/cookbook_nagios4.png"/>
+</div>
+<div class="image-title">Nagios in action</div>
+</div>
+</div>
+<div id="footer">
+<div id="footer-text">
+</div>
+</div>
+</div>

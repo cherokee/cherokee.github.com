@@ -1,0 +1,130 @@
+---
+layout: documentation
+title: Modules  Encoders | Cherokee Documentation
+---
+<div id="main_area"><h1>Documentation</h1>
+
+<div class="sectionbody">
+</div>
+<h2 id="_modules_encoders">Modules: Encoders</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Encoders are Cherokee modules that can be used as filters. The most
+common usage is to compress information allowing you to save
+bandwidth. You should do that whenever you can since hardware is
+mostly inexpensive while bandwidth is not. Besides, the performance
+penalization suffered due to the compression process is trivial.</p></div>
+<div class="paragraph"><p>Of course it doesn’t make sense to apply a processor intensive filter
+to content that can’t take advantage of it (i.e., it doesn’t make
+sense to try to compress an already compressed file because there is
+nothing to gain).</p></div>
+<div class="paragraph"><p>The encoders must be enabled or disabled in a per rule basis. The
+acceptable settings for an encoder are <em>Leave unset</em>, <em>Allow</em> and
+<em>Forbid</em>.</p></div>
+<div class="paragraph"><p>This is the list of currently provided encoders:</p></div>
+<div class="olist arabic"><ol class="arabic">
+<li>
+<p>
+<a href="modules_encoders_gzip.html">gzip</a>
+</p>
+</li>
+<li>
+<p>
+<a href="modules_encoders_deflate.html">deflate</a>
+</p>
+</li>
+</ol></div>
+<div class="paragraph"><p>As you might have guessed from the list of acceptable settings, it is
+interesting to highlight that Cherokee supports negative encoding
+rules. This translates into rules that forbid an encoder to be
+used. To prevent encoding files that are already compressed, a pretty
+simple rule such as the following one could be included to avoid the
+problem.</p></div>
+<div class="tableblock">
+<table cellpadding="4" cellspacing="0" frame="border" rules="all" width="100%">
+<col width="33%"></col>
+<col width="33%"></col>
+<col width="33%"></col>
+<thead>
+<tr>
+<th align="left" valign="top">Match                          </th>
+<th align="left" valign="top"> Final/Non-Final </th>
+<th align="left" valign="top"> Encoder setting</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left" valign="top"><p class="table">Extensions (jpg,zip,gz,rar,7z)</p></td>
+<td align="left" valign="top"><p class="table">Non-Final</p></td>
+<td align="left" valign="top"><p class="table">Gzip forbidden</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="paragraph"><p>For a more complex example, imagine the following scenario:</p></div>
+<div class="tableblock">
+<table cellpadding="4" cellspacing="0" frame="border" rules="all" width="100%">
+<col width="33%"></col>
+<col width="33%"></col>
+<col width="33%"></col>
+<thead>
+<tr>
+<th align="left" valign="top">Match   </th>
+<th align="left" valign="top"> Final/Non-Final </th>
+<th align="left" valign="top"> Encoder setting</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left" valign="top"><p class="table">*.php</p></td>
+<td align="left" valign="top"><p class="table">Non-Final</p></td>
+<td align="left" valign="top"><p class="table">Gzip forbidden</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">a*</p></td>
+<td align="left" valign="top"><p class="table">Non-Final</p></td>
+<td align="left" valign="top"><p class="table">Gzip leave unset</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">Default</p></td>
+<td align="left" valign="top"><p class="table">Final</p></td>
+<td align="left" valign="top"><p class="table">Gzip allowed</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="paragraph"><p>The rule list is evaluated from top to bottom. The <em>Leave unset</em>
+option of the encoders means that, whenever a rule is applied, it will
+not change the status of the encoding setting.</p></div>
+<div class="paragraph"><p>Under these conditions, the following requests would be evaluated as shown:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+/foo.php - wouldn’t use Gzip
+</p>
+</li>
+<li>
+<p>
+/aaa.txt - would use Gzip (a* wouldn’t set it, but since it’s non-final the default rule would)
+</p>
+</li>
+<li>
+<p>
+/zzz.txt - would use it (set by the default rule)
+</p>
+</li>
+<li>
+<p>
+/abc.php - it matches the first rule, so Gzip is forbidden, and
+  since it is no-final the evaluation continues. It also matches the
+  second rule, but since Gzip support got already forbidden nothing is
+  changed. When it hits the last rule, the same thing happens: Gzip is
+  already forbidden, so the value is not overwritten.
+</p>
+</li>
+</ul></div>
+</div>
+<div id="footer">
+<div id="footer-text">
+</div>
+</div>
+</div>

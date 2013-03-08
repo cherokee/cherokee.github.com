@@ -1,0 +1,77 @@
+---
+layout: documentation
+title: Modules  Balancers | Cherokee Documentation
+---
+<div id="main_area"><h1>Documentation</h1>
+
+<div class="sectionbody">
+</div>
+<h2 id="_modules_balancers">Modules: Balancers</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>These Cherokee modules allow to balance the load among several
+servers. Cherokee is completely modular, and thus a distinction must
+be made clear.</p></div>
+<div class="paragraph"><p>Balancer modules only implement the balancing strategy. To actually
+use one of these strategies you will need to select a
+<a href="modules_handlers.html">handler</a> that makes use of balancers in the
+<a href="other_bundle_cherokee-admin.html">cherokee-admin</a> interface.</p></div>
+<div class="paragraph"><p>These handlers can be chosen within the
+<tt>Handler</tt> tab of the <a href="config_virtual_servers_rule.html">Rule
+Options</a> section.</p></div>
+<div class="paragraph"><p>Every balancing strategy is used to manage one or more
+<a href="config_info_sources.html">information sources</a>, so at least one
+has to be added to the pool managed by the balancer. To do this,
+simply choose among the available sources in the <tt>Assign Info
+Sources</tt>.</p></div>
+<div class="paragraph"><p>This is the list of currently supported balancing strategies:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+<a href="modules_balancers_round_robin.html">Round Robin</a>
+</p>
+</li>
+<li>
+<p>
+<a href="modules_balancers_ip_hash.html">IP Hash</a>
+</p>
+</li>
+<li>
+<p>
+<a href="modules_balancers_failover.html">Failover</a>
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>And these are the handlers that use balancing:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+<a href="modules_handlers_proxy.html">Reverse HTTP Proxy</a>
+</p>
+</li>
+<li>
+<p>
+<a href="modules_handlers_fcgi.html">FastCGI</a>
+</p>
+</li>
+<li>
+<p>
+<a href="modules_handlers_scgi.html">SCGI</a>
+</p>
+</li>
+<li>
+<p>
+<a href="modules_handlers_uwsgi.html">uWSGI</a>
+</p>
+</li>
+<li>
+<p>
+<a href="modules_handlers_dbslayer.html">MySQL bridge</a>
+</p>
+</li>
+</ul></div>
+</div>
+<div id="footer">
+<div id="footer-text">
+</div>
+</div>
+</div>

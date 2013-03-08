@@ -1,0 +1,78 @@
+---
+layout: documentation
+title: Handler  Static Content | Cherokee Documentation
+---
+<div id="main_area"><h1>Documentation</h1>
+
+<div class="sectionbody">
+</div>
+<h2 id="_handler_static_content">Handler: Static Content</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>The <strong>file</strong> handler serves files from its document root.  No more, no
+less.</p></div>
+<h3 id="parameters">Parameters</h3><div style="clear:left"></div>
+<div class="tableblock">
+<table cellpadding="4" cellspacing="0" frame="border" rules="all" width="100%">
+<col width="25%"></col>
+<col width="25%"></col>
+<col width="50%"></col>
+<thead>
+<tr>
+<th align="left" valign="top">Parameters  </th>
+<th align="left" valign="top">Type    </th>
+<th align="left" valign="top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left" valign="top"><p class="table"><tt>iocache</tt></p></td>
+<td align="left" valign="top"><p class="table">Boolean</p></td>
+<td align="left" valign="top"><p class="table">Optional. Default: <tt>Enabled</tt>.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="paragraph"><p>By default it will use an internal I/O cache to improve the server
+performance.
+If you don’t want to use it with a directory just unset it using this
+parameter.</p></div>
+<div class="paragraph"><p>It is a good idea to disable to I/O cache if the content of the
+directory changes often.</p></div>
+<h3 id="examples">Examples</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Lets imagine your virtual server DocumentRoot points to /var/www.</p></div>
+<div class="tableblock">
+<table cellpadding="4" cellspacing="0" frame="border" rules="all" width="100%">
+<col width="25%"></col>
+<col width="75%"></col>
+<tbody>
+<tr>
+<td align="left" valign="top"><p class="table">Handler</p></td>
+<td align="left" valign="top"><p class="table"><tt>Static Content</tt></p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">Document Root</p></td>
+<td align="left" valign="top"><p class="table">No custom Document Root will fall back to the default one defined for the virtual server.</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">Use I/O cache</p></td>
+<td align="left" valign="top"><p class="table"><tt>Enabled</tt></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="imageblock">
+<div class="content">
+<img alt="media/images/admin_handler_file.png" src="media/images/admin_handler_file.png"/>
+</div>
+<div class="image-title">Handler Static Content</div>
+</div>
+<div class="paragraph"><p>This is a simple example that will make Cherokee able of serving each
+CSS file under /var/www or any subdirectory with the IO/cache setting
+enabled. This would only not apply if a <tt>final</tt> rule with higher
+priority specified otherwise.</p></div>
+</div>
+<div id="footer">
+<div id="footer-text">
+</div>
+</div>
+</div>
