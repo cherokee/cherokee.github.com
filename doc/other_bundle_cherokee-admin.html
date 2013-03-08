@@ -1,0 +1,237 @@
+---
+layout: documentation
+title: Man pages  cherokee-admin | Cherokee Documentation
+---
+<div id="main_area"><h1>Documentation</h1>
+
+<div class="sectionbody">
+</div>
+<h2 id="_man_pages_cherokee_admin">Man pages: cherokee-admin</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>This is the administration interface that allows for hassle-free,
+simple and easy configuration of the Cherokee web server. It is the
+only administration mechanism that should be to such task and is in
+fact the only recommended option.</p></div>
+<div class="imageblock">
+<div class="content">
+<img alt="media/images/admin_index.png" src="media/images/admin_index.png"/>
+</div>
+</div>
+<div class="paragraph"><p>If you want to access the administration interface from the same
+computer that you installed cherokee on, simply start the
+administration interface by running:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>cherokee-admin</tt></pre>
+</div></div>
+<div class="paragraph"><p>You will obtain an output similar to the following one, which provides
+the information needed to be able to access the configuration
+interface. This information is generated randomly each time the
+program is launche, and it can be very useful in case you need to to
+give temporary access to a remote administrator in the confidence that
+no future accesses will be possible.</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>Login:
+  User:              admin
+  One-time Password: F4c7cyogxhTGbp1r
+
+Cherokee Web Server 1.0.0b5077 (May 12 2010): Listening on port ALL:80, TLS
+disabled, IPv6 enabled, using epoll, 1024 fds system limit, max. 505
+connections, caching I/O, 10 threads, 50 connections per thread, standard
+scheduling policy</tt></pre>
+</div></div>
+<div class="paragraph"><p>Then redirect your web browser to 127.0.0.1:9090, which is the default
+address and port for the administration interface. The <em>User</em> and
+<em>One-time Password</em> will be required initially. This is to prevent
+other users of the local host from being able to configure the server
+unless they have access to the password.</p></div>
+<div class="imageblock">
+<div class="content">
+<img alt="media/images/admin_launch.png" src="media/images/admin_launch.png"/>
+</div>
+</div>
+<div class="paragraph"><p>If you want to access the administration interface from another
+computer, the easiest solution is to bind the cherokee administration
+interface to all network interfaces:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>cherokee-admin -b</tt></pre>
+</div></div>
+<div class="admonitionblock">
+<table><tr>
+<td class="icon">
+<div class="title">Warning</div>
+</td>
+<td class="content">By starting cherokee-admin listening on all interfaces,
+everyone that can access the computer and has the password can alter
+your cherokee configuration. Don’t use this in a production
+environment! It is much better to use <em>ssh -L</em> in these cases.</td>
+</tr></table>
+</div>
+<div class="paragraph"><p>Instead of binding it to every interface, we encourage you to use an
+SSH tunnel. This is the recommended way. In order to do so you must
+issue the following command:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>ssh -L 9090:localhost:9090 remote_IP</tt></pre>
+</div></div>
+<div class="paragraph"><p>After that you can access the remote interface through
+<a href="http://localhost:9090">http://localhost:9090</a> and every request will be forwarded to the
+remote IP running cherokee-admin.</p></div>
+<div class="paragraph"><p>Of course these options can be combined to your heart’s contempt.</p></div>
+<div class="paragraph"><div class="title">Example:</div><p>Make cherokee use a different configuration file, listen on port 9091
+and grab the administration interface application from a different
+path:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>cherokee-admin -b -p 9091 -C /etc/cherokee/cherokee2.conf \
+                 -d /path/to/svn/trunk/cherokee-admin/</tt></pre>
+</div></div>
+<div class="paragraph"><p>This is the full information provided by the manpage.</p></div>
+<div class="sidebarblock">
+<div class="sidebar-content">
+<div class="dlist"><dl>
+<dt class="hdlist1">
+<strong>NAME</strong>
+</dt>
+<dd>
+<p>
+<tt>cherokee-admin</tt> - Runs Cherokee’s administrative interface
+</p>
+</dd>
+<dt class="hdlist1">
+<strong>SYNOPSIS</strong>
+</dt>
+<dd>
+<p>
+<tt>cherokee-admin</tt> [-d DIR] [-p PORT] [-C FILE] [-b] [-x] [-u] [-t]
+</p>
+</dd>
+<dt class="hdlist1">
+<strong>DESCRIPTION</strong>
+</dt>
+<dd>
+<p>
+<tt>cherokee-admin</tt> runs the server for the administrative interface used to
+       configure Cherokee. The interface itself will be available via your Web
+       browser.
+</p>
+</dd>
+<dt class="hdlist1">
+<strong>OPTIONS</strong>
+</dt>
+<dd>
+<p>
+<tt>cherokee-admin</tt> accepts the following options:
+</p>
+<div class="dlist"><dl>
+<dt class="hdlist1">
+-h, --help
+</dt>
+<dd>
+<p>
+               Shows brief usage information
+</p>
+</dd>
+<dt class="hdlist1">
+-V, --version
+</dt>
+<dd>
+<p>
+               Show version and exit
+</p>
+</dd>
+<dt class="hdlist1">
+-x, --debug
+</dt>
+<dd>
+<p>
+               Print the backend errors to the terminal where it is executing.
+               If omited, this debug information is lost.
+</p>
+</dd>
+<dt class="hdlist1">
+-u, --unsecure
+</dt>
+<dd>
+<p>
+               Allows accessing cherokee-admin’s interface without
+               requiring the user to authenticate. This disables a
+               security measure and is only meant to ease the
+               development process. The usage of this parameter is
+               strongly discouraged for regular users.
+</p>
+</dd>
+<dt class="hdlist1">
+-b[&lt;IP&gt;], --bind[=&lt;IP&gt;]
+</dt>
+<dd>
+<p>
+               By  default <tt>cherokee-admin</tt> binds only to 127.0.0.1 (localhost),
+               which means you can only connect to it from  the  same  system.
+               With this parameter you can specify the network address
+               to listen to. If no IP is provided, it will bind to all
+               interfaces.
+</p>
+</dd>
+<dt class="hdlist1">
+-d&lt;DIR&gt;, --appdir=&lt;DIR&gt;
+</dt>
+<dd>
+<p>
+               Uses a custom admin-interface path where the source
+               files of cherokee-admin reside.
+</p>
+</dd>
+<dt class="hdlist1">
+-p&lt;NUM&gt;, --port=&lt;NUM&gt;
+</dt>
+<dd>
+<p>
+               Specifies an alternative port. By default, 9090.
+</p>
+</dd>
+<dt class="hdlist1">
+-t, --internal-unix
+</dt>
+<dd>
+<p>
+               By default, cherokee-admin uses TCP for internal
+               communications. This parameter specifies that a Unix
+               domain socket should be used instead. The default
+               behavior is the safest one, so this parameter should
+               rarely by used.
+</p>
+</dd>
+<dt class="hdlist1">
+-T&lt;NUM&gt;, --thread=&lt;NUM&gt;
+</dt>
+<dd>
+<p>
+               Specify the number of threads that the program should
+               use. Useful for memory/power constrained machines.
+</p>
+</dd>
+<dt class="hdlist1">
+-C&lt;PATH&gt;, --target=PATH
+</dt>
+<dd>
+<p>
+               Requests  a  configuration  file  different  than  the  default
+               /etc/cherokee/cherokee.conf to be used
+</p>
+</dd>
+</dl></div>
+</dd>
+</dl></div>
+</div></div>
+<div class="paragraph"><p>Refer to the <a href="config_walkthrough.html">configuration section</a> for
+more in-depth explanations of the usage of the interface as a
+configuration tool.</p></div>
+</div>
+<div id="footer">
+<div id="footer-text">
+</div>
+</div>
+</div>

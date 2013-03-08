@@ -1,0 +1,317 @@
+---
+layout: documentation
+title: Cookbook  Authentication | Cherokee Documentation
+---
+<div id="main_area"><h1>Documentation</h1>
+
+<div class="sectionbody">
+</div>
+<h2 id="_cookbook_authentication">Cookbook: Authentication</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>In this section you will find information useful to set up
+authentication mechanisms with several of Cherokee’s validators.</p></div>
+<div class="paragraph"><p>You can find information and basic examples in each validator’s
+documentation. This is the list of validator modules provided by
+Cherokee:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+<a href="modules_validators_htdigest.html">htdigest</a>
+</p>
+</li>
+<li>
+<p>
+<a href="modules_validators_htpasswd.html">htpasswd</a>
+</p>
+</li>
+<li>
+<p>
+<a href="modules_validators_ldap.html">LDAP</a>
+</p>
+</li>
+<li>
+<p>
+<a href="modules_validators_mysql.html">MySQL</a>
+</p>
+</li>
+<li>
+<p>
+<a href="modules_validators_pam.html">PAM</a>
+</p>
+</li>
+<li>
+<p>
+<a href="modules_validators_plain.html">Plain</a>
+</p>
+</li>
+<li>
+<p>
+<a href="modules_validators_authlist.html">Fixed List</a>
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>You will also find interesting information in the
+<a href="modules_validators_plain.html">"Validator Modules Overview"</a> and
+step by step examples for Plain and PAM mechanisms in the
+<a href="config_walkthrough.html">"Quickstart"</a> section.</p></div>
+<div class="paragraph"><p>There are two types of authentication:</p></div>
+<div class="dlist"><dl>
+<dt class="hdlist1">
+<strong>basic</strong>
+</dt>
+<dd>
+<p>
+    This method sends the username and password in clear text over the network.
+    It is not the most secure method.  If the connection to the web server is
+    through HTTPS then this method is as secure as the encryption used.  This
+    method is very easy to implement, so most clients support it.
+</p>
+</dd>
+<dt class="hdlist1">
+<strong>digest</strong>
+</dt>
+<dd>
+<p>
+    This method is by far the most secure, but also more complex.  Most modern
+    web browsers support this method.
+</p>
+</dd>
+</dl></div>
+<div class="paragraph"><p>The details to set up the ‘htdigest` and <tt>htpasswd</tt> are exactly the
+same as for <tt>plain</tt> validation. The only difference is the tools used
+to create the passwords’ file.</p></div>
+<h3 id="htdigest">htdigest</h3><div style="clear:left"></div>
+<div class="paragraph"><p>To use this validator you will need a file created by the <tt>htdigest</tt>
+command. It is a tool to manage user files for digest (and basic)
+authentication.</p></div>
+<div class="sidebarblock">
+<div class="sidebar-content">
+<div class="dlist"><dl>
+<dt class="hdlist1">
+Syntax
+</dt>
+<dd>
+<p>
+  htdigest [ -c ] passwdfile realm username
+</p>
+</dd>
+</dl></div>
+<div class="paragraph"><p>The only optional parameter is <tt>-c</tt>, used to create the passwdfile or
+overwrite it if it is present.</p></div>
+</div></div>
+<div class="paragraph"><p>To create a file for a <tt>testuser</tt> with <tt>testpassword</tt> you would have
+to issue:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>$ htdigest -c passwords.digest secret testuser
+Adding password for testuser in realm secret.
+New password:
+Re-type new password:
+
+$ cat pass
+testuser:secret:f24f76261bcd65780b33edde00855897</tt></pre>
+</div></div>
+<h3 id="htpasswd">htpasswd</h3><div style="clear:left"></div>
+<div class="paragraph"><p>For this validator, the tool <tt>htpasswd</tt> is needed to create the
+files. The basic usage information is this:</p></div>
+<div class="sidebarblock">
+<div class="sidebar-content">
+<div class="dlist"><dl>
+<dt class="hdlist1">
+Usage
+</dt>
+<dd>
+<p>
+        htpasswd [-cmdpsD] passwordfile username
+</p>
+<div class="literalblock">
+<div class="content">
+<pre><tt>htpasswd -b[cmdpsD] passwordfile username password</tt></pre>
+</div></div>
+<div class="literalblock">
+<div class="content">
+<pre><tt>htpasswd -n[mdps] username</tt></pre>
+</div></div>
+<div class="literalblock">
+<div class="content">
+<pre><tt>htpasswd -nb[mdps] username password</tt></pre>
+</div></div>
+</dd>
+</dl></div>
+</div></div>
+<div class="paragraph"><p>Refer to its documentation for details about the parameters. For our example, this
+will suffice:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>$ htpasswd -c /var/www/.htpasswd testuser
+New password:
+Re-type new password:
+Adding password for user testuser
+
+$ cat /var/www/.htpasswd
+testuser:iqLGh2g/7bX7M</tt></pre>
+</div></div>
+<div class="paragraph"><p>Remember that it is never recommended to place the file with the
+passwords in a location fetchable from the webserver. This is true for
+plain validation, htdigest, htpasswd and whatever file based system
+you cross paths with.</p></div>
+<h3 id="mysql">MySQL</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Lets set up a simple server requiring authentication against a MySQL
+database to fetch any content.</p></div>
+<div class="paragraph"><p>First, lets define a unique rule in our virtual server managed by the
+<tt>List and Send</tt> handler. Through the <tt>Security</tt> tab we can configure
+it to use MySQL as authentication mechanism. Filling up just the
+essential fields will be enough. Those are realm, database name, user,
+password, and an SQL query that must return one row with one column as
+password.</p></div>
+<div class="imageblock">
+<div class="content">
+<img alt="media/images/cookbook_mysql_validator.png" src="media/images/cookbook_mysql_validator.png"/>
+</div>
+</div>
+<div class="paragraph"><p>In this case, we have used:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>SELECT password FROM auth_users WHERE username = '${user}'</tt></pre>
+</div></div>
+<div class="paragraph"><p>And that is about it.
+In this example you will need a MySQL server running (localhost in
+this case, as it takes the default value), a database called
+<tt>cherokee</tt> with <tt>cherokee</tt> as user and password, and a table that
+suits the shown query.</p></div>
+<div class="paragraph"><p>Assuming you have a MySQL user with privileges granted to create
+databases, a MySQL session similar to this one would suffice:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>$ mysql -u cherokee -D cherokee -p
+
+mysql&gt; CREATE DATABASE cherokee;
+Query OK, 1 row affected (0.00 sec)
+
+mysql&gt; CREATE TABLE auth_users(
+       username varchar(32),
+       password varchar(32),
+       PRIMARY KEY (username));
+Query OK, 0 rows affected (0.00 sec)
+
+mysql&gt; INSERT INTO auth_users VALUES('cherokee','cherokee');
+Query OK, 1 row affected (0.00 sec)
+
+mysql&gt; quit</tt></pre>
+</div></div>
+<div class="paragraph"><p>When we are done, our simple virtual server should only have a
+<tt>Default</tt> rule, managed by the <tt>List &amp; Send</tt> hander, and with <tt>MySQL</tt>
+authentication set.</p></div>
+<div class="imageblock">
+<div class="content">
+<img alt="media/images/cookbook_mysql_rule.png" src="media/images/cookbook_mysql_rule.png"/>
+</div>
+</div>
+<div class="paragraph"><p>And any content requested to Cherokee will require prior
+authentication against the database.</p></div>
+<h3 id="example">Another usage example</h3><div style="clear:left"></div>
+<div class="paragraph"><p>As you can see, getting the hang of how authentication works is pretty
+easy. Let’s illustrate another easy example. How to serve PHP files,
+both from a protected location and an unprotected one?</p></div>
+<div class="paragraph"><p>Let’s assume our locations are targets are:
+- /unprotected/<strong>.php
+- /protected/</strong>.php</p></div>
+<div class="paragraph"><p>Well… this would be really easy. You just have to remember that
+rules are evaluated from top to bottom, and the evaluation proceeds
+until a final rule is matched.</p></div>
+<div class="paragraph"><p>This means that we would only have to be careful with the order of our
+rules, and it would be as simple as setting a couple of rules:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+The first one, of type <tt>Directory</tt> applied to the path
+  <tt>/protected</tt>. This would be the top rule, should use one of the
+  authentication mechanisms mentioned above and should not be set as
+  <em>FINAL</em>.
+</p>
+</li>
+<li>
+<p>
+The second one, of type <tt>Extension</tt> would apply to <tt>php</tt> files and
+  should be configured as according to the <a href="cookbook_php.html">PHP
+  recipe</a>. This one should be a <em>FINAL</em> rule.
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>And this would be more than enough. The files from the secure location
+would match the first rule and the authentication would be
+required. In case it was successful, not being a final rule, the
+request would proceed to the second rule. Once there, the regular
+processing of PHP files would take place. This one is a <em>FINAL</em> rule,
+so the rule evaluation would stop.</p></div>
+<div class="paragraph"><p>In case the PHP files were not being requested from the secured
+directory, just the second rule would apply.</p></div>
+<h3 id="fixed_list">Fixed list</h3><div style="clear:left"></div>
+<div class="paragraph"><p>For this validator you will only need to add user-password pairs, and
+the mandatory <tt>realm</tt> field.</p></div>
+<div class="imageblock">
+<div class="content">
+<img alt="media/images/admin_validators_authlist.png" src="media/images/admin_validators_authlist.png"/>
+</div>
+</div>
+<h3 id="ldap">LDAP</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Here is a basic example of the LDAP validator in action. It assumes
+you have a working LDAP service running at your localhost, and it uses
+no TLS of CA files.</p></div>
+<div class="tableblock">
+<table cellpadding="4" cellspacing="0" frame="border" rules="all" width="100%">
+<col width="50%"></col>
+<col width="50%"></col>
+<thead>
+<tr>
+<th align="left" valign="top">Field                  </th>
+<th align="left" valign="top"> Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left" valign="top"><p class="table">Validation Mechanism</p></td>
+<td align="left" valign="top"><p class="table"><tt>LDAP Server</tt></p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">Methods</p></td>
+<td align="left" valign="top"><p class="table"><tt>Basic</tt></p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">Realm</p></td>
+<td align="left" valign="top"><p class="table">secret</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">Server</p></td>
+<td align="left" valign="top"><p class="table">localhost</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">Port</p></td>
+<td align="left" valign="top"><p class="table">389</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">Bind Domain</p></td>
+<td align="left" valign="top"><p class="table">my_domain</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">Bind Password</p></td>
+<td align="left" valign="top"><p class="table">my_password</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">Base Domain</p></td>
+<td align="left" valign="top"><p class="table">example.com</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="imageblock">
+<div class="content">
+<img alt="media/images/admin_validators_ldap.png" src="media/images/admin_validators_ldap.png"/>
+</div>
+</div>
+</div>
+<div id="footer">
+<div id="footer-text">
+</div>
+</div>
+</div>

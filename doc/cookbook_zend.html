@@ -1,0 +1,75 @@
+---
+layout: documentation
+title: Cookbook  Setting up Zend Framework | Cherokee Documentation
+---
+<div id="main_area"><h1>Documentation</h1>
+
+<div class="sectionbody">
+</div>
+<h2 id="_cookbook_setting_up_zend_framework">Cookbook: Setting up Zend Framework</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>The <a href="http://framework.zend.com/">Zend Framework</a> is a PHP framework
+focused on building more secure, reliable, and modern Web 2.0
+applications &amp; web services.</p></div>
+<div class="paragraph"><p>It is essential that Cherokee supports PHP before starting with this
+recipe. That should not be a problem since it comes preconfigured by
+default. However, you can follow the <a href="cookbook_php.html">setting up
+PHP</a> recipe for further hints on fine tuning this feature.</p></div>
+<div class="paragraph"><p>To make sure the recipe works, we’ll be using the demo provided by the
+<a href="http://framework.zend.com/docs/quickstart">Zend Framework
+Quickstart</a>. Last time this document was edited, it was
+<a href="http://framework.zend.com/demos/ZendFrameworkQuickstart-20090430.tar.gz">demo
+20090430</a>.</p></div>
+<div class="paragraph"><p>Uncompress its contents to a directory and set up the <tt>public</tt>
+subdirectory as your web document root. In our example, it will be
+<tt>/var/www/demo/public</tt>.</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>user@cherokee:/var/www/demo$ ls
+application  data  library  public  scripts</tt></pre>
+</div></div>
+<div class="paragraph"><p>The <tt>library</tt> directory is empty and should contain the Zend Framework
+files. Download it from the
+<a href="http://framework.zend.com/download">official page</a> and copy it to
+the appropriate location. Follow the Quickstart for more details on
+setting up the framework. We will concentrate on the Cherokee side.</p></div>
+<div class="paragraph"><p>So now that we have the files in place, we’ll just create the needed
+rules for the web server. Specially important will be the rewrite
+rules. From the Zend Framework</p></div>
+<div class="sidebarblock">
+<div class="sidebar-content">
+<div class="paragraph"><p>This set of rewrite rules specify that if the file exists under the
+document root directory, it should simply be served as a static
+resource. Otherwise, the request is for dynamic content and should be
+rewritten to our index.php script. Since all requests for non-static
+content will be rewritten to it, the index.php script serves as the
+entry point to our application.</p></div>
+</div></div>
+<h3 id="wizard_configuration">Configure Cherokee using the Wizard</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Cherokee is shipped with a configuration <tt>Wizard</tt> that can be used
+both to deploy the application under a dedicated <tt>Virtual Server</tt> and
+under a web folder from one already existent.</p></div>
+<div class="paragraph"><p>Launch cherokee-admin, and proceed to the
+<a href="config_virtual_servers.html">Virtual servers</a> section.</p></div>
+<div class="paragraph"><p>Now you can either enter the chosen one to install under a web folder,
+or directly click on the <tt>Add</tt> button of the <tt>Virtual Servers</tt> panel
+to create a customised virtual server. In any case you will find the
+wizard under the <tt>Platforms</tt> category.</p></div>
+<div class="paragraph"><p>After that you will be asked for the minimal information required to
+correctly configure your server in a totally transparent way.</p></div>
+<div class="paragraph"><p>And that’s it. You are done with the configuration! You can now access
+your application.</p></div>
+<div class="imageblock">
+<div class="content">
+<img alt="media/images/cookbook_zend1.png" src="media/images/cookbook_zend1.png"/>
+</div>
+<div class="image-title">Zend-provided demo</div>
+</div>
+<div class="paragraph"><p>Of course, you’ll have to follow the complete tutorial if you expect
+it to work as intended.</p></div>
+</div>
+<div id="footer">
+<div id="footer-text">
+</div>
+</div>
+</div>

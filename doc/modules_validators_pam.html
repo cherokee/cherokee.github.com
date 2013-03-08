@@ -1,0 +1,65 @@
+---
+layout: documentation
+title: 121365308MANUAL EDITING REQUIRED | Cherokee Documentation
+---
+<div id="main_area"><h1>Documentation</h1>
+
+<div class="sectionbody">
+<h3 id="_validator_pam">Validator: PAM</h3><div style="clear:left"></div>
+<div class="paragraph"><p>The pam validator uses the <strong>Pluggable Authentication Module</strong> to validate the
+username/password combination.</p></div>
+<h4 id="parameters">Parameters</h4>
+<div class="paragraph"><p>Users: You can restrict to some local system users</p></div>
+<h4 id="compatibility">Compatibility</h4>
+<div class="paragraph"><p>This validator is compatible with the <strong>basic</strong> scheme.</p></div>
+<h4 id="example">Example</h4>
+<div class="imageblock">
+<div class="content">
+<img alt="media/images/admin_validators_pam.png" src="media/images/admin_validators_pam.png"/>
+</div>
+</div>
+<div class="paragraph"><p>Requires a valid user and password system pair to access the protected
+directory. It will be available for all local users, unless a
+restriction list is provided.</p></div>
+<h4 id="notes">Notes</h4>
+<div class="paragraph"><p>The PAM approach ensures a dynamic configuration for how the
+authentication is performed. This dynamic configuration must be
+specified. This means that a /etc/pam.d/cherokee file must define the
+connection between Cherokee and the pluggable authentication modules
+that perform the actual authentication tasks.</p></div>
+<div class="paragraph"><p>Cherokee’s installation procedure already takes care of the creation
+of such file (under /etc or whatever system configuration directory is
+used in your platform of choice). If you consistently fail to use the
+PAM validator, make sure that such configuration definitions are set.</p></div>
+<div class="listingblock">
+<div class="title">Sample: /etc/pam.d/cherokee</div>
+<div class="content">
+<pre><tt>#
+# The PAM configuration file for Cherokee
+#
+
+account    required   pam_unix.so
+auth       required   pam_unix.so nullok
+auth       required   pam_env.so
+session    required   pam_unix.so</tt></pre>
+</div></div>
+<div class="paragraph"><p>Bare in mind that Cherokee needs to be able to read <tt>/etc/shadow</tt> in
+order to perform PAM authentication. If you are not successful setting
+up this validator, check your logs for clarification about the
+authentication failures you might be experiencing. The solution to
+this particular problem is adding the user under which Cherokee is
+running to the shadow-group and restarting cherokee. This is easily
+achievable. For instance, assuming Cherokee is running as <tt>www-data</tt>
+on a Debian based Linux distribution, this can be done with the
+following command.</p></div>
+<div class="listingblock">
+<div class="title">Adding Cherokee user to shadow group on Debian</div>
+<div class="content">
+<pre><tt>sudo adduser www-data shadow</tt></pre>
+</div></div>
+</div>
+<div id="footer">
+<div id="footer-text">
+</div>
+</div>
+</div>

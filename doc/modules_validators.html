@@ -1,0 +1,101 @@
+---
+layout: documentation
+title: Modules  Validators | Cherokee Documentation
+---
+<div id="main_area"><h1>Documentation</h1>
+
+<div class="sectionbody">
+</div>
+<h2 id="_modules_validators">Modules: Validators</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Validator modules are used to implement an authentication mechanism.
+Those can be selected from the <tt>Security</tt> section of each rule you
+have in your <tt>virtual servers</tt>.</p></div>
+<div class="paragraph"><p>Note this is not the <tt>Security</tt> section of your virtual domains. It is
+the <tt>Security</tt> tab within each of the rules in your <tt>Virtual
+server</tt>. Those are accessible from the <tt>Behavior</tt> section of every
+configured virtual server.</p></div>
+<div class="paragraph"><p>Depending on the complexity of the mechanism you will have to provide
+more or less information.</p></div>
+<div class="paragraph"><p>You will always have to provide a <strong>Realm</strong>, which is a name to
+associate with the authenticated resource.
+You will also have permanently the option to provide a list of <strong>allowed
+users</strong>, regardless of the validator chosen.</p></div>
+<div class="paragraph"><p>It is important to take into consideration that there are two different
+authentication mechanisms:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+Basic
+</p>
+</li>
+<li>
+<p>
+Digest
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>Some can only handle one of those mechanisms because of technical
+limitations. In case the module supports both of them, the interface
+allows to choose whether one or both are to be used.</p></div>
+<div class="imageblock">
+<div class="content">
+<img alt="media/images/admin_validators_pam.png" src="media/images/admin_validators_pam.png"/>
+</div>
+<div class="image-title">Interface sample for simple validator</div>
+</div>
+<div class="paragraph"><p>Refer to the <a href="cookbook_authentication.html">Authentication</a> recipe
+in the <a href="cookbook.html">Cookbook</a> for more detailed examples.</p></div>
+<div class="paragraph"><p>This is the list of validator modules provided by Cherokee:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+<a href="modules_validators_htdigest.html">htdigest</a>
+</p>
+</li>
+<li>
+<p>
+<a href="modules_validators_htpasswd.html">htpasswd</a>
+</p>
+</li>
+<li>
+<p>
+<a href="modules_validators_ldap.html">LDAP</a>
+</p>
+</li>
+<li>
+<p>
+<a href="modules_validators_mysql.html">MySQL</a>
+</p>
+</li>
+<li>
+<p>
+<a href="modules_validators_pam.html">PAM</a>
+</p>
+</li>
+<li>
+<p>
+<a href="modules_validators_plain.html">Plain</a>
+</p>
+</li>
+<li>
+<p>
+<a href="modules_validators_authlist.html">Fixed list</a>
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>When you set up an authentication mechanism you must remember this:
+define a rule, configure its <strong>security</strong> section, adjust the priority
+of this rule, and last, do not flag the rule as <tt>Final</tt> unless you are
+sure you don’t want your request to match other rules.</p></div>
+<div class="paragraph"><p>A frequent mistake is to define a rule for authenticated resources
+with no configured handler, mark it as <tt>Final</tt> and set it on top of
+the priority list. This might prompt for authentication, but being a
+<tt>Final</tt> rule will always deliver a failure because no handler copes
+with the request.</p></div>
+</div>
+<div id="footer">
+<div id="footer-text">
+</div>
+</div>
+</div>

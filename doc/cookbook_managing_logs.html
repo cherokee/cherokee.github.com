@@ -1,0 +1,150 @@
+---
+layout: documentation
+title: Cookbook  Managing logs | Cherokee Documentation
+---
+<div id="main_area"><h1>Documentation</h1>
+
+<div class="sectionbody">
+</div>
+<h2 id="_cookbook_managing_logs">Cookbook: Managing logs</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Cherokee strictly follows a
+<a href="other_goodies.html#zero-downtime">downtime-free</a> policy. This also
+applies to the process of log rotation. No need to interrupt any
+active connections just to do this.</p></div>
+<div class="paragraph"><p>This operation involves using
+<a href="other_bundle_cherokee-tweak.html">cherokee-tweak</a> and the
+<a href="modules_handlers_admin.html">remote administration</a> handler.</p></div>
+<div class="paragraph"><p>Logging is an operation performed on a per-virtual-server basis, so
+rotation must also be done this way. For simplicity’s sake we’ll make
+an example with just the default virtual server present, but the
+process is exactly the same for more. Independently of the number,
+just one rule is needed as entry point for the handler.</p></div>
+<div class="paragraph"><p>Under the hood, the process is simple:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+Set Cherokee to backup mode, which will start logging to an internal buffer.
+</p>
+</li>
+<li>
+<p>
+Locally rotate the logs: this operation is not performed by the web server.
+</p>
+</li>
+<li>
+<p>
+Restore Cherokee to production mode, dumping the logs in the buffer
+  to the new file and continuing with business as usual.
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>You must be very careful when setting up cherokee-admin. Security
+should be of concern, since unauthorized access could in theory keep
+the server in backup mode until it runs out of auxiliary buffer space.</p></div>
+<h3 id="_cherokee_admin">cherokee-admin</h3><div style="clear:left"></div>
+<div class="paragraph"><p>First, the remote administration handler must be configured, so we
+will have to create a rule for that (<tt>Virtual Servers</tt> → <tt>default</tt> →
+<tt>Behavior</tt> → <tt>Rule Management</tt> → <tt>Add New</tt>). We will use a
+directory-type rule.</p></div>
+<div class="tableblock">
+<table cellpadding="4" cellspacing="0" frame="border" rules="all" width="100%">
+<col width="50%"></col>
+<col width="50%"></col>
+<thead>
+<tr>
+<th align="left" valign="top">Rule Type </th>
+<th align="left" valign="top">Web Directory</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left" valign="top"><p class="table">Directory</p></td>
+<td align="left" valign="top"><p class="table">/admin</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">Handler</p></td>
+<td align="left" valign="top"><p class="table"><tt>Remote Administration</tt></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="imageblock">
+<div class="content">
+<img alt="media/images/cookbook_managing_logs_handler.png" src="media/images/cookbook_managing_logs_handler.png"/>
+</div>
+<div class="image-title">Handler</div>
+</div>
+<div class="paragraph"><p>This handler will allow performing administration tasks, so public
+access is not an option. You can leave free access, but you should
+not. Don’t forget to fill in the <tt>Security</tt> tab of
+the rule to specify a validation method. Using <tt>Digest</tt> mechanism and
+restricting to only allow HTTPS connections  is also strongly advised.</p></div>
+<div class="paragraph"><p>In this example, we will use the simplest of all, the <tt>Fixed list</tt>
+validation mechanism and will define the user <tt>admin</tt> identified by
+the password <tt>adminpass</tt>. Of course you can use any other method
+available.</p></div>
+<div class="imageblock">
+<div class="content">
+<img alt="media/images/cookbook_managing_logs_security.png" src="media/images/cookbook_managing_logs_security.png"/>
+</div>
+<div class="image-title">Security options</div>
+</div>
+<div class="imageblock">
+<div class="content">
+<img alt="media/images/cookbook_managing_logs_rules.png" src="media/images/cookbook_managing_logs_rules.png"/>
+</div>
+<div class="image-title">Possible list of rules</div>
+</div>
+<div class="paragraph"><p>Remember to save the changes through a graceful restart, since the main
+purpose of this recipe is not loosing any logging information and
+keeping the server online.</p></div>
+<h3 id="_cherokee_tweak">cherokee-tweak</h3><div style="clear:left"></div>
+<div class="paragraph"><p>To actually rotate the logs, you must use <tt>logrotate</tt> as command
+parameter.</p></div>
+<div class="paragraph"><p>Provided the user running cherokee-tweak has sufficient permissions,
+the rotation will be effective. Just provide the required parameters:</p></div>
+<div class="olist arabic"><ol class="arabic">
+<li>
+<p>
+command, which is <tt>logrotate</tt>
+</p>
+</li>
+<li>
+<p>
+url, the administration URL
+</p>
+</li>
+<li>
+<p>
+log, the log file to be rotated
+</p>
+</li>
+<li>
+<p>
+user and password, since the administration interface has restricted
+  access.
+</p>
+</li>
+</ol></div>
+<div class="listingblock">
+<div class="title">cherokee-tweak parameters</div>
+<div class="content">
+<pre><tt>$ cherokee-tweak -c logrotate -a http://example.net/admin/ -u admin -p adminpass -l /var/log/cherokee.access</tt></pre>
+</div></div>
+<div class="listingblock">
+<div class="title">Command output</div>
+<div class="content">
+<pre><tt>Setting backup mode.. OK
+Log file '/var/log/cherokee.access' moved to '/var/log/cherokee.access.1' successfully
+Restoring production mode.. OK</tt></pre>
+</div></div>
+<div class="paragraph"><p>That should do it. <a href="other_bundle_cherokee-tweak.html">cherokee-tweak</a> is
+a powerful tool. Take a look at the parameters and you find out if it
+can solve some of your administration problems.</p></div>
+</div>
+<div id="footer">
+<div id="footer-text">
+</div>
+</div>
+</div>

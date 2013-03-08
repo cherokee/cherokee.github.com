@@ -1,0 +1,216 @@
+---
+layout: documentation
+title: Cookbook  Setting up ASP.NET | Cherokee Documentation
+---
+<div id="main_area"><h1>Documentation</h1>
+
+<div class="sectionbody">
+</div>
+<h2 id="_cookbook_setting_up_asp_net">Cookbook: Setting up ASP.NET</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>To run ASP.NET applications with Cherokee, you will need to install
+<a href="http://www.mono-project.com/">Mono</a>. The Mono Project is a UNIX
+version of the Microsoft .NET development platform aimed at enabling
+UNIX developers to build and deploy cross-platform .NET Applications.</p></div>
+<div class="paragraph"><p>You will specifically need to run the <em>mono-fastcgi-server</em>, since
+that is the backend needed to set up Cherokee with the FastCGI handler
+to parse and compile aspx code.</p></div>
+<div class="paragraph"><p>You have several options available to obtain this.
+If you are lucky enough, it will already be available in your favorite
+platform.</p></div>
+<div class="paragraph"><p>On Debian Lenny and Sid, and on Ubuntu 8.10+ (Intrepid and Jaunty) you
+can simply leave to APT the trouble of setting up the dependencies by
+typing:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt># apt-get install mono-fastcgi-server2</tt></pre>
+</div></div>
+<div class="paragraph"><p>The official supported packages can be found at
+<a href="http://www.go-mono.com/mono-downloads/download.html">the download
+site</a>. If your flavor is not there, for Linux you can either:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+Download the binary installer, which is the
+<a href="http://ftp.novell.com/pub/mono/archive/1.9.1/linux-installer/2/mono-1.9.1_2-installer.bin">release
+1.9.1</a> at the time of writing,
+</p>
+</li>
+<li>
+<p>
+Download and compile the sources, available at the
+<a href="http://ftp.novell.com/pub/mono/sources-stable/">sources page</a>. The
+fastcgi-server is provided by the
+<a href="http://ftp.novell.com/pub/mono/sources/xsp/xsp-2.0.tar.bz2">XSP</a> package.
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>You can find all sorts of information about the configuration of Mono
+at the <a href="http://www.mono-project.com/">Mono Project</a> web site.</p></div>
+<div class="paragraph"><p>Once you have a FastCGI Mono backend available, we can proceed with
+the recipe.</p></div>
+<div class="paragraph"><p>Since a Mono Wizard is shipped with Cherokee, the configuration is as
+simple as clicking on the Wizard, located under the <tt>Languages</tt>
+category, and filling up a few required fields. Your application
+should be up and running. The rest of this document simply details the
+the recipe that is emulated by the Wizard. If you have any trouble
+with it, these steps could provide some insight on the reason of the
+failure to function properly.</p></div>
+<div class="olist arabic"><div class="title">Preparations</div><ol class="arabic">
+<li>
+<p>
+Define an <a href="config_info_sources.html">information source</a> that
+  spawns the <em>fastcgi-mono-server</em>. In our example we will be binding
+  it to the local interface, port 8080, with our application located
+  in <tt>/var/www</tt>, which is our document root. It will be mapped to <tt>/</tt>
+  by the FastCGI Mono Server. To do this, we will create a source
+  called <em>mono</em>, and we will set up the interpreter as:
+</p>
+<div class="listingblock">
+<div class="content">
+<pre><tt>fastcgi-mono-server2 --socket=tcp:8080 --address=127.0.0.1 --applications=/:/var/www</tt></pre>
+</div></div>
+<div class="paragraph"><p>Of course you could also define the parameters through environment
+variables, and simply launch the interpreter as:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>fastcgi-mono-server2</tt></pre>
+</div></div>
+<div class="paragraph"><p>Lets assume we wanted to do so and also wished to use it through a
+Unix socket instead of through a host:port combination. You would have
+to define at least the following variables:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>MONO_FCGI_APPLICATIONS=/:/var/www
+MONO_FCGI_SOCKET=unix
+MONO_FCGI_FILENAME=/tmp/cherokee-mono.socket</tt></pre>
+</div></div>
+<div class="paragraph"><p>Make sure to set up a relatively high spawning timeout, because it can
+take its time and you don’t want Cherokee giving up before the process
+is spawned. A value of 30 seconds should suffice. Obviously this value
+is way too high to serve contents when the FastCGI Mono backend has
+not been spawned. It is only meant to be used a security
+measure. Spawning the process before putting the server into
+production is highly recommended.</p></div>
+</li>
+<li>
+<p>
+Map your information source to a rule that handles your Mono
+  application. This can be done by setting up the rule for extensions
+  or paths.
+</p>
+<div class="ulist"><ul>
+<li>
+<p>
+The first alternative is easily achievable by passing the 11
+    standard extensions to the FastCGI Mono Server, defining a rule
+    that uses the information source we just mentioned and applies to
+    the extensions: <tt>aspx, asmx, ashx, asax, ascx, soap, rem, axd, cs,
+    config, dll</tt>. However, this is not the option recommended by the
+    Mono Project since some undesired side effects are obtained, such
+    as exposed files and missing features.
+</p>
+</li>
+<li>
+<p>
+The second alternative overcomes this by sending all requests
+    directly to the FastCGI Mono Server, but it comes at the cost of a
+    performance decrease. It is the recommended option.
+</p>
+</li>
+</ul></div>
+</li>
+</ol></div>
+<div class="paragraph"><p>So, lets get started. The recipe will configure the FastCGI handler
+using paths, deleting all but the <tt>Default</tt> rule from our Cherokee
+configuration.</p></div>
+<div class="olist arabic"><div class="title">Steps</div><ol class="arabic">
+<li>
+<p>
+First, access your virtual server configuration and go to the
+  <tt>Basics</tt> tab. Add <tt>index.aspx,default.aspx</tt> to the list of
+  <tt>Directory Indexes</tt>.
+</p>
+</li>
+<li>
+<p>
+Then, delete every erasable rule. The only remaining one should be
+  the <tt>Default</tt> one.
+</p>
+</li>
+<li>
+<p>
+Edit the rule, go to the <tt>Handler</tt> tab and select the FastCGI
+  handler. Assign it the <em>mono</em> information source. As always, you can
+  set up as many hosts as desired and Cherokee will balance the load
+  among them. If you want to take the alternative path of configuring
+  Mono through extensions instead of paths, simply define a rule that
+  applies to the 11 extensions mentioned above. The handler
+  configuration is completely identical. Either way, make sure the
+  <tt>Check file</tt> option of the handler is enabled. This is very
+  important. If it is not, FastCGI will not work and you will receive
+  an <em>500 Internal Server Error</em>.
+</p>
+</li>
+</ol></div>
+<div class="imageblock">
+<div class="content">
+<img alt="media/images/cookbook_mono_handler.png" src="media/images/cookbook_mono_handler.png"/>
+</div>
+<div class="image-title">FastCGI handler</div>
+</div>
+<div class="paragraph"><p>And that is all. Once you upload your ASP.NET application to
+<em>/var/www</em> and launch Cherokee, you should be able to access your
+application by pointing your web browser to, lets say
+<tt>http://example.net/</tt>.</p></div>
+<div class="paragraph"><p>For this recipe, the package asp.net2-examples (provided by Debian and
+Ubuntu thanks to some APT magic) was used. If you were to copy the
+examples to <tt>/var/www</tt> as final step of this tutorial, you should see that Mono is working.</p></div>
+<div class="imageblock">
+<div class="content">
+<img alt="media/images/cookbook_mono_demo.png" src="media/images/cookbook_mono_demo.png"/>
+</div>
+<div class="image-title">Demo in action</div>
+</div>
+<div class="paragraph"><p>When the package is installed, the examples will be placed in
+<tt>/usr/share/asp.net2-demos</tt>. Copy those to <tt>/var/www</tt> and you are ready
+to make the test.</p></div>
+<div class="paragraph"><p>Alternatively you can avoid copying any files and simply spawn the
+FastCGI Mono Server with the real path of the examples, like this:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>fastcgi-mono-server2 --socket=tcp:8080 --address=127.0.0.1 --applications=/:/usr/share/asp.net2-demos</tt></pre>
+</div></div>
+<div class="paragraph"><p>In case you can’t find the mentioned examples, you could always copy
+the following program to <tt>/var/www/index.aspx</tt> just to make sure your
+Mono setup is working.</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>&lt;%@ Page Language="C#" Debug="true" %&gt;
+&lt;html&gt;
+   &lt;body&gt;
+       &lt;h1&gt;Hello World!!!&lt;/h1&gt;
+       &lt;%
+          // This block will execute in the Render_Control method
+          Response.Write("Check out the family tree: &lt;br&gt; &lt;br&gt;");
+          Response.Write(this.GetType().ToString());
+          Response.Write(" which derives from: &lt;br&gt; ");
+          Response.Write(this.GetType().BaseType.ToString());
+          Response.Write(" which derives from: &lt;br&gt; ");
+          Response.Write(this.GetType().BaseType.BaseType.ToString());
+          Response.Write(" which derives from: &lt;br&gt; ");
+          Response.Write(
+            this.GetType().BaseType.BaseType.BaseType.ToString());
+          Response.Write(" which derives from: &lt;br&gt; ");
+          Response.Write(
+            this.GetType().BaseType.BaseType.BaseType.BaseType.ToString());
+       %&gt;
+   &lt;/body&gt;
+&lt;/html&gt;</tt></pre>
+</div></div>
+</div>
+<div id="footer">
+<div id="footer-text">
+</div>
+</div>
+</div>

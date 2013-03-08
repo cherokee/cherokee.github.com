@@ -1,0 +1,130 @@
+---
+layout: documentation
+title: Cookbook  Setting up Liferay | Cherokee Documentation
+---
+<div id="main_area"><h1>Documentation</h1>
+
+<div class="sectionbody">
+</div>
+<h2 id="_cookbook_setting_up_liferay">Cookbook: Setting up Liferay</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>You could just use the automatic installer present in the Cherokee
+Market. It would download and install everything, and make the
+necessary adjustments for you, both to Cherokee and your system.</p></div>
+<div class="paragraph"><p>But for those wanting to do everything manually, here is what you
+should do.</p></div>
+<div class="paragraph"><p>For this recipe we will be using
+<a href="http://www.liferay.com/web/guest/downloads/portal">Liferay Portal
+5.1.2 Standard Edition</a>.</p></div>
+<div class="paragraph"><p>You can use the standard package which is shipped with Tomcat as
+application server, or simply download one of the others. There is a
+<a href="http://downloads.sourceforge.net/lportal/liferay-portal-glassfish-linux-5.1.1.jar">Glassfish
+version</a> available. We will be using the former method, but you could
+choose the latter and just deploy the application in your favorite
+application server. If you chose the Glassfish release, you could
+refer to the <a href="cookbook_glassfish.html">Glassfish</a> recipe and the
+rest of this document would be of no more concern to you.</p></div>
+<div class="paragraph"><p>Before we proceed with the installation on Linux, you will need to
+make sure to have JDK 1.5 or later installed.</p></div>
+<div class="paragraph"><p>We will be installing the package and then setting up Cherokee as a
+reverse proxy to access this Enterprise Portal.</p></div>
+<h3 id="liferay">Phase one: Liferay</h3><div style="clear:left"></div>
+<div class="paragraph"><p>This part is trivial. As the
+<a href="http://www.liferay.com/web/guest/community/wiki/-/wiki/Main/Quick+Installation+Instructions">Quick
+installation notes</a> say, you just have to uncompress the package and
+launch the startup script.</p></div>
+<div class="paragraph"><p>So, uncompress to <tt>/opt/liferay</tt>, launch <tt>/opt/liferay/bin/startup.sh</tt>
+and you are done with this part.</p></div>
+<div class="paragraph"><p>It could give an error because it can’t find the Java environment.</p></div>
+<div class="paragraph"><p>Simply set the environment variable and try again.</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>export JAVA_HOME=/usr/lib/jvm/java-6-sun
+/opt/liferay/bin/startup.sh</tt></pre>
+</div></div>
+<div class="paragraph"><p>This path is set to the symbolic link present in <tt>/usr/lib/jvm</tt>. Yours
+could vary, so take a look there. As stated before, you do need Java
+1.5 or higher.</p></div>
+<div class="paragraph"><p>Once you have launched it, you can already access the application
+server directly at <a href="http://localhost:8080">http://localhost:8080</a></p></div>
+<div class="tableblock">
+<table cellpadding="4" cellspacing="0" frame="border" rules="all" width="100%">
+<caption class="title">Initial access information</caption>
+<col width="50%"></col>
+<col width="50%"></col>
+<thead>
+<tr>
+<th align="left" valign="top">Field    </th>
+<th align="left" valign="top">Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left" valign="top"><p class="table">user</p></td>
+<td align="left" valign="top"><p class="table"><a href="mailto:test@liferay.com">test@liferay.com</a></p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">password</p></td>
+<td align="left" valign="top"><p class="table">test</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="imageblock">
+<div class="content">
+<img alt="media/images/cookbook_liferay.png" src="media/images/cookbook_liferay.png"/>
+</div>
+<div class="image-title">Accessing Liferay</div>
+</div>
+<h3 id="Cherokee">Phase two: Cherokee</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Simply set up Cherokee as reverse proxy. You can
+either create a new virtual server with a matching rule (be it
+<tt>default</tt> or anything else) if you are sharing the proxy machine, or
+dedicate another machine to the Proxy Handler. This will be our
+choice, since typically you will be wanting to get the best possible
+performance, the Java application server is heavy by definition, and
+you could be using the proxy machine also to serve other contents. We
+are only going to set Cherokee’s HTTP reverse proxy handler to hit the
+server running Liferay at port 8080.</p></div>
+<div class="paragraph"><p>Launch Cherokee-Admin on your proxy machine, create a rule that
+matches the desired path on your web server hierarchy -<tt>/liferay</tt> for
+instance- in your virtual server of choice, and define the <tt>HTTP
+reverse proxy</tt> handler from within the <tt>Handler</tt> tab.</p></div>
+<div class="paragraph"><p>You will need to assign it an information source you define for the
+server running Liferay. We will assume the IP is <tt>192.168.1.100</tt> in
+your firewalled local network, and your reverse proxy is accessible as
+<tt>http://example.com/</tt></p></div>
+<div class="paragraph"><p>This information source is to be defined as external sources, like
+the following example:</p></div>
+<div class="tableblock">
+<table cellpadding="4" cellspacing="0" frame="border" rules="all" width="100%">
+<col width="33%"></col>
+<col width="33%"></col>
+<col width="33%"></col>
+<thead>
+<tr>
+<th align="left" valign="top">Type        </th>
+<th align="left" valign="top">Nick    </th>
+<th align="left" valign="top">Connection</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left" valign="top"><p class="table">Remote host</p></td>
+<td align="left" valign="top"><p class="table">liferay</p></td>
+<td align="left" valign="top"><p class="table">192.168.1.100:8080</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="paragraph"><p>Refer to the <a href="modules_handlers_proxy.html">HTTP reverse proxy</a>
+documentation if you need any further help with this.</p></div>
+<div class="paragraph"><p>Once you launch Cherokee and access <tt>http://example.com/liferay</tt>, you
+should be presented with the login screen from before, since you will
+be receiving whatever is at <tt>http://192.168.1.100:8080/</tt>.</p></div>
+</div>
+<div id="footer">
+<div id="footer-text">
+</div>
+</div>
+</div>

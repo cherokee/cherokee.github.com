@@ -1,0 +1,336 @@
+---
+layout: documentation
+title: Cookbook  Setting up phpBB | Cherokee Documentation
+---
+<div id="main_area"><h1>Documentation</h1>
+
+<div class="sectionbody">
+</div>
+<h2 id="_cookbook_setting_up_phpbb">Cookbook: Setting up phpBB</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>You will need PHP support correctly configured in Cherokee, and PHP
+with the MySQL module installed. The default configuration already
+provides a valid PHP configuration for Cherokee if you have <tt>php-cgi</tt>
+installed, but you can follow the appropriate recipe about
+<a href="cookbook_php.html">setting up PHP</a> in case you don’t have it
+available for some reason.</p></div>
+<div class="paragraph"><p>Under these conditions, you could start the installation and you
+would already be able to have your site up and running.</p></div>
+<h3 id="_installation">Installation</h3><div style="clear:left"></div>
+<div class="paragraph"><p><a href="http://www.phpbb.com">phpBB</a> can be installed quite
+easily. Download the <a href="http://www.phpbb.com/downloads/">latest
+package</a>, decompress it and point your browser to the corresponding
+URL.</p></div>
+<div class="paragraph"><p>In this example, we will be installing everything under
+<tt>/var/www/phpBB3</tt> and will set that as <tt>document root</tt> in
+cherokee-admin for our server, which will be hosting contents for the
+domain <tt>example.net</tt>. You can modify this going to <tt>Virtual servers</tt>
+→ <tt>default</tt> → <tt>Basics</tt> → <tt>Document Root</tt>. You can delete all the
+unnecessary rules of your default out-of-the-box configuration.</p></div>
+<div class="imageblock">
+<div class="content">
+<img alt="media/images/cookbook_phpbb_rules.png" src="media/images/cookbook_phpbb_rules.png"/>
+</div>
+<div class="image-title">Rule list</div>
+</div>
+<div class="paragraph"><p>This is all you need to do with Cherokee, for now.</p></div>
+<div class="paragraph"><p>If you intend to use the same domain, insert the appropriate entry in
+your <tt>/etc/hosts</tt> or equivalent file.</p></div>
+<div class="listingblock">
+<div class="title">Entry for your /etc/hosts</div>
+<div class="content">
+<pre><tt>127.0.0.1       localhost example.net</tt></pre>
+</div></div>
+<div class="paragraph"><p>First download the
+<a href="http://www.phpbb.com/downloads/olympus.php">phpBB3</a> package and
+proceed decompressing it to the desired path.</p></div>
+<div class="paragraph"><p>Second, create the database for the installation. Log in to MySQL with
+your administration user and password:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>mysql -u root -p</tt></pre>
+</div></div>
+<div class="paragraph"><p>And create the database. We will be using the name
+<em>phpbb</em>, the user <em>phpbbuser</em> and the password <em>phpbbpassword</em>, but
+you should set up your own.</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>CREATE DATABASE phpbb;
+GRANT ALL PRIVILEGES ON phpbb.* TO phpbbuser@localhost IDENTIFIED BY 'phpbbpassword';
+GRANT ALL PRIVILEGES ON phpbb.* TO phpbbuser@localhost.localdomain IDENTIFIED BY 'phpbbpassword';
+FLUSH PRIVILEGES;
+quit;</tt></pre>
+</div></div>
+<h3 id="wizard">Configuring with the Wizard</h3><div style="clear:left"></div>
+<div class="paragraph"><p><tt>Cherokee-Admin</tt> provides a wizard for phpBB that will configure the
+web server appropriately. Just find it under the <tt>Web Applications</tt>
+category, provide some basic information and you are good to go.</p></div>
+<div class="paragraph"><p>Then point your web browser to <tt>http://example.net</tt> and follow all the
+steps. Basically you will have to provide the database information and
+troubleshoot any possible warning, but the process is fairly straight
+forward.</p></div>
+<div class="imageblock">
+<div class="content">
+<img alt="media/images/cookbook_phpbb_1_intro.png" src="media/images/cookbook_phpbb_1_intro.png"/>
+</div>
+<div class="image-title">Introduction</div>
+</div>
+<div class="imageblock">
+<div class="content">
+<img alt="media/images/cookbook_phpbb_2_req.png" src="media/images/cookbook_phpbb_2_req.png"/>
+</div>
+<div class="image-title">Requirements</div>
+</div>
+<div class="imageblock">
+<div class="content">
+<img alt="media/images/cookbook_phpbb_3_db.png" src="media/images/cookbook_phpbb_3_db.png"/>
+</div>
+<div class="image-title">Database settings</div>
+</div>
+<div class="imageblock">
+<div class="content">
+<img alt="media/images/cookbook_phpbb_4_admin.png" src="media/images/cookbook_phpbb_4_admin.png"/>
+</div>
+<div class="image-title">Administrator details</div>
+</div>
+<div class="imageblock">
+<div class="content">
+<img alt="media/images/cookbook_phpbb_5_config.png" src="media/images/cookbook_phpbb_5_config.png"/>
+</div>
+<div class="image-title">Configuration file</div>
+</div>
+<div class="imageblock">
+<div class="content">
+<img alt="media/images/cookbook_phpbb_6_advanced.png" src="media/images/cookbook_phpbb_6_advanced.png"/>
+</div>
+<div class="image-title">Advanced settings</div>
+</div>
+<div class="imageblock">
+<div class="content">
+<img alt="media/images/cookbook_phpbb_7_create.png" src="media/images/cookbook_phpbb_7_create.png"/>
+</div>
+<div class="image-title">Create database tables</div>
+</div>
+<div class="imageblock">
+<div class="content">
+<img alt="media/images/cookbook_phpbb_8_final.png" src="media/images/cookbook_phpbb_8_final.png"/>
+</div>
+<div class="image-title">Final stage</div>
+</div>
+<div class="paragraph"><p>Once you are done you will be redirected to the <tt>Administration
+control panel</tt>. If not, you should have a link at the bottom of the
+page.  You need to eliminate the <tt>/var/www/phpBB3/install</tt>
+subdirectory or you will not be allowed to go any further.</p></div>
+<div class="imageblock">
+<div class="content">
+<img alt="media/images/cookbook_phpbb_adm_warning.png" src="media/images/cookbook_phpbb_adm_warning.png"/>
+</div>
+<div class="image-title">Warning</div>
+</div>
+<div class="paragraph"><p>It is just a security precaution. Once you have done this, you can
+proceed.</p></div>
+<div class="imageblock">
+<div class="content">
+<img alt="media/images/cookbook_phpbb_adm.png" src="media/images/cookbook_phpbb_adm.png"/>
+</div>
+<div class="image-title">After deletion</div>
+</div>
+<div class="paragraph"><p>The basic installation is done. You can see the software running just
+by accessing <a href="http://example.net/">http://example.net/</a></p></div>
+<div class="imageblock">
+<div class="content">
+<img alt="media/images/cookbook_phpbb_running.png" src="media/images/cookbook_phpbb_running.png"/>
+</div>
+<div class="image-title">phpBB running</div>
+</div>
+<h3 id="_url_rewrites">URL rewrites</h3><div style="clear:left"></div>
+<div class="paragraph"><p>To beautify your URLs you will need to write some redirection rules
+and apply some patches. This feature seems to not be supported in
+phpBB, so you will have to download phpBB’s <tt>mod_rewrite</tt> module and
+apply the patch. There are several alternative patches available from
+different sources. Since you will need to modify by hand some code,
+your best alternative is probably sticking to some pre-modded version.</p></div>
+<div class="paragraph"><p>One such version is <a href="http://www.phpbb-seo.com/">phpBB SEO</a>. Make
+sure the release you are using matches that of your installed phpBB.</p></div>
+<div class="paragraph"><p>After applying the fixes, mostly overwriting the files with the ones
+provided, you will have to generate an .htaccess file. It will not
+work for Cherokee, but it will give you the rewrite-directives that
+need to be translated.</p></div>
+<div class="paragraph"><p>These need to be created as <tt>Regular Expression</tt> type rules that match
+our translated directives. The rules must be <tt>Final</tt> and managed by
+the <tt>Redirection</tt> handler. Within the handler you will need to specify
+only the type -<tt>Internal</tt> - and substitution to perform. The regular
+expression is inherited, so no need to re-type it.</p></div>
+<div class="paragraph"><p>Just one precaution must be taken before you start playing around with
+rewriting rules. Despite these, you will probably want to ensure that
+existing files, directories or symbolic links are
+used instead of matching (and re-directing) them with rewrite rules.
+To do this you will have to create one <tt>File exists</tt>-type rule that
+matches any file and that is both <tt>Final</tt> and managed by the <tt>list &amp;
+send</tt> or <tt>static</tt> handlers.</p></div>
+<div class="paragraph"><p>Once you start creating new rules, just make sure to keep the PHP -non
+final- one at the top of the list and that the next one is your static
+file managing rule.</p></div>
+<div class="paragraph"><p>This is a set of rewrites that is known to have worked with phpBB3 and
+<tt>phpBB-SEO simple</tt>. Please use them as an orientation, since they
+could very well fail with the specific <tt>phpBB mod_rewrite</tt> patch you
+are using.</p></div>
+<div class="tableblock">
+<table cellpadding="4" cellspacing="0" frame="border" rules="all" width="100%">
+<caption class="title">Basic forum access</caption>
+<col width="30%"></col>
+<col width="70%"></col>
+<tbody>
+<tr>
+<td align="left" valign="top"><p class="table">Regular Expression</p></td>
+<td align="left" valign="top"><p class="table">^/[a-z0-9_-]*-f([0-9]+)/?(p([0-9]+)\.html)?$</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">Substitution</p></td>
+<td align="left" valign="top"><p class="table">/viewforum.php?f=$1&amp;start=$3</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="tableblock">
+<table cellpadding="4" cellspacing="0" frame="border" rules="all" width="100%">
+<caption class="title">Topics with virtual folder</caption>
+<col width="30%"></col>
+<col width="70%"></col>
+<tbody>
+<tr>
+<td align="left" valign="top"><p class="table">Regular Expression</p></td>
+<td align="left" valign="top"><p class="table">^/[a-z0-9_-]*-f([0-9]+)/[a-z0-9_-]*-t([0-9]+)(-([0-9]+))?\.html$</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">Substitution</p></td>
+<td align="left" valign="top"><p class="table">/viewtopic.php?f=$1&amp;t=$2&amp;start=$4</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="tableblock">
+<table cellpadding="4" cellspacing="0" frame="border" rules="all" width="100%">
+<caption class="title">Global announces with virtual folder</caption>
+<col width="30%"></col>
+<col width="70%"></col>
+<tbody>
+<tr>
+<td align="left" valign="top"><p class="table">Regular Expression</p></td>
+<td align="left" valign="top"><p class="table">^/announces/[a-z0-9_-]*-t([0-9]+)(-([0-9]+))?\.html$</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">Substitution</p></td>
+<td align="left" valign="top"><p class="table">/viewtopic.php?t=$1&amp;start=$3</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="tableblock">
+<table cellpadding="4" cellspacing="0" frame="border" rules="all" width="100%">
+<caption class="title">Topic without forum ID &amp; DELIM</caption>
+<col width="30%"></col>
+<col width="70%"></col>
+<tbody>
+<tr>
+<td align="left" valign="top"><p class="table">Regular Expression</p></td>
+<td align="left" valign="top"><p class="table">^/[a-z0-9_-]*/?[a-z0-9_-]*-t([0-9]+)(-([0-9]+))?\.html$</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">Substitution</p></td>
+<td align="left" valign="top"><p class="table">/viewtopic.php?t=$1&amp;start=$3</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="tableblock">
+<table cellpadding="4" cellspacing="0" frame="border" rules="all" width="100%">
+<caption class="title">Profiles</caption>
+<col width="30%"></col>
+<col width="70%"></col>
+<tbody>
+<tr>
+<td align="left" valign="top"><p class="table">Regular Expression</p></td>
+<td align="left" valign="top"><p class="table">^/m([0-9]+)\.html$</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">Substitution</p></td>
+<td align="left" valign="top"><p class="table">/memberlist.php?mode=viewprofile&amp;u=$1</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="tableblock">
+<table cellpadding="4" cellspacing="0" frame="border" rules="all" width="100%">
+<caption class="title">User messages</caption>
+<col width="30%"></col>
+<col width="70%"></col>
+<tbody>
+<tr>
+<td align="left" valign="top"><p class="table">Regular Expression</p></td>
+<td align="left" valign="top"><p class="table">^/messages([0-9]+)(-([0-9]+))?\.html$</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">Substitution</p></td>
+<td align="left" valign="top"><p class="table">/search.php?author_id=$1&amp;sr=posts&amp;start=$3</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="tableblock">
+<table cellpadding="4" cellspacing="0" frame="border" rules="all" width="100%">
+<caption class="title">Groups</caption>
+<col width="30%"></col>
+<col width="70%"></col>
+<tbody>
+<tr>
+<td align="left" valign="top"><p class="table">Regular Expression</p></td>
+<td align="left" valign="top"><p class="table">^/g([0-9]+)(-([0-9]+))?\.html$</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">Substitution</p></td>
+<td align="left" valign="top"><p class="table">/memberlist.php?mode=group&amp;g=$1&amp;start=$3</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="tableblock">
+<table cellpadding="4" cellspacing="0" frame="border" rules="all" width="100%">
+<caption class="title">Post</caption>
+<col width="30%"></col>
+<col width="70%"></col>
+<tbody>
+<tr>
+<td align="left" valign="top"><p class="table">Regular Expression</p></td>
+<td align="left" valign="top"><p class="table">^/p([0-9]+)\.html$</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">Substitution</p></td>
+<td align="left" valign="top"><p class="table">/viewtopic.php?p=$1</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="tableblock">
+<table cellpadding="4" cellspacing="0" frame="border" rules="all" width="100%">
+<caption class="title">The team</caption>
+<col width="25%"></col>
+<col width="75%"></col>
+<tbody>
+<tr>
+<td align="left" valign="top"><p class="table">Regular Expression</p></td>
+<td align="left" valign="top"><p class="table">^/the-team\.html$ /memberlist.php?mode=leaders</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">Substitution</p></td>
+<td align="left" valign="top"><p class="table">^/[a-z0-9_-]+/?(p([0-9]+)\.html)?$ /viewforum.php?start=$2</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="footer">
+<div id="footer-text">
+</div>
+</div>
+</div>

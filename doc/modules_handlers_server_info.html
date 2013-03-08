@@ -1,0 +1,165 @@
+---
+layout: documentation
+title: Handler  Server Info | Cherokee Documentation
+---
+<div id="main_area"><h1>Documentation</h1>
+
+<div class="sectionbody">
+</div>
+<h2 id="_handler_server_info">Handler: Server Info</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>The Server Info handler is used to create rules that can provide
+information about the web server. When these rules are matched,
+information regarding Cherokee’s status will be displayed. The
+information will be refreshed every 30 seconds.</p></div>
+<div class="paragraph"><p>But that is not all. Besides the HTML output, the handler makes the
+information available for direct consumption by some of the most
+popular programming languages.</p></div>
+<div class="tableblock">
+<table cellpadding="4" cellspacing="0" frame="border" rules="all" width="100%">
+<col width="35%"></col>
+<col width="65%"></col>
+<thead>
+<tr>
+<th align="left" valign="top">Language   </th>
+<th align="left" valign="top"> Web path</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left" valign="top"><p class="table">Python</p></td>
+<td align="left" valign="top"><p class="table">&lt;HANDLER WEBDR&gt;/info/py</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">Ruby</p></td>
+<td align="left" valign="top"><p class="table">&lt;HANDLER WEBDR&gt;/info/ruby</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">PHP</p></td>
+<td align="left" valign="top"><p class="table">&lt;HANDLER WEBDR&gt;/info/php</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">Javascript</p></td>
+<td align="left" valign="top"><p class="table">&lt;HANDLER WEBDR&gt;/info/js</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="paragraph"><p>The <tt>type</tt> parameter specifies influences the verbosity of the output.</p></div>
+<div class="tableblock">
+<table cellpadding="4" cellspacing="0" frame="border" rules="all" width="100%">
+<col width="20%"></col>
+<col width="10%"></col>
+<col width="70%"></col>
+<thead>
+<tr>
+<th align="left" valign="top">Parameters </th>
+<th align="left" valign="top">Type   </th>
+<th align="left" valign="top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left" valign="top"><p class="table">type</p></td>
+<td align="left" valign="top"><p class="table">String</p></td>
+<td align="left" valign="top"><p class="table">just_about | normal | connection_details</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="paragraph"><p>If set to <tt>just_about</tt>, it will display:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+Release number of Cherokee.
+</p>
+</li>
+<li>
+<p>
+Brief license notice.
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>If set to <tt>normal</tt>, some extra information will be provided regarding:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+General Information
+</p>
+</li>
+<li>
+<p>
+Server Core
+</p>
+</li>
+<li>
+<p>
+Current connections
+</p>
+</li>
+<li>
+<p>
+Loaded Modules
+</p>
+</li>
+<li>
+<p>
+Icons
+</p>
+</li>
+<li>
+<p>
+File Caching
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>If set to <tt>connection_details</tt> it will also  provide more detailed
+information about the existing connections:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+ID
+</p>
+</li>
+<li>
+<p>
+Remote IP
+</p>
+</li>
+<li>
+<p>
+Phase
+</p>
+</li>
+<li>
+<p>
+Request
+</p>
+</li>
+<li>
+<p>
+Handler
+</p>
+</li>
+<li>
+<p>
+Info sent
+</p>
+</li>
+<li>
+<p>
+Info received
+</p>
+</li>
+<li>
+<p>
+Icon
+</p>
+</li>
+</ul></div>
+</div>
+<div id="footer">
+<div id="footer-text">
+</div>
+</div>
+</div>

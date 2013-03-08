@@ -1,0 +1,56 @@
+---
+layout: documentation
+title: Cookbook  Redirecting all traffic from HTTP to HTTPS | Cherokee Documentation
+---
+<div id="main_area"><h1>Documentation</h1>
+
+<div class="sectionbody">
+</div>
+<h2 id="_cookbook_redirecting_all_traffic_from_http_to_https">Cookbook: Redirecting all traffic from HTTP to HTTPS</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Some times you will have a production website that has to be used via
+HTTPS.  However, many users are not aware that they need to type
+<em>https:</em> and not <em>http:</em> into their browser. The request will simply
+timeout if only port 443 is used, or the users will get <em>426 Upgrade
+Required</em> if port 80 is also turned on on your Cherokee configuration.</p></div>
+<div class="paragraph"><p>No need to worry. <a href="modules_handlers_redir.html">Rewrite rules</a> can
+easily handle this situation.</p></div>
+<div class="paragraph"><p>To achive your goal you will simply have to set up a redirection
+making use of the <tt>${host}</tt> macro, such as the following one.</p></div>
+<div class="paragraph"><p>First, create a new complex rule of type <tt>NOT Is SSL/TLS</tt>, that is,
+make a rule of type <tt>TLS/SSL</tt>, and apply the <tt>NOT</tt> boolean operator to
+it.</p></div>
+<div class="paragraph"><p>Then configure the <tt>Redirection</tt> handler to use the specified macro
+like this:</p></div>
+<div class="tableblock">
+<table cellpadding="4" cellspacing="0" frame="border" rules="all" width="100%">
+<col width="50%"></col>
+<col width="50%"></col>
+<thead>
+<tr>
+<th align="left" valign="top">Regular Expression </th>
+<th align="left" valign="top">Substitution</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left" valign="top"><p class="table"><tt>/(.*)$</tt></p></td>
+<td align="left" valign="top"><p class="table"><tt>https://${host}/$1</tt></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="paragraph"><p>Of course, this macro uses the standard template subsystem , which
+provides <a href="config_virtual_servers_evhost.html#slicing">slicing
+support</a>. This means you could specify a substitution such as
+<tt>https://${host}[:-4].com/$1</tt> that would redirect any matching request
+to an HTTPS version of that request for the <tt>.com</tt> TLD. As an example,
+provided all the domains matched your virtual server, you could send
+traffic from <tt>http://example.com</tt>, <tt>http://example.net</tt>, and
+<tt>http://example.org</tt> to <tt>https://example.com</tt></p></div>
+</div>
+<div id="footer">
+<div id="footer-text">
+</div>
+</div>
+</div>

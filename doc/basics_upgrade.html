@@ -1,0 +1,81 @@
+---
+layout: documentation
+title: Upgrading Cherokee | Cherokee Documentation
+---
+
+<div id="main_area">
+	<h1>Cherokee Basics</h1>
+	<h2 id="_a_href_index_html_index_a_8594_a_href_basics_html_getting_started_a"><a href="index.html">Index</a> → <a href="basics.html">Getting started</a></h2>
+	<div class="sectionbody"></div>
+	<h2 id="_upgrading_cherokee">Upgrading Cherokee</h2>
+	<div class="sectionbody">
+		<div class="paragraph">
+			<p>If there is a prepackaged version of Cherokee for you platform of
+				choice, we strongly encourage you to use it. Although upgrading
+				Cherokee is not complicated, the prepackaged versions should make your
+				upgrades much easier.
+			</p>
+		</div>
+		<div class="paragraph">
+			<p>Refer to the <a href="basics_installation_unix.html#APT">APT</a> section of the
+				Unix installation instructions if you are using Debian or Ubuntu for
+				some additional information.
+			</p>
+		</div>
+		<div class="paragraph">
+			<p>The current mechanism of choice to configure Cherokee did not exist
+				prior to release 0.6. A lot has happened since then, and Cherokee has
+				been constantly improving in terms of stability, efficiency and
+				features.
+			</p>
+		</div>
+		<div class="paragraph">
+			<p>If you happen to be running an old version of Cherokee and would like
+				to keep your current configuration settings, you can upgrade your
+				cherokee.conf file.
+			</p>
+		</div>
+		<div class="paragraph">
+			<p>Cherokee currently supports configuration versioning, so
+				from now on, whenever a change is made to the configuration file
+				format, Cherokee-Admin will be able to automatically convert yours to
+				the new release. You simply have to load Cherokee-Admin and it will be
+				converted once you proceed to saving it.
+			</p>
+		</div>
+		<div class="paragraph">
+			<p>There is also a command line utility that you can use to do the exact
+				same thing. It is provided under
+				<tt>$prefix/share/cherokee/admin/upgrade_config.py.</tt>
+			</p>
+		</div>
+		<div class="paragraph">
+			<p>In case you need to do this manually, the usage is as follows:</p>
+		</div>
+		<div class="listingblock">
+			<div class="content">
+				<pre><tt>/usr/share/cherokee/admin/upgrade_config.py /etc/cherokee/cherokee.conf</tt></pre>
+			</div>
+		</div>
+		<div class="paragraph">
+			<p>Every effort is made to bulletproof the upgrade script. If an upgrade
+				does not work for you, please send a bug report.  However, Cherokee is
+				a very active project and has been steadily advancing and
+				incorporating technical improvements. You should really be using
+				<a href="other_bundle_cherokee-admin.html">cherokee-admin</a> to configure
+				your system if you want to take full advantage of the new
+				features. Even if the upgrade process is successful, you should use
+				the new configuration file as a start point and go through the normal
+				configuration process using
+				<a href="other_bundle_cherokee-admin.html">cherokee-admin</a>.
+			</p>
+		</div>
+		<div class="paragraph">
+			<p>Also, as long as you are not using an ancient configuration file,
+				every new cherokee-admin release will be able to upgrade the
+				configuration automatically from previous versions whenever a format
+				change has been required.
+			</p>
+		</div>
+	</div>
+</div>

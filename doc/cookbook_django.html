@@ -1,0 +1,210 @@
+---
+layout: documentation
+title: Cookbook  Setting up Django | Cherokee Documentation
+---
+<div id="main_area"><h1>Documentation</h1>
+
+<div class="sectionbody">
+</div>
+<h2 id="_cookbook_setting_up_django">Cookbook: Setting up Django</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Django is a fantastic high-level Python Web framework that can run
+nicely with Cherokee and either the
+<a href="modules_handlers_scgi.html">SCGI</a> or
+<a href="modules_handlers_fcgi.html">FastCGI</a> handlers.</p></div>
+<div class="paragraph"><p>To properly set up Cherokee to use Django you will need a working
+Django framework, which is not difficult at all to get ready. The
+details vary from system to system. You can refer to the official
+project’s documentation for more information on
+<a href="http://www.djangoproject.com/documentation/install">how to install
+Django</a>.</p></div>
+<div class="paragraph"><p>There are two ways to deploy a Django project running on Cherokee. The
+first one is the classical method and involves the usage of Flup, it
+is the method documented in this recipe and has been the standard
+method for years. Thousands of sites currently use this approach
+successfully.</p></div>
+<div class="paragraph"><p>The other method involves using <a href="cookbook_uwsgi.html">uWSGI</a>. It is
+a new, modern and feature-rich approach. There is a separate recipe
+and wizard for that, so check it out. We can assure you it will be
+worth your time. The instructions on how to set up the Framework are
+the same, but the method in which Cherokee is configured varies.</p></div>
+<div class="paragraph"><p>There is a
+<a href="../screencasts.html#django_flup">screencast</a>
+available at the
+<a href="../index.html">Cherokee-Project website</a> to
+demonstrate how easy it is to use the Django wizard.</p></div>
+<div class="paragraph"><div class="title">Django wizard</div><p><span class="image">
+<a class="image" href="../screencasts.html#django_flup">
+<img alt="media/images/screencast.png" src="media/images/screencast.png"/>
+</a>
+</span></p></div>
+<h3 id="_preparing_the_framework">Preparing the framework</h3><div style="clear:left"></div>
+<div class="paragraph"><p>On Debian based systems this will be enough:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt># apt-get install python-django python-flup</tt></pre>
+</div></div>
+<div class="paragraph"><p>You will need Flup because it implements the standard interface
+between Python Web applications and Web servers, so you will be using
+it to run your web application either as FastCGI or SCGI.</p></div>
+<div class="paragraph"><p>Once you are done with that, you must deploy your Django project:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>$ cd /var/www
+$ django-admin startproject example</tt></pre>
+</div></div>
+<div class="paragraph"><p>This will create the basic structure into a new directory called
+<tt>example</tt>.</p></div>
+<div class="paragraph"><p>It is important to ensure that <tt>manage.py</tt> has execution permissions.
+If it does not, you will only have to set them by running:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>chmod a+rx manage.py</tt></pre>
+</div></div>
+<div class="paragraph"><p>Now you are ready to configure Cherokee.</p></div>
+<h3 id="_preparing_cherokee">Preparing Cherokee</h3><div style="clear:left"></div>
+<div class="paragraph"><p>You can either do it by hand, or you can use the appropriate wizard
+for a hassle-free configuration.</p></div>
+<div class="paragraph"><p>To do so, simply access the <tt>Virtual Servers</tt> section in
+<tt>Cherokee-Admin</tt>, and click on the <tt>Add</tt> button at the top of the
+panel to show the list of available wizards. <tt>Django</tt> is located under
+the <tt>Platforms</tt> category. You can use this wizard both within your
+<tt>Virtual Servers</tt> list (in which case a new virtual server is
+configured), and from the <tt>Rule Management</tt> button on the <tt>Behavior</tt>
+tab inside one of your virtual servers. In this last scenario, the
+Django project will be accessible under the specified web directory of
+the selected virtual server.</p></div>
+<div class="imageblock">
+<div class="content">
+<img alt="media/images/admin_vservers_wizard.png" src="media/images/admin_vservers_wizard.png"/>
+</div>
+<div class="image-title">Wizards</div>
+</div>
+<div class="paragraph"><p>Simply fill in the required fields. <tt>Project Directory</tt> applies to the
+path where your Django application is located, while <tt>Document Root</tt>
+applies to the directory that contains non-Django related files, such
+as any static content.</p></div>
+<div class="paragraph"><p>That’s it. You can stop reading now. Go enjoy your Django application
+running on Cherokee.</p></div>
+<h3 id="_setting_up_cherokee_by_hand">Setting up Cherokee by hand</h3><div style="clear:left"></div>
+<div class="paragraph"><p>The following information details the steps needed to configure
+Cherokee by hand, which is not the recommended option. The wizards are
+constantly being updated as new releases of the software become
+available, while the recipe might become somehow more outdated given
+enough time.</p></div>
+<div class="paragraph"><p>It is not difficult, though. You only need to know how to spawn the
+FastCGI or SCGI, which is done with a script provided by your project
+called <tt>manage.py</tt>.</p></div>
+<div class="paragraph"><p>Django can be run on a TCP port or on a Unix socket. In our example we
+will be launching it as threaded server on a TCP port with SCGI
+protocol. This is accomplished with the following command, which is
+what we will have to set up in <tt>cherokee-admin</tt>.</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>./manage.py runfcgi method=threaded host=127.0.0.1 port=3033 protocol=scgi</tt></pre>
+</div></div>
+<div class="paragraph"><p>The process is fairly simple. Set up a new rule for this new path and
+manage it with the SCGI handler. If you wanted to use the FastCGI
+handler instead you would only have to omit the last parameter and
+FastCGI would be used by default. The configuration of the handler is
+exactly the same for SCGI and FastCGI.</p></div>
+<div class="paragraph"><p>Once you have created the new rule for your <tt>/var/www/example</tt>
+directory, choose the desired handler and use the following
+configuration.</p></div>
+<div class="paragraph"><div class="title">Common CGI options</div><p>Under <tt>Common CGI options</tt> make sure to check the <tt>Error handler</tt> box and
+uncheck <tt>Check file</tt>. This is to prevent possible errors with the
+<tt>INFO_PATH</tt> generation that can happen when an application, in this
+case <em>Django</em>, manages the whole subtree. This is mentioned in the
+<a href="modules_handlers_cgi.html">Common CGI</a> section of the
+documentation. It is a good idea to enable the <tt>Error handler</tt>
+checkbox since it will help you determine if an error is associated
+with your Django application or with Cherokee. This, however, is not
+required.</p></div>
+<div class="imageblock">
+<div class="content">
+<img alt="media/images/cookbook_django_common.png" src="media/images/cookbook_django_common.png"/>
+</div>
+<div class="image-title">SCGI handler</div>
+</div>
+<div class="paragraph"><div class="title">SCGI specific</div><p>Under <tt>SCGI specific</tt> make sure to add the hosts providing the
+service. This is done by adding one or more information sources.</p></div>
+<div class="imageblock">
+<div class="content">
+<img alt="media/images/cookbook_django_infosources.png" src="media/images/cookbook_django_infosources.png"/>
+</div>
+<div class="image-title">Django information source</div>
+</div>
+<div class="paragraph"><p>Note that you will have to manually launch the <tt>spawner</tt> if
+you use a <tt>Remote host</tt> as <tt>Information source</tt> instead of a <tt>Local
+interpreter</tt>.</p></div>
+<div class="paragraph"><p>You will simply have to add as many sources as needed, for instance
+our example uses one nicknamed <tt>django1</tt>, created as <strong>local
+interpreter</strong> with these parameters on port 3033.</p></div>
+<div class="tableblock">
+<table cellpadding="4" cellspacing="0" frame="border" rules="all" width="100%">
+<col width="10%"></col>
+<col width="90%"></col>
+<thead>
+<tr>
+<th align="left" valign="top">Host           </th>
+<th align="left" valign="top">Interpreter</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left" valign="top"><p class="table">localhost:3033</p></td>
+<td align="left" valign="top"><p class="table"><tt>/var/www/example/manage.py runfcgi method=threaded ` \
+                 `host=127.0.0.1 port=3033 protocol=scgi</tt></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="paragraph"><p>You can set up as many hosts as desired and Cherokee will balance the
+load among them.</p></div>
+<div class="paragraph"><p>Once everything is done you can check if Django is really
+working. Just navigate to the path configured by your rule,
+<a href="http://localhost/example">http://localhost/example</a> for instance, and you should see some notes
+about your recently created project.</p></div>
+<div class="imageblock">
+<div class="content">
+<img alt="media/images/cookbook_django.png" src="media/images/cookbook_django.png"/>
+</div>
+<div class="image-title">It worked!</div>
+</div>
+<div class="sidebarblock">
+<div class="sidebar-content">
+<div class="paragraph"><p>Should you wish to deploy your Django application directly instead of
+through <tt>manage.py</tt> this could be easily achieved. Just remember to
+add the appropriate command used to launch the interpreter in the
+relevant <tt>information source</tt>, and it will be executed. As noted in
+the warning on the documentation about
+<a href="config_info_sources.html#daemonization">Information Sources</a>, Cherokee
+is smart enough to daemonize the backend during the spawning process,
+so you must avoid any manual daemonization on your part to prevent the
+processess from interfering.</p></div>
+<div class="paragraph"><p>This is done adding the appropriate parameter to the <tt>runfastcgi</tt>
+method of <tt>django.core.servers.fastcgi</tt> in your script.</p></div>
+<div class="listingblock">
+<div class="title">Using a unix socket:</div>
+<div class="content">
+<pre><tt>from django.core.servers.fastcgi import runfastcgi
+
+runfastcgi(method="threaded", daemonize="false", maxrequests=5,
+           protocol="scgi", socket="/tmp/cherokee-django.socket",
+           pidfile="/tmp/cherokee-django.pid")</tt></pre>
+</div></div>
+<div class="listingblock">
+<div class="title">Using a host:port configuration:</div>
+<div class="content">
+<pre><tt>from django.core.servers.fastcgi import runfastcgi
+
+runfastcgi(method="threaded", daemonize="false", maxrequests=5,
+           protocol="scgi", host="127.0.0.1", port=3033)</tt></pre>
+</div></div>
+</div></div>
+</div>
+<div id="footer">
+<div id="footer-text">
+</div>
+</div>
+</div>

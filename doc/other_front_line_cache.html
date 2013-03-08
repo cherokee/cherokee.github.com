@@ -1,0 +1,109 @@
+---
+layout: documentation
+title: Other  Front-line Cache | Cherokee Documentation
+---
+<div id="main_area"><h1>Documentation</h1>
+
+<div class="sectionbody">
+</div>
+<h2 id="_other_front_line_cache">Other: Front-line Cache</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Cherokee has very sophisticated content caching mechanisms,
+allowing it to cache anything (static files, dynamic content, etc.).
+Cherokee’s NEW version 1.2.3 Front-line Cache
+replaces well known independent front-line caches (i.e., Varnish, Squid, etc.).
+Independent front-line caches add additional latency to requests due to
+TCPIP network based round-trips to check whether or not the content has
+already been cached. With Cherokee, the front-line cache built in so
+there are is no unnecessary network overhead due to caching.</p></div>
+<div class="paragraph"><p>Front-line cache accelerates HTTP delivery even on content-heavy
+dynamic websites (see example and notes on caching where cookies exist
+and how to selectively ignore cookies).</p></div>
+<div class="paragraph"><p>Caching policies can be specified on a per-rule basis. Caching of
+content is decided by two things:</p></div>
+<div class="olist arabic"><ol class="arabic">
+<li>
+<p>
+Headers returned by the back-end (i.e., Expires Header).
+</p>
+</li>
+<li>
+<p>
+Whatever is specified in the matching rule.
+</p>
+</li>
+</ol></div>
+<div class="paragraph"><p>Caching can be customized for each and every rule of your virtual
+server’s configuration, by specifying any of the three settings
+available on a per-rule basis in the &lt;tt&gt;Content Caching&lt;/tt&gt; section:
+&lt;em&gt;Leave unset&lt;/em&gt;, &lt;em&gt;Allow&lt;/em&gt; and &lt;em&gt;Forbid&lt;/em&gt;.</p></div>
+<div class="olist arabic"><ol class="arabic">
+<li>
+<p>
+&lt;em&gt;Leave unset&lt;/em&gt; option means that whenever a rule is applied it will not
+change the status of the caching setting that has been inherited from
+previously matched rules.
+</p>
+</li>
+<li>
+<p>
+&lt;em&gt;Forbid&lt;/em&gt; will disable caching of
+the rule
+</p>
+</li>
+<li>
+<p>
+&lt;em&gt;Allow&lt;/em&gt; will cache whatever &lt;strong&gt;can&lt;/strong&gt; be cached.
+</p>
+</li>
+</ol></div>
+<div class="paragraph"><p>Any HTTP content can be cached by Cherokee, except the following:</p></div>
+<div class="olist arabic"><ol class="arabic">
+<li>
+<p>
+Content in a SSL/TLS stream.
+</p>
+</li>
+<li>
+<p>
+Content that is server after having matched an authentication rule.
+</p>
+</li>
+<li>
+<p>
+Rules that have set any of the properties <em>No store</em>, <em>No
+  Transform</em>, <em>Must Revalidate</em>, or <em>Proxies Revalidate</em>.
+</p>
+</li>
+<li>
+<p>
+Responses to user petitions requesting specific ranges.
+</p>
+</li>
+<li>
+<p>
+Responses where the back-end sets a cookie (although you can tell Cherokee
+to ignore such cookies).
+</p>
+</li>
+</ol></div>
+<div class="paragraph"><p>By default, content that includes cookies are not cached, but the
+setting to allow caching on a rule gives you the ability to
+disregard cookies using regular expressions (so even that content
+can be cached).</p></div>
+<div class="paragraph"><p>Cherokee’s rules provide for great flexibility and control over caching.
+For instance, take the following example where we never cache content from a
+restricted "members" section of a website, while allowing Cherokee to always
+cache the contents of another section of the website regardless of presence of cookies,
+by prepending two rules to the behavior rule list:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>Fullpath: /site/index.php - Non-final - Cache: Disregarded Cookies '.*', Expiration.
+Fullpath: /site/members/index.php - Non-final - Cache: Expiration: 1970</tt></pre>
+</div></div>
+</div>
+<div id="footer">
+<div id="footer-text">
+</div>
+</div>
+</div>
