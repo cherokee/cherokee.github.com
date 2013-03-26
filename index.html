@@ -68,6 +68,15 @@ title: Home
 				<div class="bar3-title">
 					<a href="https://github.com/cherokee/webserver/commits/dev" target="_blank">Latest Commits</a>
 				</div>
+                
+                <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.js"></script>
+                <script src="static/js/github.commits.widget.js"></script>
+                <script>
+                    $(function() {
+                        $('#github-commits').githubInfoWidget(
+                            { user: 'cherokee', repo: 'webserver', branch: 'master', last: 15, limitMessageTo: 30 });
+                    });
+                </script>  
 
 				<div class="commit">
 					<div class="date">
