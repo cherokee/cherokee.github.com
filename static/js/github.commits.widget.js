@@ -38,9 +38,9 @@
 
                 for (var c = 0; c < totalCommits; c++) {
                     var commit = commits[c];
-                    list.append(
+                    element.append(
                         '<div class="commit">' +
-                            '<div class="date">'
+                            '<div class="date">' +
                                 when(commit.commit.committer.date) +
                             '</div>' +
                             '<div class="commit-txt">' +
@@ -49,7 +49,7 @@
                             '</div>' +
                         '</div>');
                 }
-                element.append('<p class="github-commits-widget-by">by <a href="https://github.com/alexanderbeletsky/github.commits.widget">github.commits.widget</a></p>');
+
                 callback(element);
 
                 function itemClass(current, totalCommits) {
@@ -75,7 +75,7 @@
                     {
                         commitMessage = commitMessage.substr(0, limitMessage) + '...';
                     }
-                    return '"' + '<a class="github-commit" title="' + originalCommitMessage + '" href="https://github.com/' + user + '/' + repo + '/commit/' + sha + '">' + commitMessage + '</a>"';
+                    return '<a class="github-commit" title="' + originalCommitMessage + '" href="https://github.com/' + user + '/' + repo + '/commit/' + sha + '">' + commitMessage + '</a>';
                 }
 
                 function replaceHtmlTags(message) {
