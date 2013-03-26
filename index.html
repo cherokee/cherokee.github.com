@@ -66,81 +66,20 @@ title: Home
 		<div class="bar3">
 			<div id="latest-commits">
 				<div class="bar3-title">
-					<a href="https://github.com/cherokee/webserver/commits/dev" target="_blank">Latest Commits</a>
+					<a href="https://github.com/cherokee/webserver/commits/master" target="_blank">Latest Commits in <em>master</em></a>
 				</div>
-
-				<div class="commit">
-					<div class="date">
-						<a href="https://github.com/cherokee/webserver/commit/e43de1b004f4954380f4b4ea272ea26ef2e81468">4 weeks ago</a>
-					</div>
-
-					<div class="commit-txt">
-						Stefan de Konink: Merge pull request #44 from	cherokee/fix-for-missing-libt...
-					</div>
-				</div>
-
-				<div class="commit">
-					<div class="date">
-						<a href="https://github.com/cherokee/webserver/commit/7fa9e4457437a2affbcb3dfa8f5dc1084fecf924" target="_blank" title="7fa9e4457437a2affbcb3dfa8f5dc1084fecf924">4 weeks ago</a>
-					</div>
-
-					<div class="commit-txt">
-						M. David Peterson: checks for the existence of glibtool using hash rather th...
-					</div>
-				</div>
-
-				<div class="commit">
-					<div class="date">
-						<a href="https://github.com/cherokee/webserver/commit/97e24f061fc527f9aaf86aa5c97072b990d5912a" target="_blank" title="97e24f061fc527f9aaf86aa5c97072b990d5912a">4 weeks ago</a>
-					</div>
-
-					<div class="commit-txt">
-						Stefan de Konink: Disabling SSL Compression might prevent an SSL CRIME attack.
-					</div>
-				</div>
-
-				<div class="commit">
-					<div class="date">
-						<a href="https://github.com/cherokee/webserver/commit/2e4800587586e392f81c45893ec0e63cd303d748" target="_blank" title="2e4800587586e392f81c45893ec0e63cd303d748">4 weeks ago</a>
-					</div>
-
-					<div class="commit-txt">
-						Stefan de Konink: Add support to explictly disable SSL compression.
-					</div>
-				</div>
-
-				<div class="commit">
-					<div class="date">
-						<a href="https://github.com/cherokee/webserver/commit/19b8fe12874ae4791ae695e74257a990c9f21281"	target="_blank" title="19b8fe12874ae4791ae695e74257a990c9f21281">4 weeks ago</a>
-					</div>
-
-					<div class="commit-txt">
-						Stefan de Konink: Implements the request for Cipher Server Preference
-					</div>
-				</div>
-
-				<div class="commit">
-					<div class="date">
-						<a href="https://github.com/cherokee/webserver/commit/d363f35eaca3f87d9af0133f7630099f61890ef8" target="_blank" title="d363f35eaca3f87d9af0133f7630099f61890ef8">5 weeks ago</a>
-					</div>
-
-					<div class="commit-txt">
-						Stefan de Konink: Merge pull request #40 from cherokee/mod-streaming_ffmpeg...
-					</div>
-				</div>
-
-				<div class="commit">
-					<div class="date">
-						<a href="https://github.com/cherokee/webserver/commit/d6e24b9fc890876c832bc8c7bebdc58017bcba34" title="d6e24b9fc890876c832bc8c7bebdc58017bcba34">5 weeks ago</a>
-					</div>
-
-					<div class="commit-txt">
-						M. David Peterson: fix for 'handler_streaming.c:383:23: error: 'AVFormatCont...
-					</div>
-				</div>
+                
+                <script src="static/js/github.commits.widget.js"></script>
+                <script>
+                    $(function() {
+                        $('#github-commits').githubInfoWidget(
+                            { user: 'cherokee', repo: 'webserver', branch: 'master', last: 6, limitMessageTo: 30 });
+                    });
+                </script>  
+                <div id="github-commits"></div>
 
 				<div class="bar3-bottom-link">
-					<a href="https://github.com/cherokee/webserver/commits/dev" target="_blank">View Commits Log »</a>
+					<a href="https://github.com/cherokee/webserver/commits/master" target="_blank">View Commits Log »</a>
 				</div>
 			</div>
 		</div>
