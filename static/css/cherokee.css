@@ -6,7 +6,7 @@ table{ border-collapse: collapse; border-spacing:0; }
 fieldset,img{border:0;}
 th{text-align:left;}
 input,button,textarea,select,optgroup,option{font-family:inherit;font-size:inherit;font-style:inherit;font-weight:inherit;}
-input,button,textarea,select{*font-size:100%;}
+input,button,textarea,select{font-size:100%;}
 strong {font-weight: bold;}
 em {font-style: italic;}
 code {font-family: courier;}
