@@ -63,6 +63,27 @@ title: Home
 
 		<div class="bar3">
 			<div class="bar3-title">
+				<a href="https://github.com/cherokee/webserver/commits/master">Latest Commits in <em>master</em></a>
+			</div>
+
+			<script src="static/js/github.commits.widget.js"></script>
+			<script>
+				$(function() {
+					$('#github-commits-master').githubInfoWidget(
+						{ user: 'cherokee', repo: 'webserver', branch: 'master', last: 6, limitMessageTo: 40 });
+				});
+			</script>
+			<div id="github-commits-master"></div>
+
+			<div class="bar3-bottom-link">
+				<a href="https://github.com/cherokee/webserver/commits/master">View commits log »</a>
+			</div>
+		</div>
+
+
+
+		<div class="bar3">
+			<div class="bar3-title">
 				<a href="https://github.com/cherokee/webserver/commits/master">Latest Commits in <em>dev</em></a>
 			</div>
 
@@ -80,26 +101,6 @@ title: Home
 			</div>
 		</div>
 
-
-
-		<div class="bar3">
-			<div class="bar3-title">
-				<a href="https://github.com/cherokee/webserver/commits/master">Latest Commits in <em>master</em></a>
-			</div>
-
-			<script src="static/js/github.commits.widget.js"></script>
-			<script>
-				$(function() {
-					$('#github-commits-master').githubInfoWidget(
-						{ user: 'cherokee', repo: 'webserver', branch: 'master', last: 6, limitMessageTo: 40 });
-				});
-			</script>
-			<div id="github-commits-master"></div>
-
-			<div class="bar3-bottom-link">
-				<a href="https://github.com/cherokee/webserver/commits/master">View commits log »</a>
-			</div>
-		</div>
 
 
 		<!-- removed from display until someone finds a javascript widget --
