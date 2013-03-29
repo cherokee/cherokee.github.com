@@ -20,9 +20,6 @@ ul {list-style: none;}
 }
 
 /* General */
-html, body {
-  height: 100%;
-}
 body {
   background: #fff url(../images/bg.png);
   font-family: Helvetica, Arial, Tahoma, sans-serif;
