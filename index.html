@@ -8,7 +8,6 @@ title: Home
 			<div id="mainmsg">
 				<h1>Evolved Web Infrastructure Software</h1>
 				<p>Cherokee is an innovative, feature rich, and yet easy to configure open source web server.</p>
-				<!-- <a id="overview" name="overview">Learn	More</a> -->
 			</div>
 		</div>
 	</div>
@@ -68,15 +67,15 @@ title: Home
 				<div class="bar3-title">
 					<a href="https://github.com/cherokee/webserver/commits/master" target="_blank">Latest Commits in <em>master</em></a>
 				</div>
-                
-                <script src="static/js/github.commits.widget.js"></script>
-                <script>
-                    $(function() {
-                        $('#github-commits').githubInfoWidget(
-                            { user: 'cherokee', repo: 'webserver', branch: 'master', last: 6, limitMessageTo: 30 });
-                    });
-                </script>  
-                <div id="github-commits"></div>
+		
+		<script src="static/js/github.commits.widget.js"></script>
+		<script>
+		    $(function() {
+			$('#github-commits').githubInfoWidget(
+			    { user: 'cherokee', repo: 'webserver', branch: 'master', last: 6, limitMessageTo: 30 });
+		    });
+		</script>  
+		<div id="github-commits"></div>
 
 				<div class="bar3-bottom-link">
 					<a href="https://github.com/cherokee/webserver/commits/master" target="_blank">View Commits Log »</a>
@@ -164,14 +163,14 @@ title: Home
 
 		<div class="clr"></div>
 
-<!-- Show last 5 posts here -->
-{% for post in site.posts limit: 5  %}
-		<div class="post">
-			<h2>{{ post.title }}</h2>
-			<span class="date">{{ post.date | date_to_string }}</span>
-			<div class="entry">{{ post.excerpt }}</div>
-			<span class="meta"><a href="{{site.baseurl}}{{ post.url }}">Read More</a></span>
-		</div>
-{% endfor %}
+		<!-- Show last 5 blog posts here -->
+		{% for post in site.posts limit: 5  %}
+			<div class="post">
+				<h2>{{ post.title }}</h2>
+				<span class="date">{{ post.date | date_to_string }}</span>
+				<div class="entry">{{ post.excerpt }}</div>
+				<span class="meta"><a href="{{site.baseurl}}{{ post.url }}">Read More</a></span>
+			</div>
+		{% endfor %}
 	
 	</div>
