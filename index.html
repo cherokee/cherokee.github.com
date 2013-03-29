@@ -67,15 +67,15 @@ title: Home
 				<div class="bar3-title">
 					<a href="https://github.com/cherokee/webserver/commits/master" target="_blank">Latest Commits in <em>master</em></a>
 				</div>
-		
-		<script src="static/js/github.commits.widget.js"></script>
-		<script>
-		    $(function() {
-			$('#github-commits').githubInfoWidget(
-			    { user: 'cherokee', repo: 'webserver', branch: 'master', last: 6, limitMessageTo: 30 });
-		    });
-		</script>  
-		<div id="github-commits"></div>
+
+								<script src="static/js/github.commits.widget.js"></script>
+								<script>
+									$(function() {
+										$('#github-commits').githubInfoWidget(
+											{ user: 'cherokee', repo: 'webserver', branch: 'master', last: 6, limitMessageTo: 30 });
+									});
+								</script>
+								<div id="github-commits"></div>
 
 				<div class="bar3-bottom-link">
 					<a href="https://github.com/cherokee/webserver/commits/master" target="_blank">View Commits Log »</a>
@@ -172,5 +172,5 @@ title: Home
 				<span class="meta"><a href="{{site.baseurl}}{{ post.url }}">Read More</a></span>
 			</div>
 		{% endfor %}
-	
+
 	</div>
