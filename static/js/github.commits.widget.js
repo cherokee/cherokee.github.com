@@ -44,7 +44,7 @@
                                 when(commit.commit.committer.date) +
                             '</div>' +
                             '<div class="commit-txt">' +
-                                commit.commit.committer.name + ': ' +
+                                commit.commit.committer.name + ':<br />' +
                                 message(replaceHtmlTags(commit.commit.message)) +
                             '</div>' +
                         '</div>');

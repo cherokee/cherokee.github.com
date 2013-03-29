@@ -12,7 +12,12 @@ title: Home
 		</div>
 	</div>
 
+
+
 	<div id="container">
+
+
+
 		<div id="index-main">
 			<h2>Features Highlights</h2>
 
@@ -33,6 +38,8 @@ title: Home
 			</div>
 		</div>
 
+
+
 		<div id="index-sidebox">
 			<div id="main-links">
 				<ul>
@@ -48,40 +55,53 @@ title: Home
 			</div>
 		</div>
 
+
+
 		<div class="clr"></div>
 
-		<div class="bar3">
-			<div id="latest-tweets">
-				<div class="bar3-title">
-					<a href="http://twitter.com/webserver">Recent Tweets</a>
-				</div>
 
-				<div class="bar3-bottom-link">
-					<a href="http://twitter.com/webserver">Follow us on Twitter »</a>
-				</div>
+
+		<div class="bar3">
+			<div class="bar3-title">
+				<a href="https://github.com/cherokee/webserver/commits/master">Latest Commits in <em>dev</em></a>
+			</div>
+
+			<script src="static/js/github.commits.widget.js"></script>
+			<script>
+				$(function() {
+					$('#github-commits-dev').githubInfoWidget(
+						{ user: 'cherokee', repo: 'webserver', branch: 'dev', last: 6, limitMessageTo: 40 });
+				});
+			</script>
+			<div id="github-commits-dev"></div>
+
+			<div class="bar3-bottom-link">
+				<a href="https://github.com/cherokee/webserver/commits/master">View commits log »</a>
 			</div>
 		</div>
 
+
+
 		<div class="bar3">
-			<div id="latest-commits">
-				<div class="bar3-title">
-					<a href="https://github.com/cherokee/webserver/commits/master">Latest Commits in <em>master</em></a>
-				</div>
+			<div class="bar3-title">
+				<a href="https://github.com/cherokee/webserver/commits/master">Latest Commits in <em>master</em></a>
+			</div>
 
-				<script src="static/js/github.commits.widget.js"></script>
-				<script>
-					$(function() {
-						$('#github-commits').githubInfoWidget(
-							{ user: 'cherokee', repo: 'webserver', branch: 'master', last: 6, limitMessageTo: 30 });
-					});
-				</script>
-				<div id="github-commits"></div>
+			<script src="static/js/github.commits.widget.js"></script>
+			<script>
+				$(function() {
+					$('#github-commits-master').githubInfoWidget(
+						{ user: 'cherokee', repo: 'webserver', branch: 'master', last: 6, limitMessageTo: 40 });
+				});
+			</script>
+			<div id="github-commits-master"></div>
 
-				<div class="bar3-bottom-link">
-					<a href="https://github.com/cherokee/webserver/commits/master">View Commits Log »</a>
-				</div>
+			<div class="bar3-bottom-link">
+				<a href="https://github.com/cherokee/webserver/commits/master">View commits log »</a>
 			</div>
 		</div>
+
+
 
 		<div class="bar3">
 			<div id="mailing-list">
@@ -161,7 +181,11 @@ title: Home
 			</div>
 		</div>
 
+
+
 		<div class="clr"></div>
+
+
 
 		<!-- Show last 5 blog posts here -->
 		{% for post in site.posts limit: 5  %}
@@ -172,5 +196,7 @@ title: Home
 				<span class="meta"><a href="{{site.baseurl}}{{ post.url }}">Read More</a></span>
 			</div>
 		{% endfor %}
+
+
 
 	</div>
