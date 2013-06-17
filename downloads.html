@@ -191,15 +191,15 @@ title: Downloads
                         <h3>Option 1: Automatic installation</h3>
                         <div>
                             <p>Open a terminal and enter:</p>
-                            <pre class="terminal">wget http://cherokee-project.com/install && python install</pre>
+                            <pre class="terminal">wget https://github.com/cherokee/installer/blob/master/install.py && python install.py</pre>
                             <p>or</p>
-                            <pre class="terminal">curl -LO http://cherokee-project.com/install && python install</pre>
+                            <pre class="terminal">curl -LO https://github.com/cherokee/installer/blob/master/install.py && python install.py</pre>
                             <p>This will download and install Cherokee under /opt/cherokee</p>
                         </div>
                         
                         <h3>Option 2: Compile it by hand</h3>
                         <div>
-                            Download <a href="/download/1.2/1.2.101/cherokee-1.2.101.tar.gz">latest source code package</a>,
+                            Download <a href="https://github.com/cherokee/webserver/archive/master.zip">latest source code package</a>,
                             and install it by hand doing the <i>./configure, make, make install</i> dance:
                             <pre class="terminal">configure --prefix=/usr --localstatedir=/var --sysconfdir=/etc</pre>
                             <pre class="terminal">make && sudo make install</pre>
