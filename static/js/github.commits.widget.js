@@ -45,7 +45,7 @@
                             '</div>' +
                             '<div class="commit-txt">' +
                                 commit.commit.committer.name + ':<br />' +
-                                message(replaceHtmlTags(commit.commit.message)) +
+                                message(replaceHtmlTags(commit.commit.message), commit.sha) +
                             '</div>' +
                         '</div>');
                 }
