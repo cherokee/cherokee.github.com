@@ -102,9 +102,6 @@ button {
     border: 1px solid #cde;
     border-radius: 4px;
     background: #ddeeff;
-    background: -webkit-gradient(linear, left top, left bottom, from(#ffffff), to(#ddeeff));
-    background: -moz-linear-gradient(top,  #ffffff,  #ddeeff);
-    filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='#ddeeff');
     box-shadow: inset 1px 1px 0 #fff;
 }
 button:active {
