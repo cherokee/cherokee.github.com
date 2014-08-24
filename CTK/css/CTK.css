@@ -75,7 +75,7 @@ select { border: 1px solid #b0bfce; background: #fff; padding: 2px; outline: non
 * html .ui-helper-clearfix { height:1%; }
 .ui-helper-clearfix { display:block; }
 /* end clearfix */
-.ui-helper-zfix { width: 100%; height: 100%; top: 0; left: 0; position: absolute; opacity: 0; filter:Alpha(Opacity=0); }
+.ui-helper-zfix { width: 100%; height: 100%; top: 0; left: 0; position: absolute; opacity: 0; }
 
 /* Error
  */
@@ -98,9 +98,6 @@ button {
     border: 1px solid #cde;
     border-radius: 4px;
     background: #ddeeff;
-    background: -webkit-gradient(linear, left top, left bottom, from(#ffffff), to(#ddeeff));
-    background: -moz-linear-gradient(top,  #ffffff,  #ddeeff);
-    filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='#ddeeff');
     box-shadow: inset 1px 1px 0 #fff;
 }
 button:active {
@@ -115,9 +112,6 @@ button:hover { cursor: pointer; }
     text-shadow: #14335d 0px 1px 0px;
     border: 1px solid #17457e;
     background: #235699;
-    background: -webkit-gradient(linear, left top, left bottom, from(#5e8bc9), to(#235699));
-    background: -moz-linear-gradient(top,  #396aae,  #235699);
-    filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#396aae', endColorstr='#235699');
     box-shadow: inset 1px 1px 0 #7798c2;
 }
 
@@ -130,9 +124,6 @@ button:hover { cursor: pointer; }
     text-shadow: #fff 0px 1px 0px;
     border: 1px solid #cde;
     background: #2277cc;
-    background: -webkit-gradient(linear, left top, left bottom, from(#ffffff), to(#ddeeff));
-    background: -moz-linear-gradient(top,  #ffffff,  #ddeeff);
-    filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='#ddeeff');
     box-shadow: inset 1px 1px 0 #fff;
 }
 
@@ -250,8 +241,8 @@ button:hover { cursor: pointer; }
 
 /* PageException.py
  */
-.backtrace { white-space: pre-wrap; white-space: -moz-pre-wrap; white-space: -o-pre-wrap; background: #fafafa; border: 1px solid #ddd; color: #c00; padding: 16px; margin: 16px 0; }
-.shell { white-space: pre-wrap; white-space: -moz-pre-wrap; white-space: -o-pre-wrap; background: #fafafa; border: 1px solid #ddd; color: #0b0; padding: 16px; margin: 16px 0 16px 48px; }
+.backtrace { white-space: pre-wrap; white-space: white-space: background: #fafafa; border: 1px solid #ddd; color: #c00; padding: 16px; margin: 16px 0; }
+.shell { white-space: pre-wrap; white-space: white-space: background: #fafafa; border: 1px solid #ddd; color: #0b0; padding: 16px; margin: 16px 0 16px 48px; }
 #body-error h1 { background: #fff url(/CTK/images/dialog-error.png) 8px 12px no-repeat; padding-left: 48px; }
 #body-error h2 { margin-bottom: 1em; }
 #body-error #main { padding: 16px; width: 926px; }
@@ -393,4 +384,3 @@ tr.panel-selected td div.row_content .sel-actions {
 /* Collapsible
  */
 .collapsible-title { cursor: pointer; }
-
