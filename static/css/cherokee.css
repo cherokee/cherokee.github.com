@@ -379,7 +379,7 @@ ul.list li {
 
 .date {
   float: left;
-  text-align: right;
+  text-align: left;
   width: 100px;
   color: #666;
 }
@@ -395,6 +395,10 @@ ul.list li {
 
 .tweet-txt, .commit-txt, .mail-txt {
   margin-left: 60px;
+}
+
+.commit-txt {
+  margin-left: 110px;
 }
 
 .ohloh-languages-box,
