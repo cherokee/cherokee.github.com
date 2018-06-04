@@ -329,11 +329,15 @@ ul.list li {
 
 
 
-.bar3 {
+.bar3, .bar2-3 {
   width: 33%;
   float: left;
   font-size: 13px;
   margin-top: 30px;
+}
+
+.bar2-3 {
+  width: 66%;
 }
 
 .bar3-title {
@@ -342,7 +346,7 @@ ul.list li {
   margin-bottom: 15px;
 }
 
-.bar3-title a {
+.bar3-title a, .bar2-3 {
   text-decoration: none;
 }
 .bar3-title a:hover {
@@ -375,8 +379,8 @@ ul.list li {
 
 .date {
   float: left;
-  text-align: right;
-  width: 50px;
+  text-align: left;
+  width: 100px;
   color: #666;
 }
 
@@ -391,6 +395,10 @@ ul.list li {
 
 .tweet-txt, .commit-txt, .mail-txt {
   margin-left: 60px;
+}
+
+.commit-txt {
+  margin-left: 110px;
 }
 
 .ohloh-languages-box,
@@ -452,6 +460,7 @@ ul.list li {
 #platform-debian { background: url('/static/images/icon-debian.png') no-repeat; margin-top: 32px; }
 #platform-epel { background: url('/static/images/icon-epel.png') no-repeat; margin-top: 32px; }
 #platform-fedora { background: url('/static/images/icon-fedora.png') no-repeat; margin-top: 32px; }
+#platform-macosx { background: url('/static/images/icon-macosx.png') no-repeat; margin-top: 32px; }
 
 #macosx-steps {
 }
